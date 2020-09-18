@@ -16,6 +16,7 @@
 	```
 	
 * How to push your updated code: 
+
 	Make sure you are in your own branch
 	```
 	$ git branch 
