@@ -25,6 +25,7 @@
 	$ git commit -m "DescriptionOfChangesAddedToCode"
 	$ git push
 	```
+	And create pull request
 
 * How to pull updated code from master:
 	Delete your directory and git clone again or do the following:
