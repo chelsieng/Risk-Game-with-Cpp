@@ -8,6 +8,8 @@
 
 using namespace std;
 //as per the instructions of the assignment, all data members (of user-made classes) must be of the pointer type
+//EDIT: change was made to say that the above is in fact, not the case. Honestly I wrote most of this before
+// any clarification was made so as it stands, most data members will remain as pointers.
 
 class Card {
 
@@ -17,7 +19,13 @@ private:
 public:
 	Card(); //default constructor, do not use.
 	Card(string t);
+	Card(const Card&); //"In Call by value, a copy of the variable is passed whereas in Call by reference, 
+						//a variable itself is passed", "for efficiency reasons, constant call by reference is usually
+						//used in place of call by value for classes""
+	~Card();
+	Card& operator =(const Card& rightSide);
 	string getType();
+	void setType(string t);
 	void setDescription(string t);
 	string getDescription();
 	void printDescription();
@@ -29,6 +37,12 @@ public:
 	// add it back to the game deck
 	void play();	//This should actually return an order (or a pointer to one) -> WAITING FOR ORDERS class to be implemented
 		//that is to say, won't remain void
+
+	friend class BombCard;				//important, so that these subclasses can access the private data members
+	friend class DiplomacyCard;				//particularly relevant since we are required to write copy constructors
+	friend class ReinforcementCard;			//and destructors for each of these
+	friend class BlockadeCard;
+	friend class AirliftCard;
 };//end of Card class
 
 //The specific types of cards are implemented as a series of subclasses (of the class Card):
@@ -36,26 +50,41 @@ public:
 class BombCard : public Card {
 public:
 	BombCard();
+	BombCard(const BombCard& copyMe);
+	~BombCard();
+	BombCard& operator =(const BombCard& rightSide);
 };//end of BombCard class
 
 class DiplomacyCard : public Card {
 public:
 	DiplomacyCard();
+	DiplomacyCard(const DiplomacyCard& copyMe);
+	DiplomacyCard& operator =(const DiplomacyCard& rightSide);
+	~DiplomacyCard();
 };//end of DiplomacyCard class
 
 class ReinforcementCard : public Card {
 public:
 	ReinforcementCard();
+	ReinforcementCard(const ReinforcementCard& copyMe);
+	ReinforcementCard& operator =(const ReinforcementCard& rightSide);
+	~ReinforcementCard();
 };//end of ReinforcementCard class
 
 class AirliftCard : public Card {
 public:
 	AirliftCard();
+	AirliftCard(const AirliftCard& copyMe);
+	AirliftCard& operator =(const AirliftCard& rightSide);
+	~AirliftCard();
 };//end of AirliftCard class
 
 class BlockadeCard : public Card {
 public:
 	BlockadeCard();
+	BlockadeCard(const BlockadeCard& copyMe);
+	BlockadeCard& operator =(const BlockadeCard& rightSide);
+	~BlockadeCard();
 };//end of BlockadeCard class
 
 //Now we must create a deck class which will contain whatever cards we add to it
@@ -63,8 +92,11 @@ public:
 
 class deckNode {
 public:
-	deckNode();
+	deckNode(Card* thedata);
 	deckNode(Card* thedata, deckNode* theLink);
+	deckNode(const deckNode& copyMe);
+	deckNode& operator =(const deckNode& rightSide);
+	~deckNode();
 
 	deckNode* const getLink();
 	Card* const getData();
@@ -75,6 +107,7 @@ private:
 	Card* data;	//all data members must be of pointer type :(
 	deckNode* link;
 
+friend class Deck;
 };//END of deckNode class
 typedef deckNode* deckNodePtr;
 
@@ -86,6 +119,9 @@ private:
 public:
 	//add default constructor even though we won't use it
 	Deck(deckNodePtr thehead);
+	Deck(const Deck& copyMe);
+	Deck& operator =(const Deck& rightSide);
+	~Deck();
 	void addToDeck(Card* theData); //(equivalent to adding to head)
 	Card* draw();	//(equivalent to removing from head)
 	void placeOnBottom(Card* theData);
@@ -98,10 +134,14 @@ public:
 class Hand {
 private:
 	Deck* gameDeck;	//the deck the hand will draw from
-	int* limit;
+	int limit;
 	std::vector<Card*> cardsInHand; //will be initialized in constructor
 public:
 	Hand(int l, Deck* d);
+	Hand(const Hand& copyMe);
+	Hand& operator =(const Hand& rightSide);
+	~Hand();
+	
 	void showCardsInHand();
 	void playCardAtIndex(int i);
 	void addToHand(Card* c);
