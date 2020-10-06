@@ -1,3 +1,6 @@
+//Author: Dominique Cartier
+//A1 Part five: Driver
+
 #include <iostream>
 #include "Cards.h"
 using namespace std;

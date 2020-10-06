@@ -1,3 +1,6 @@
+//Author: Dominique Cartier
+//A1 Part five: Cpp file
+
 #include "Cards.h"
 #include <string>
 #include <iostream>
