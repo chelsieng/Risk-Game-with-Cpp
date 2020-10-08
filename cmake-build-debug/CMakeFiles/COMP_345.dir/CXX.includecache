@@ -1,0 +1,68 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 1/Map.cpp
+Map.h
+C:/Users/jason/Documents/GitHub/COMP-345/Part 1/Map.h
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 1/Map.h
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 1/MapDriver.cpp
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 2/MapLoader.cpp
+MapLoader.h
+C:/Users/jason/Documents/GitHub/COMP-345/Part 2/MapLoader.h
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 2/MapLoader.h
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 2/MapLoaderDriver.cpp
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 3/Orders.cpp
+iostream
+-
+vector
+-
+Orders.h
+C:/Users/jason/Documents/GitHub/COMP-345/Part 3/Orders.h
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 3/Orders.h
+iostream
+-
+vector
+-
+string
+-
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 3/OrdersDriver.cpp
+iostream
+-
+vector
+-
+Orders.h
+C:/Users/jason/Documents/GitHub/COMP-345/Part 3/Orders.h
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 4/Player.cpp
+Player.h
+C:/Users/jason/Documents/GitHub/COMP-345/Part 4/Player.h
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 4/Player.h
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 4/PlayerDriver.cpp
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 5/Cards.cpp
+Cards.h
+C:/Users/jason/Documents/GitHub/COMP-345/Part 5/Cards.h
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 5/Cards.h
+
+C:/Users/jason/Documents/GitHub/COMP-345/Part 5/CardsDriver.cpp
+
+C:/Users/jason/Documents/GitHub/COMP-345/main.cpp
+iostream
+-
+
