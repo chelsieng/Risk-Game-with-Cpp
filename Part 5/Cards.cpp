@@ -1,9 +1,9 @@
 //Author: Dominique Cartier
 //A1 Part five: Cpp file
 
-#include "Cards.h"
 #include <string>
 #include <iostream>
+#include "Cards.h"
 using namespace std;
 
 
@@ -40,26 +40,28 @@ Card& Card::operator=(const Card& rightSide)
 	return *this;
 }//end of assignment overload (card)
 
-string Card::getType()
+
+string* Card::getType() const
 {
-	return *type;	//returns the string itself, not the pointer
+	return type;	//returns the pointer
 }
 
-void Card::setDescription(string t)
+void Card::setDescription(string t) const
 {
 	*description = t;
 }
 
-void Card::setType(string t)
+void Card::setType(string t) const
 {
 	*type = t;
 }
 
-string Card::getDescription() {
-	return *description;		//returns the string itself, not the pointer
+string* Card::getDescription() const {
+	return description;		//returns the pointer
 }
 
-void Card::printDescription() {
+//Might remove print method now that we have << overload
+void Card::printDescription() const {
 	cout << this->getDescription() << endl;
 }
 
@@ -67,7 +69,7 @@ void Card::play() //this won't actually be a void method, awaiting updates on Or
 {
 	//switch(*type)
 	//create different order based on type
-	cout << "You played a card of type: " << this->getType() << endl;
+	cout << "You played a card of type: " << *this->getType() << endl;
 	//return pointer to order created
 }
 
@@ -79,8 +81,8 @@ BombCard::BombCard()
 
 BombCard::BombCard(const BombCard& copyMe)	//if parameter is const we're not able to access the getters and setters	
 {											//Fortunately for us, Card and BombCard are good friends
-	type = new string(*copyMe.type);
-	description = new string(*copyMe.description);
+	this->setType(*copyMe.getType());
+	this->setDescription(*copyMe.getDescription());
 }
 
 BombCard::~BombCard()
@@ -93,10 +95,10 @@ BombCard& BombCard::operator=(const BombCard& rightSide)
 	if (this == &rightSide) {
 		return *this;
 	}
-	delete type;	//deleting what was already there (if anything) to avoid memory leaks
-	delete description;	//same thing for this
-	type = new string(*rightSide.type);
-	description = new string(*rightSide.description);
+	delete this->getType();	//deleting what was already there (if anything) to avoid memory leaks
+	delete this->getDescription();	//same thing for this
+	setType((*rightSide.getType()));
+	setDescription(*rightSide.getDescription());
 	return *this;
 }//end of assignment overload (BombCard)
 
@@ -108,8 +110,8 @@ DiplomacyCard::DiplomacyCard()
 
 DiplomacyCard::DiplomacyCard(const DiplomacyCard& copyMe)
 {
-	type = new string(*copyMe.type);
-	description = new string(*copyMe.type);
+	setType((*copyMe.getType()));
+	setDescription((*copyMe.getType()));
 }
 
 DiplomacyCard& DiplomacyCard::operator=(const DiplomacyCard& rightSide)
@@ -117,10 +119,10 @@ DiplomacyCard& DiplomacyCard::operator=(const DiplomacyCard& rightSide)
 	if (this == &rightSide) {
 		return *this;
 	}
-	delete type;
-	delete description;
-	type = new string(*rightSide.type);
-	description = new string(*rightSide.description);
+	delete this->getType();
+	delete this->getDescription();
+	setType(*rightSide.getType());
+	setDescription(*rightSide.getDescription());
 	return *this;
 }
 
@@ -136,8 +138,8 @@ ReinforcementCard::ReinforcementCard()
 
 ReinforcementCard::ReinforcementCard(const ReinforcementCard& copyMe)
 {
-	type = new string(*copyMe.type);
-	description = new string(*copyMe.type);
+	setType(*copyMe.getType());
+	setDescription(*copyMe.getType());
 }
 
 ReinforcementCard& ReinforcementCard::operator=(const ReinforcementCard& rightSide)
@@ -145,10 +147,10 @@ ReinforcementCard& ReinforcementCard::operator=(const ReinforcementCard& rightSi
 	if (this == &rightSide) {
 		return *this;
 	}
-	delete type;
-	delete description;
-	type = new string(*rightSide.type);
-	description = new string(*rightSide.description);
+	delete this->getType();
+	delete this->getDescription();
+	setType(*rightSide.getType());
+	setDescription(*rightSide.getDescription());
 	return *this;
 }
 
@@ -164,8 +166,8 @@ AirliftCard::AirliftCard()
 
 AirliftCard::AirliftCard(const AirliftCard& copyMe)
 {
-	type = new string(*copyMe.type);
-	description = new string(*copyMe.type);
+	setType(*copyMe.getType());
+	setDescription(*copyMe.getType());
 }
 
 AirliftCard& AirliftCard::operator=(const AirliftCard& rightSide)
@@ -173,12 +175,13 @@ AirliftCard& AirliftCard::operator=(const AirliftCard& rightSide)
 	if (this == &rightSide) {
 		return *this;
 	}
-	delete type;
-	delete description;
-	type = new string(*rightSide.type);
-	description = new string(*rightSide.description);
+	delete this->getType();
+	delete this->getDescription();
+	setType(*rightSide.getType());
+	setDescription(*rightSide.getType());
 	return *this;
 }
+
 
 AirliftCard::~AirliftCard()
 {
@@ -192,8 +195,8 @@ BlockadeCard::BlockadeCard()
 
 BlockadeCard::BlockadeCard(const BlockadeCard& copyMe)
 {
-	type = new string(*copyMe.type);
-	description = new string(*copyMe.type);
+	setType(*copyMe.getType());
+	setDescription(*copyMe.getType());
 }
 
 BlockadeCard& BlockadeCard::operator=(const BlockadeCard& rightSide)
@@ -201,10 +204,10 @@ BlockadeCard& BlockadeCard::operator=(const BlockadeCard& rightSide)
 	if (this == &rightSide) {
 		return *this;
 	}
-	delete type;
-	delete description;
-	type = new string(*rightSide.type);
-	description = new string(*rightSide.description);
+	delete this->getType();
+	delete this->getDescription();
+	setType(*rightSide.getType());
+	setDescription(*rightSide.getDescription());
 	return *this;
 }
 
@@ -246,22 +249,22 @@ deckNode::~deckNode()
 {	//filling this in with delete data and delete head caused major issues... Probably deletes things more than once?
 }
 
-deckNode* const deckNode::getLink()
+deckNode* deckNode::getLink() const
 {
 	return link;
 }
 
-Card* const deckNode::getData()
+Card* deckNode::getData() const
 {
 	return data;
 }
 
-void deckNode::setData(Card* theData)
+void deckNode::setData(Card* theData) 
 {
 	data = theData;
 }
 
-void deckNode::setLink(deckNode* theLink)
+void deckNode::setLink(deckNode* theLink) 
 {
 	link = theLink;
 }
@@ -274,7 +277,7 @@ Deck::Deck(deckNodePtr thehead)
 Deck::Deck(const Deck& copyMe)
 {
 	if (copyMe.head == NULL) {
-		head == NULL;
+		head = NULL;
 	}
 	else {
 		head = new deckNode(copyMe.head->data, nullptr);
@@ -311,6 +314,11 @@ Deck& Deck::operator=(const Deck& rightSide)
 		}
 	}
 	return *this;
+}
+
+deckNode* Deck::getHead() const
+{
+	return head;
 }
 
 Deck::~Deck()
@@ -389,7 +397,7 @@ Hand& Hand::operator=(const Hand& rightSide)
 			cardsInHand.push_back(rightSide.cardsInHand.at(i));
 		}//end of for
 	}//end of else
-
+	return *this;
 }
 
 Hand::~Hand()
@@ -400,7 +408,7 @@ void Hand::showCardsInHand()
 {
 	int size = cardsInHand.size();
 	for (int i = 0; i < size; i++) {
-		cout << i << ": " << cardsInHand.at(i)->getDescription() << endl;
+		cout << i << ": " << *cardsInHand.at(i)->getDescription() << endl;
 	}
 }
 
@@ -418,4 +426,87 @@ void Hand::playCardAtIndex(int i)
 void Hand::addToHand(Card* c)
 {
 	cardsInHand.push_back(c);
+}
+
+Card Hand::getCardatIndex(int i) const
+{
+	return *cardsInHand.at(i);
+}
+
+int Hand::getSize() const
+{
+	return cardsInHand.size();
+}
+
+ostream& operator<<(ostream& outs, const Card& printMe)
+{
+	outs << *printMe.getDescription() << endl;
+	return outs;
+}
+
+//Since we have the above, overloading the << operator for the specific card types is a bit useless, but the assignment demands it :b
+
+ostream& operator<<(ostream& outs, const BombCard& printMe)
+{
+	outs << *printMe.getDescription() << endl;
+	return outs;
+}
+
+ostream& operator<<(ostream& outs, const DiplomacyCard& printMe)
+{
+	outs << *printMe.getDescription() << endl;
+	return outs;
+}
+
+ostream& operator<<(ostream& outs, const ReinforcementCard& printMe)
+{
+	outs << *printMe.getDescription() << endl;
+	return outs;
+}
+
+ostream& operator<<(ostream& outs, const BlockadeCard& printMe)
+{
+	outs << *printMe.getDescription() << endl;
+	return outs;
+}
+
+ostream& operator<<(ostream& outs, const AirliftCard& printMe)
+{
+	outs << *printMe.getDescription() << endl;
+	return outs;
+}
+
+ostream& operator<<(ostream& outs, const deckNode& printMe)
+{
+	outs << "\nA deck node that contains the following card: \n" << *printMe.getData() << endl;
+	return outs;
+}
+
+ostream& operator<<(ostream& outs, const Deck& printMe)
+{
+	outs << "Here are all the cards currently in this deck:\n" << endl;
+	if (printMe.getHead() == NULL) {
+		outs << "The deck is empty!" << endl;
+	}
+	else {
+		deckNode* objHead = printMe.getHead();
+		deckNode* current = objHead;
+		
+		while (current != NULL) {
+			outs << *current->getData() << endl;
+			current = current->getLink();
+		}
+	}
+	return outs;
+
+}
+
+ostream& operator<<(ostream& outs, const Hand& printMe)
+{
+	outs << "These are the cards currently in your hand:\n" << endl;
+	int size = printMe.getSize();
+	for (int i = 0; i < size; i++) {
+		outs << printMe.getCardatIndex(i) << endl;
+	}
+	return outs;
 }
