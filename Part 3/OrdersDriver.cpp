@@ -16,10 +16,32 @@ int main()
     Order *negotiate = new Negotiate();
     Order *airlift = new Airlift();
 
-    
+    deploy->validate();
+    deploy->execute();
+
+    advance->validate();
+    advance->execute();
+
+    bomb->validate();
+    bomb->execute();
+
+    blockade->validate();
+    blockade->execute();
+
+    negotiate->validate();
+    negotiate->execute();
+
+    airlift->validate();
+    airlift->execute();
 
     // Testing OrdersList
-
+    OrdersList *ordersList = new OrdersList();
+    ordersList->add(deploy);
+    ordersList->add(advance);
+    ordersList->add(bomb);
+    ordersList->add(blockade);
+    ordersList->add(negotiate);
+    ordersList->add(airlift);
 
     // Delete pointers
     delete deploy;

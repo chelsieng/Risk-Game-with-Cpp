@@ -58,18 +58,18 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cf.first.check.clang-format" value="false" />
     <property name="js.buildTools.grunt.grunt-cli.package" value="" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Part 3/CMakeLists.txt" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/CMakeLists.txt" />
     <property name="nodejs.protractor.protractor_package" value="" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="CPPToolchains" />
   </component>
   <component name="RunManager">
-    <configuration name="COMP_345" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="COMP_345" TARGET_NAME="COMP_345" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="COMP_345" RUN_TARGET_NAME="COMP_345">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="COMP_345" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="COMP_345" TARGET_NAME="COMP_345" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="COMP_345" RUN_TARGET_NAME="COMP_345">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -95,7 +95,10 @@
       <updated>1601867101840</updated>
       <workItem from="1601867102449" duration="3374000" />
       <workItem from="1602093765998" duration="12301000" />
-      <workItem from="1602108670160" duration="4464000" />
+      <workItem from="1602108670160" duration="5108000" />
+      <workItem from="1602165701660" duration="913000" />
+      <workItem from="1602166732550" duration="11000" />
+      <workItem from="1602166776900" duration="15135000" />
     </task>
     <servers />
   </component>
@@ -135,10 +138,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="137" y="14" width="1092" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1602108222960" />
-    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1602108364315">
+    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1602166788081">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1602108364315" />
+    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1602166788081" />
     <state x="184" y="9" key="SettingsEditor" timestamp="1602107462499">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -147,10 +150,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="500" y="278" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.728@0.0.1366.728" timestamp="1602107555026" />
-    <state x="339" y="162" key="run.anything.popup" timestamp="1602106401944">
+    <state x="339" y="162" key="run.anything.popup" timestamp="1602188578221">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="339" y="162" key="run.anything.popup/0.0.1366.728@0.0.1366.728" timestamp="1602106401944" />
+    <state x="339" y="162" key="run.anything.popup/0.0.1366.728@0.0.1366.728" timestamp="1602188578221" />
     <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1602103064494">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

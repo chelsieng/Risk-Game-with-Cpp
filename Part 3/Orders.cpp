@@ -14,9 +14,20 @@ Order::Order()
 
 }
 
+Order::Order(Player *player)
+{
+    this->player = player;
+}
+
 Order::Order(const Order &order)
 {
+    this->player = order.player;
+    this->isExecuted = order.isExecuted;
+}
 
+Order::~Order()
+{
+    delete player;
 }
 
 bool Order::validate()
@@ -32,24 +43,38 @@ void Order::execute()
         cout << "False order" << endl;
 }
 
-std::ostream &Order::operator<<(ostream &out, const Order &order) {
+ostream &Order::operator<<(ostream &out, const Order &order)
+{
     out << "Execute order";
     if(isExecuted)
         out << "This order has been executed.";
     return out;
 }
 
+
 /*
- * Deploy order class
+  * Deploy order class
  */
-Deploy::Deploy()
+Deploy::Deploy() : Order()
 {
 
 }
 
-Deploy::Deploy(const Deploy &deploy)
+Deploy::Deploy(Player *player, Territory *deployTerritory, int numOfArmies) : Order(player)
 {
+    this->deployTerritory = deployTerritory;
+    this->numOfArmies = numOfArmies;
+}
 
+Deploy::Deploy(const Deploy &deploy) : Order(deploy)
+{
+    this->deployTerritory = deploy.deployTerritory;
+    this->numOfArmies = deploy.numOfArmies;
+}
+
+Deploy::~Deploy()
+{
+    delete deployTerritory;
 }
 
 bool Deploy::validate()
@@ -67,24 +92,40 @@ void Deploy::execute()
     }
 }
 
-std::ostream &Deploy::operator<<(ostream &out, const Deploy &deploy) {
+ostream &Deploy::operator<<(ostream &out, const Deploy &deploy) {
     out << "Deploy armies";
     if(isExecuted)
         out << "This order has been executed.";
     return out;
 }
 
+
 /*
  * Advance order class
  */
-Advance::Advance()
+Advance::Advance() : Order()
 {
 
 }
 
-Advance::Advance(const Advance &advance)
+Advance::Advance(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies) : Order(player)
 {
+    this->fromTerritory = fromTerritory;
+    this->toTerritory = toTerritory;
+    this->numOfArmies = numOfArmies;
+}
 
+Advance::Advance(const Advance &advance) : Order(advance)
+{
+    this->fromTerritory = advance.fromTerritory;
+    this->toTerritory = advance.toTerritory;
+    this->numOfArmies = advance.numOfArmies;
+}
+
+Advance::~Advance()
+{
+    delete fromTerritory;
+    delete toTerritory
 }
 
 bool Advance::validate()
@@ -102,24 +143,38 @@ void Advance::execute()
     }
 }
 
-std::ostream &Advance::operator<<(ostream &out, const Advance &advance) {
+ostream &Advance::operator<<(ostream &out, const Advance &advance) {
     out << "Advance armies";
     if(isExecuted)
         out << "This order has been executed.";
     return out;
 }
 
+
 /*
- * Bomb order class
+  * Bomb order class
  */
-Bomb::Bomb()
+Bomb::Bomb() : Order()
 {
 
 }
 
+Bomb::Bomb(Player *player, Territory *fromTerritory, Territory *toTerritory) : Order(player)
+{
+    this->fromTerritory = fromTerritory;
+    this->toTerritory = toTerritory;
+}
+
 Bomb::Bomb(const Bomb &bomb)
 {
+    this->fromTerritory = bomb.fromTerritory;
+    this->toTerritory = bomb.toTerritory;
+}
 
+Bomb::~Bomb()
+{
+    delete fromTerritory;
+    delete toTerritory;
 }
 
 bool Bomb::validate()
@@ -137,24 +192,36 @@ void Bomb::execute()
     }
 }
 
-std::ostream &Bomb::operator<<(ostream &out, const Bomb &bomb) {
+ostream &Bomb::operator<<(ostream &out, const Bomb &bomb) {
     out << "Bomb territory";
     if(isExecuted)
         out << "This order has been executed.";
     return out;
 }
 
+
 /*
- * Blockade order class
+  * Blockade order class
  */
-Blockade::Blockade()
+Blockade::Blockade() : Order()
 {
 
 }
 
-Blockade::Blockade(const Blockade &blockade)
+Blockade::Blockade(Player *player, Territory *blockTerritory) : Order(player)
 {
+    this->blockTerritory = blockTerritory;
+}
 
+Blockade::Blockade(const Blockade &blockade) : Order(blockade)
+{
+    this->blockTerritory = blockade.blockTerritory;
+    this->isExecuted = blockade.isExecuted;
+}
+
+Blockade::~Blockade()
+{
+    delete blockTerritory;
 }
 
 bool Blockade::validate()
@@ -172,24 +239,39 @@ void Blockade::execute()
     }
 }
 
-std::ostream &Blockade::operator<<(ostream &out, const Blockade &blockade) {
+ostream &Blockade::operator<<(ostream &out, const Blockade &blockade) {
     out << "Blockade territory";
     if(isExecuted)
         out << "This order has been executed.";
     return out;
 }
 
+
 /*
  * Airlift order class
  */
-Airlift::Airlift()
+Airlift::Airlift() : Order()
 {
 
 }
 
+Airlift::Airlift(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies) : Order(player)
+{
+    this->fromTerritory = fromTerritory;
+    this->toTerritory = toTerritory;
+    this->numOfArmies = numOfArmies;
+}
+
 Airlift::Airlift(const Airlift &airlift)
 {
+    this->fromTerritory = airlift.fromTerritory;
+    this->toTerritory = airlift.toTerritory;
+}
 
+Airlift::~Airlift()
+{
+    delete fromTerritory;
+    delete toTerritory;
 }
 
 bool Airlift::validate()
@@ -207,24 +289,35 @@ void Airlift::execute()
     }
 }
 
-std::ostream &Airlift::operator<<(ostream &out, const Airlift &airlift) {
+ostream &Airlift::operator<<(ostream &out, const Airlift &airlift) {
     out << "Execute airlift";
     if(isExecuted)
         out << "This order has been executed.";
     return out;
 }
 
+
 /*
  * Negotiate order class
  */
-Negotiate::Negotiate()
+Negotiate::Negotiate() : Order()
 {
 
 }
 
-Negotiate::Negotiate(const Negotiate &negotiate)
+Negotiate::Negotiate(Player *player, Player *negotiator) : Order(player)
+{
+    this->negotiator = negotiator;
+}
+
+Negotiate::Negotiate(const Negotiate &negotiate) : Order(negotiate)
 {
 
+}
+
+Negotiate::~Negotiate()
+{
+    delete negotiator;
 }
 
 bool Negotiate::validate()
@@ -242,19 +335,20 @@ void Negotiate::execute()
     }
 }
 
-std::ostream &Negotiate::operator<<(ostream &out, const Negotiate &negotiate) {
+ostream& Negotiate::operator<<(ostream &out, const Negotiate &negotiate) {
     out << "Execute negotiation";
     if(isExecuted)
         out << "This order has been executed.";
     return out;
 }
 
+
 /*
  * OrdersList class
  */
 OrdersList::OrdersList()
 {
-
+//    listOrders = new vector<Order*>();
 }
 
 OrdersList::OrdersList(const OrdersList &orders)
@@ -262,12 +356,27 @@ OrdersList::OrdersList(const OrdersList &orders)
 
 }
 
-void OrdersList::delete(Order* order)
+OrdersList::~OrdersList()
 {
 
 }
 
-void OrdersList::move(Order* order)
+OrdersList& OrdersList::operator=(const OrdersList& o){
+    this->listOrders = o.listOrders;
+    return *this;
+}
+
+void OrdersList::add(Order *order)
+{
+    this->listOrders.push_back(order);
+}
+
+void OrdersList::delete(Order *order)
+{
+
+}
+
+void OrdersList::move(Order *order)
 {
 
 }
