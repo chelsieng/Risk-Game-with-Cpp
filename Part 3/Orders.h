@@ -12,7 +12,6 @@
 using namespace std;
 using std::vector;
 
-
 class Order
 {
 public:
@@ -22,7 +21,7 @@ public:
     ~Order();
     bool validate();
     void execute();
-    ostream& operator<< (ostream& out, const Order* order);
+    ostream& operator<<(ostream& out, const Order* order);
 protected:
     bool isExecuted = false;
 private:
@@ -37,8 +36,8 @@ public:
     Deploy(Player *player, Territory *deployTerritory, int numOfArmies);
     Deploy(const Deploy &deploy);
     ~Deploy();
-    bool validate() override;
-    void execute() override;
+    bool validate();
+    void execute();
     ostream& operator<<(ostream& out, const Deploy& deploy);
 
 private:
@@ -136,8 +135,8 @@ public:
     ~OrdersList();
     OrdersList& operator=(OrdersList const& o);
     void add(Order *order);
-    void delete(Order *order);
-    void move(Order *order);
+    void delete(int index);
+    void move(int indexFrom, int indexTo);
     ostream& operator<<(ostream& out, const OrdersList& ordersList);
 private:
     vector<Order*> listOrders;

@@ -43,6 +43,8 @@ int main()
     ordersList->add(negotiate);
     ordersList->add(airlift);
 
+    ordersList->move(1,3);
+
     // Delete pointers
     delete deploy;
     deploy = nullptr;
