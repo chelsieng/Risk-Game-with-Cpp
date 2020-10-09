@@ -1,3 +1,0 @@
-C:/Users/jason/Documents/GitHub/COMP-345/cmake-build-debug/CMakeFiles/COMP_345.dir
-C:/Users/jason/Documents/GitHub/COMP-345/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/jason/Documents/GitHub/COMP-345/cmake-build-debug/CMakeFiles/rebuild_cache.dir
