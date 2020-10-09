@@ -165,7 +165,7 @@ Bomb::Bomb(Player *player, Territory *fromTerritory, Territory *toTerritory) : O
     this->toTerritory = toTerritory;
 }
 
-Bomb::Bomb(const Bomb &bomb)
+Bomb::Bomb(const Bomb &bomb) : Order(bomb)
 {
     this->fromTerritory = bomb.fromTerritory;
     this->toTerritory = bomb.toTerritory;
@@ -373,7 +373,7 @@ void OrdersList::add(Order *order)
 
 void OrdersList::delete(Order *order)
 {
-
+    
 }
 
 void OrdersList::move(Order *order)
