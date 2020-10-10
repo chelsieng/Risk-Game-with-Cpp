@@ -20,18 +20,6 @@ public:
     Player(const Player &player); // copy constructor
     ~Player(); // destructor
 
-    // Getters and Setter
-//    Hand* gethand();
-//    OrderList* getOrderList();
-//    Orders* getOrders();
-//    vector<Map::Territory*> getTerritories();
-//
-//    void sethand(Hand* hand);
-//    void setOrderList(OrderList* orderList);
-//    void setOrders(Orders* order);
-//    void setTerritories(vector<Map::Territory*> territories);
-
-
     // Methods
     void issueOrder(Orders* orderToIssue);
     vector<Map::Territory*> toDefend();
