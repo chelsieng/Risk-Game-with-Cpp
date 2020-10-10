@@ -9,31 +9,36 @@ using std::vector;
 /*
  * Order class
  */
+// Default constructor
 Order::Order()
 {
     this->player = nullptr;
     this->isExecuted = false;
 }
 
+// Parameterized constructor
 Order::Order(Player *player)
 {
     this->player = player;
     this->isExecuted = false;
 }
 
+// Copy constructor
 Order::Order(const Order &order)
 {
     this->player = order.player;
     this->isExecuted = order.isExecuted;
 }
 
+// Destructor
 Order::~Order()
 {
     delete player;
 }
 
-bool Order::validate()
-{
+// Methods
+bool Order::validate() {
+    cout << "Order is valid" << endl;
     return true;
 }
 
@@ -48,11 +53,13 @@ void Order::execute()
         cout << "False order" << endl;
 }
 
-ostream &Order::operator<<(ostream &out, const Order &order)
-{
-    out << "Execute order";
-    if(isExecuted)
-        out << "This order has been executed.";
+// Overloading operator
+ostream &operator<<(ostream &out, const Order& order) {
+    out << "Order";
+    if(order.isExecuted)
+        out << " has been executed";
+    else
+        out << " has not been executed";
     return out;
 }
 
@@ -60,32 +67,37 @@ ostream &Order::operator<<(ostream &out, const Order &order)
 /*
  * Deploy order class
  */
+// Default constructor
 Deploy::Deploy() : Order()
 {
     this->deployTerritory = nullptr;
     this->numOfArmies = 0;
 }
 
-Deploy::Deploy(Player *player, Territory *deployTerritory, int numOfArmies) : Order(player)
+// Parameterized constructor
+Deploy::Deploy(Player *player, Map::Territory *deployTerritory, int numOfArmies) : Order(player)
 {
     this->deployTerritory = deployTerritory;
     this->numOfArmies = numOfArmies;
 }
 
+// Copy constructor
 Deploy::Deploy(const Deploy &deploy) : Order(deploy)
 {
     this->deployTerritory = deploy.deployTerritory;
     this->numOfArmies = deploy.numOfArmies;
 }
 
+// Destructor
 Deploy::~Deploy()
 {
     delete deployTerritory;
 }
 
+// Methods
 bool Deploy::validate()
 {
-    cout << "True if order is valid" << endl;
+    cout << "Deploy order is valid" << endl;
     return true;
 }
 
@@ -98,11 +110,13 @@ void Deploy::execute()
     }
 }
 
-ostream &Deploy::operator<<(ostream &out, const Deploy &deploy)
-{
-    out << "Deploy armies";
-    if(isExecuted)
-        out << "This order has been executed.";
+// Overloading operator
+ostream &operator<<(ostream &out, const Deploy& deploy) {
+    out << "Deploy order";
+    if(deploy.isExecuted)
+        out << " has been executed";
+    else
+        out << " has not been executed";
     return out;
 }
 
@@ -110,6 +124,7 @@ ostream &Deploy::operator<<(ostream &out, const Deploy &deploy)
 /*
  * Advance order class
  */
+// Default constructor
 Advance::Advance() : Order()
 {
     this->fromTerritory = nullptr;
@@ -117,13 +132,15 @@ Advance::Advance() : Order()
     this->numOfArmies = 0;
 }
 
-Advance::Advance(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies) : Order(player)
+// Parameterized constructor
+Advance::Advance(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory, int numOfArmies) : Order(player)
 {
     this->fromTerritory = fromTerritory;
     this->toTerritory = toTerritory;
     this->numOfArmies = numOfArmies;
 }
 
+// Copy constructor
 Advance::Advance(const Advance &advance) : Order(advance)
 {
     this->fromTerritory = advance.fromTerritory;
@@ -131,15 +148,17 @@ Advance::Advance(const Advance &advance) : Order(advance)
     this->numOfArmies = advance.numOfArmies;
 }
 
+// Destructor
 Advance::~Advance()
 {
     delete fromTerritory;
     delete toTerritory;
 }
 
+// Methods
 bool Advance::validate()
 {
-    cout << "True if order is valid" << endl;
+    cout << "Advance order is valid" << endl;
     return true;
 }
 
@@ -152,11 +171,12 @@ void Advance::execute()
     }
 }
 
-ostream &Advance::operator<<(ostream &out, const Advance &advance)
-{
-    out << "Advance armies";
-    if(isExecuted)
-        out << "This order has been executed.";
+ostream &operator<<(ostream &out, const Advance& advance) {
+    out << "Advance order";
+    if(advance.isExecuted)
+        out << " has been executed";
+    else
+        out << " has not been executed";
     return out;
 }
 
@@ -164,33 +184,38 @@ ostream &Advance::operator<<(ostream &out, const Advance &advance)
 /*
   * Bomb order class
  */
+// Default constructor
 Bomb::Bomb() : Order()
 {
     this->fromTerritory = nullptr;
     this->toTerritory = nullptr;
 }
 
-Bomb::Bomb(Player *player, Territory *fromTerritory, Territory *toTerritory) : Order(player)
+// Parameterized constructor
+Bomb::Bomb(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory) : Order(player)
 {
     this->fromTerritory = fromTerritory;
     this->toTerritory = toTerritory;
 }
 
+// Copy constructor
 Bomb::Bomb(const Bomb &bomb) : Order(bomb)
 {
     this->fromTerritory = bomb.fromTerritory;
     this->toTerritory = bomb.toTerritory;
 }
 
+// Destructor
 Bomb::~Bomb()
 {
     delete fromTerritory;
     delete toTerritory;
 }
 
+// Methods
 bool Bomb::validate()
 {
-    cout << "True if order is valid" << endl;
+    cout << "Bomb order is valid" << endl;
     return true;
 }
 
@@ -203,11 +228,12 @@ void Bomb::execute()
     }
 }
 
-ostream &Bomb::operator<<(ostream &out, const Bomb &bomb)
-{
-    out << "Bomb territory";
-    if(isExecuted)
-        out << "This order has been executed.";
+ostream &operator<<(ostream &out, const Bomb& bomb) {
+    out << "Bomb order";
+    if(bomb.isExecuted)
+        out << " has been executed";
+    else
+        out << " has not been executed";
     return out;
 }
 
@@ -215,30 +241,35 @@ ostream &Bomb::operator<<(ostream &out, const Bomb &bomb)
 /*
   * Blockade order class
  */
+// Default constructor
 Blockade::Blockade() : Order()
 {
     this->blockTerritory = nullptr;
 }
 
-Blockade::Blockade(Player *player, Territory *blockTerritory) : Order(player)
+// Parameterized constructor
+Blockade::Blockade(Player *player, Map::Territory *blockTerritory) : Order(player)
 {
     this->blockTerritory = blockTerritory;
 }
 
+// Copy constructor
 Blockade::Blockade(const Blockade &blockade) : Order(blockade)
 {
     this->blockTerritory = blockade.blockTerritory;
     this->isExecuted = blockade.isExecuted;
 }
 
+// Destructor
 Blockade::~Blockade()
 {
     delete blockTerritory;
 }
 
+// Methods
 bool Blockade::validate()
 {
-    cout << "True if order is valid" << endl;
+    cout << "Blockade order is valid" << endl;
     return true;
 }
 
@@ -246,16 +277,17 @@ void Blockade::execute()
 {
     if(validate())
     {
-        cout << "Perform blockage" << endl;
+        cout << "Perform blockade" << endl;
         isExecuted = true;
     }
 }
 
-ostream &Blockade::operator<<(ostream &out, const Blockade &blockade)
-{
-    out << "Blockade territory";
-    if(isExecuted)
-        out << "This order has been executed.";
+ostream &operator<<(ostream &out, const Blockade& blockade) {
+    out << "Blockade order";
+    if(blockade.isExecuted)
+        out << " has been executed";
+    else
+        out << " has not been executed";
     return out;
 }
 
@@ -263,6 +295,7 @@ ostream &Blockade::operator<<(ostream &out, const Blockade &blockade)
 /*
  * Airlift order class
  */
+//Default constructor
 Airlift::Airlift() : Order()
 {
     this->fromTerritory = nullptr;
@@ -270,28 +303,32 @@ Airlift::Airlift() : Order()
     this->numOfArmies = 0;
 }
 
-Airlift::Airlift(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies) : Order(player)
+// Parameterized constructor
+Airlift::Airlift(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory, int numOfArmies) : Order(player)
 {
     this->fromTerritory = fromTerritory;
     this->toTerritory = toTerritory;
     this->numOfArmies = numOfArmies;
 }
 
+// Copy constructor
 Airlift::Airlift(const Airlift &airlift) : Order(airlift)
 {
     this->fromTerritory = airlift.fromTerritory;
     this->toTerritory = airlift.toTerritory;
 }
 
+// Destructor
 Airlift::~Airlift()
 {
     delete fromTerritory;
     delete toTerritory;
 }
 
+// Method
 bool Airlift::validate()
 {
-    cout << "True if order is valid" << endl;
+    cout << "Airlift order is valid" << endl;
     return true;
 }
 
@@ -304,11 +341,12 @@ void Airlift::execute()
     }
 }
 
-ostream &Airlift::operator<<(ostream &out, const Airlift &airlift)
-{
-    out << "Execute airlift";
-    if(isExecuted)
-        out << "This order has been executed.";
+ostream &operator<<(ostream &out, const Airlift& airlift) {
+    out << "Airlift order";
+    if(airlift.isExecuted)
+        out << " has been executed";
+    else
+        out << " has not been executed";
     return out;
 }
 
@@ -316,30 +354,35 @@ ostream &Airlift::operator<<(ostream &out, const Airlift &airlift)
 /*
  * Negotiate order class
  */
+// Default constructor
 Negotiate::Negotiate() : Order()
 {
     this->negotiator = nullptr;
 }
 
+// Parameterized constructor
 Negotiate::Negotiate(Player *player, Player *negotiator) : Order(player)
 {
     this->negotiator = negotiator;
 }
 
+// Copy constructor
 Negotiate::Negotiate(const Negotiate &negotiate) : Order(negotiate)
 {
     this->negotiator = negotiate.negotiator;
     this->isExecuted = negotiate.isExecuted;
 }
 
+// Destructor
 Negotiate::~Negotiate()
 {
     delete negotiator;
 }
 
+// Methods
 bool Negotiate::validate()
 {
-    cout << "True if order is valid" << endl;
+    cout << "Negotiate order is valid" << endl;
     return true;
 }
 
@@ -352,11 +395,12 @@ void Negotiate::execute()
     }
 }
 
-ostream& Negotiate::operator<<(ostream &out, const Negotiate &negotiate)
-{
-    out << "Execute negotiation";
-    if(isExecuted)
-        out << "This order has been executed.";
+ostream &operator<<(ostream &out, const Negotiate& negotiate) {
+    out << "Negotiate order";
+    if(negotiate.isExecuted)
+        out << " has been executed";
+    else
+        out << " has not been executed";
     return out;
 }
 
@@ -364,26 +408,31 @@ ostream& Negotiate::operator<<(ostream &out, const Negotiate &negotiate)
 /*
  * OrdersList class
  */
+// Default constructor
 OrdersList::OrdersList()
 {
-    listOrders = new vector<Order*>();
+    vector<Order*> listOrders;
 }
 
+// Copy constructor
 OrdersList::OrdersList(const OrdersList &orders)
 {
     this->listOrders = orders.listOrders;
 }
 
+// Destructor
 OrdersList::~OrdersList()
 {
     listOrders.clear();
 }
 
+// Overloading operator
 OrdersList& OrdersList::operator=(const OrdersList& o){
     this->listOrders = o.listOrders;
     return *this;
 }
 
+// Methods
 void OrdersList::add(int index, Order *order)
 {
     this->listOrders.insert((this->listOrders.begin()+index), order);
@@ -405,4 +454,12 @@ void OrdersList::move(int indexFrom, int indexTo)
 {
     Order *movedOrder = this->deleteAt(indexFrom);
     this->add(indexTo, movedOrder);
+}
+
+ostream &operator<<(ostream &out, const OrdersList &ordersList)
+{
+    out << "List of Orders:" << endl;
+    for(int i = 0; i < ordersList.listOrders.size(); i++)
+        out << (i+1) << ". " << *ordersList.listOrders[i] << endl;
+    return out;
 }

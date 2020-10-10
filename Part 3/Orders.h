@@ -19,14 +19,14 @@ public:
     Order(Player *player);
     Order(const Order &order);
     ~Order();
-
     virtual bool validate();
     virtual void execute();
-    ostream& operator<<(ostream& out, const Order* order);
+    friend ostream& operator<<(ostream& out, const Order& order);
 protected:
     bool isExecuted;
 private:
     Player *player;
+    string name = "Order";
 };
 
 
@@ -34,16 +34,16 @@ class Deploy : public Order
 {
 public:
     Deploy();
-    Deploy(Player *player, Territory *deployTerritory, int numOfArmies);
+    Deploy(Player *player, Map::Territory *deployTerritory, int numOfArmies);
     Deploy(const Deploy &deploy);
     ~Deploy();
     bool validate() override;
     void execute() override;
-    ostream& operator<<(ostream& out, const Deploy& deploy);
-
+    friend ostream& operator<<(ostream& out, const Deploy& deploy);
 private:
-    Territory *deployTerritory;
+    Map::Territory *deployTerritory;
     int numOfArmies;
+    string name = "Deploy";
 };
 
 
@@ -51,16 +51,17 @@ class Advance : public Order
 {
 public:
     Advance();
-    Advance(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies);
+    Advance(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory, int numOfArmies);
     Advance(const Advance &advance);
     ~Advance();
     bool validate() override;
     void execute() override;
-    ostream& operator<<(ostream& out, const Advance& advance);
+    friend ostream& operator<<(ostream& out, const Advance& advance);
 private:
-    Territory *fromTerritory;
-    Territory *toTerritory;
+    Map::Territory *fromTerritory;
+    Map::Territory *toTerritory;
     int numOfArmies;
+    string name = "Advance";
 
 };
 
@@ -69,15 +70,16 @@ class Bomb : public Order
 {
 public:
     Bomb();
-    Bomb(Player *player, Territory *fromTerritory, Territory *toTerritory);
+    Bomb(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory);
     Bomb(const Bomb &bomb);
     ~Bomb();
     bool validate() override;
     void execute() override;
-    ostream& operator<<(ostream& out, const Bomb& bomb);
+    friend ostream& operator<<(ostream& out, const Bomb& bomb);
 private:
-    Territory *fromTerritory;
-    Territory *toTerritory;
+    Map::Territory *fromTerritory;
+    Map::Territory *toTerritory;
+    string name = "Bomb";
 };
 
 
@@ -85,14 +87,15 @@ class Blockade : public Order
 {
 public:
     Blockade();
-    Blockade(Player *player, Territory *blockTerritory);
+    Blockade(Player *player, Map::Territory *blockTerritory);
     Blockade(const Blockade &blockage);
     ~Blockade();
     bool validate() override;
     void execute() override;
-    ostream& operator<<(ostream& out, const Blockade& blockade);
+    friend ostream& operator<<(ostream& out, const Blockade& blockade);
 private:
-    Territory *blockTerritory;
+    Map::Territory *blockTerritory;
+    string name = "Blockade";
 };
 
 
@@ -100,16 +103,17 @@ class Airlift : public Order
 {
 public:
     Airlift();
-    Airlift(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies);
+    Airlift(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory, int numOfArmies);
     Airlift(const Airlift &airlift);
     ~Airlift();
     bool validate() override;
     void execute() override;
-    ostream& operator<<(ostream& out, const Airlift& airlift);
+    friend ostream& operator<<(ostream& out, const Airlift& airlift);
 private:
-    Territory *fromTerritory;
-    Territory *toTerritory;
+    Map::Territory *fromTerritory;
+    Map::Territory *toTerritory;
     int numOfArmies;
+    string name = "Airlift";
 };
 
 
@@ -122,9 +126,10 @@ public:
     ~Negotiate();
     bool validate() override;
     void execute() override;
-    ostream& operator<<(ostream& out, const Negotiate& negotiate);
+    friend ostream& operator<<(ostream& out, const Negotiate& negotiate);
 private:
     Player *negotiator;
+    string name = "Negotiate";
 };
 
 
@@ -139,7 +144,7 @@ public:
     void addToLast(Order *order);
     Order* deleteAt(int index);
     void move(int indexFrom, int indexTo);
-    ostream& operator<<(ostream& out, const OrdersList& ordersList);
+    friend ostream& operator<<(ostream& out, const OrdersList &ordersList);
 private:
     vector<Order*> listOrders;
 };
