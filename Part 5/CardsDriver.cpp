@@ -5,7 +5,7 @@
 #include "Cards.h"
 using namespace std;
 
-int main() {	//None of this will do anything visible when run if not in main... Not sure if they want this 
+int main() {	//None of this will do anything visible when run if not in main... Not sure if they want this
 	//file to have a main function??? Multiple driver files is why I've assume no... Clarification required.
 	BombCard daBomb;
 	ReinforcementCard rere;
