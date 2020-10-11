@@ -4,7 +4,6 @@
 #pragma once
 #ifndef A1_CARDS_H
 #define A1_CARDS_H
-//#include "player.h"
 //#include "Orders.h"
 #include <string>
 #include <vector>
@@ -27,11 +26,15 @@ public:
 						//used in place of call by value for classes""
 	~Card();
 	Card& operator =(const Card& rightSide);
-	string getType();
-	void setType(string t);
-	void setDescription(string t);
-	string getDescription();
-	void printDescription();
+
+	//A note on const:
+	//A variable declared as const (like the reference "printMe" below) can only call const methods, and const object can only be passed to methods that are expecting a const object
+	friend ostream& operator<<(ostream& outs, const Card& printMe);
+	string* getType() const;
+	void setType(string t) const;	//the setters can be const in this case because the data members being affected are mutables (strings)
+	void setDescription(string t) const;
+	string* getDescription() const;
+	void printDescription() const;
 	//unfortunately, we cannot declare or define the full Play() method here, since it requires a Deck object as
 	//input, but the Deck class is later in the file (a forward declaration will not work for a Parameter of
 	//	an incomplete type, to the best of my knowledge).
@@ -41,11 +44,7 @@ public:
 	void play();	//This should actually return an order (or a pointer to one) -> WAITING FOR ORDERS class to be implemented
 		//that is to say, won't remain void
 
-	friend class BombCard;				//important, so that these subclasses can access the private data members
-	friend class DiplomacyCard;				//particularly relevant since we are required to write copy constructors
-	friend class ReinforcementCard;			//and destructors for each of these
-	friend class BlockadeCard;
-	friend class AirliftCard;
+
 };//end of Card class
 
 //The specific types of cards are implemented as a series of subclasses (of the class Card):
@@ -56,6 +55,7 @@ public:
 	BombCard(const BombCard& copyMe);
 	~BombCard();
 	BombCard& operator =(const BombCard& rightSide);
+	friend ostream& operator<<(ostream& outs, const BombCard& printMe);
 };//end of BombCard class
 
 class DiplomacyCard : public Card {
@@ -64,6 +64,7 @@ public:
 	DiplomacyCard(const DiplomacyCard& copyMe);
 	DiplomacyCard& operator =(const DiplomacyCard& rightSide);
 	~DiplomacyCard();
+	friend ostream& operator<<(ostream& outs, const DiplomacyCard& printMe);
 };//end of DiplomacyCard class
 
 class ReinforcementCard : public Card {
@@ -72,6 +73,7 @@ public:
 	ReinforcementCard(const ReinforcementCard& copyMe);
 	ReinforcementCard& operator =(const ReinforcementCard& rightSide);
 	~ReinforcementCard();
+	friend ostream& operator<<(ostream& outs, const ReinforcementCard& printMe);
 };//end of ReinforcementCard class
 
 class AirliftCard : public Card {
@@ -80,6 +82,7 @@ public:
 	AirliftCard(const AirliftCard& copyMe);
 	AirliftCard& operator =(const AirliftCard& rightSide);
 	~AirliftCard();
+	friend ostream& operator<<(ostream& outs, const AirliftCard& printMe);
 };//end of AirliftCard class
 
 class BlockadeCard : public Card {
@@ -88,6 +91,7 @@ public:
 	BlockadeCard(const BlockadeCard& copyMe);
 	BlockadeCard& operator =(const BlockadeCard& rightSide);
 	~BlockadeCard();
+	friend ostream& operator<<(ostream& outs, const BlockadeCard& printMe);
 };//end of BlockadeCard class
 
 //Now we must create a deck class which will contain whatever cards we add to it
@@ -101,11 +105,11 @@ public:
 	deckNode& operator =(const deckNode& rightSide);
 	~deckNode();
 
-	deckNode* const getLink();
-	Card* const getData();
-	void setData(Card* theData);
-	void setLink(deckNode* theLink);
-
+	deckNode* getLink() const;
+	Card* getData() const;
+	void setData(Card* theData); //the setters cannot be const, because that would make "this" a pointer to const object, whose members
+	void setLink(deckNode* theLink);		//cannot be modified (unless they are "mutables")
+	friend ostream& operator<<(ostream& outs, const deckNode& printMe);
 private:
 	Card* data;	//all data members must be of pointer type :(
 	deckNode* link;
@@ -120,14 +124,16 @@ class Deck {
 private:
 	deckNodePtr head;
 public:
-	//add default constructor even though we won't use it
+	//add default constructor even though we won't use it?
 	Deck(deckNodePtr thehead);
 	Deck(const Deck& copyMe);
 	Deck& operator =(const Deck& rightSide);
+	deckNode* getHead() const;
 	~Deck();
 	void addToDeck(Card* theData); //(equivalent to adding to head)
 	Card* draw();	//(equivalent to removing from head)
 	void placeOnBottom(Card* theData);
+	friend ostream& operator<<(ostream& outs, const Deck& printMe);
 };
 //END of deck class
 
@@ -148,6 +154,9 @@ public:
 	void showCardsInHand();
 	void playCardAtIndex(int i);
 	void addToHand(Card* c);
+	Card getCardatIndex(int i) const;
+	int getSize() const;
+	friend ostream& operator<<(ostream& outs, const Hand& printMe);
 };
 
 #endif //A1_CARDS_H
