@@ -276,8 +276,8 @@ Deck::Deck(deckNodePtr thehead)
 
 Deck::Deck(const Deck& copyMe)
 {
-	if (copyMe.head == NULL) {
-		head = NULL;
+	if (copyMe.head == nullptr) {
+		head = nullptr;
 	}
 	else {
 		head = new deckNode(copyMe.head->data, nullptr);
@@ -285,7 +285,7 @@ Deck::Deck(const Deck& copyMe)
 		deckNode* objHead = copyMe.head;
 		deckNode* current = objHead;
 
-		while (current->link != NULL) {
+		while (current->link != nullptr) {
 			position->link = new deckNode(current->link->data);
 			position = position->link;
 			current = current->link;
@@ -306,7 +306,7 @@ Deck& Deck::operator=(const Deck& rightSide)
 		deckNode* objHead = rightSide.head;
 		deckNode* current = objHead;
 
-		while (current->link != NULL) {
+		while (current->link != nullptr) {
 			delete position->link; //(again avoiding memory leaks)
 			position->link = new deckNode(current->link->data);
 			position = position->link;
@@ -346,15 +346,15 @@ Card* Deck::draw()
 
 void Deck::placeOnBottom(Card* theData)
 {
-	if (head == NULL) {
+	if (head == nullptr) {
 		addToDeck(theData);
 	}//end of if (deck empty)
 	else {
 		deckNodePtr position = head;
-		while (position->getLink() != NULL) {
+		while (position->getLink() != nullptr) {
 			position = position->getLink();
 		}
-		position->setLink(new deckNode(theData, NULL));
+		position->setLink(new deckNode(theData, nullptr));
 	}//end of else (deck not empty)
 }
 
@@ -485,14 +485,14 @@ ostream& operator<<(ostream& outs, const deckNode& printMe)
 ostream& operator<<(ostream& outs, const Deck& printMe)
 {
 	outs << "Here are all the cards currently in this deck:\n" << endl;
-	if (printMe.getHead() == NULL) {
+	if (printMe.getHead() == nullptr) {
 		outs << "The deck is empty!" << endl;
 	}
 	else {
 		deckNode* objHead = printMe.getHead();
 		deckNode* current = objHead;
 		
-		while (current != NULL) {
+		while (current != nullptr) {
 			outs << *current->getData() << endl;
 			current = current->getLink();
 		}
