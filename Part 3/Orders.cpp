@@ -36,6 +36,12 @@ Order::~Order()
     delete player;
 }
 
+// Accessor
+string Order::getOrderType()
+{
+    return this->orderType;
+}
+
 // Methods
 bool Order::validate() {
     cout << "Order is valid" << endl;
@@ -54,8 +60,14 @@ void Order::execute()
 }
 
 // Overloading operator
+Order& Order::operator=(const Order& order){
+    this->player = order.player;
+    this->isExecuted = order.isExecuted;
+    return *this;
+}
+
 ostream &operator<<(ostream &out, const Order& order) {
-    out << "Order";
+    out << order.orderType;
     if(order.isExecuted)
         out << " has been executed";
     else
@@ -94,6 +106,12 @@ Deploy::~Deploy()
     delete deployTerritory;
 }
 
+// Accessor
+string Deploy::getOrderType()
+{
+    return this->orderType;
+}
+
 // Methods
 bool Deploy::validate()
 {
@@ -111,8 +129,14 @@ void Deploy::execute()
 }
 
 // Overloading operator
+Deploy& Deploy::operator=(const Deploy& deploy){
+    this->deployTerritory = deploy.deployTerritory;
+    this->numOfArmies = deploy.numOfArmies;
+    return *this;
+}
+
 ostream &operator<<(ostream &out, const Deploy& deploy) {
-    out << "Deploy order";
+    out << deploy.orderType;
     if(deploy.isExecuted)
         out << " has been executed";
     else
@@ -155,6 +179,12 @@ Advance::~Advance()
     delete toTerritory;
 }
 
+// Accessor
+string Advance::getOrderType()
+{
+    return this->orderType;
+}
+
 // Methods
 bool Advance::validate()
 {
@@ -171,8 +201,16 @@ void Advance::execute()
     }
 }
 
+// Overloading operator
+Advance& Advance::operator=(const Advance& advance){
+    this->fromTerritory = advance.fromTerritory;
+    this->toTerritory = advance.toTerritory;
+    this->numOfArmies = advance.numOfArmies;
+    return *this;
+}
+
 ostream &operator<<(ostream &out, const Advance& advance) {
-    out << "Advance order";
+    out << advance.orderType;
     if(advance.isExecuted)
         out << " has been executed";
     else
@@ -212,6 +250,12 @@ Bomb::~Bomb()
     delete toTerritory;
 }
 
+// Accessor
+string Bomb::getOrderType()
+{
+    return this->orderType;
+}
+
 // Methods
 bool Bomb::validate()
 {
@@ -228,8 +272,16 @@ void Bomb::execute()
     }
 }
 
+// Overloading operator
+Bomb& Bomb::operator=(const Bomb& bomb)
+{
+    this->fromTerritory = bomb.fromTerritory;
+    this->toTerritory = bomb.toTerritory;
+    return *this;
+}
+
 ostream &operator<<(ostream &out, const Bomb& bomb) {
-    out << "Bomb order";
+    out << bomb.orderType;
     if(bomb.isExecuted)
         out << " has been executed";
     else
@@ -266,6 +318,12 @@ Blockade::~Blockade()
     delete blockTerritory;
 }
 
+// Accessor
+string Blockade::getOrderType()
+{
+    return this->orderType;
+}
+
 // Methods
 bool Blockade::validate()
 {
@@ -282,8 +340,14 @@ void Blockade::execute()
     }
 }
 
+// Overloading operator
+Blockade& Blockade::operator=(const Blockade& blockade){
+    this->blockTerritory = blockade.blockTerritory;
+    return *this;
+}
+
 ostream &operator<<(ostream &out, const Blockade& blockade) {
-    out << "Blockade order";
+    out << blockade.orderType;
     if(blockade.isExecuted)
         out << " has been executed";
     else
@@ -325,6 +389,13 @@ Airlift::~Airlift()
     delete toTerritory;
 }
 
+// Accessor
+string Airlift::getOrderType()
+{
+    return this->orderType;
+}
+
+
 // Method
 bool Airlift::validate()
 {
@@ -341,8 +412,16 @@ void Airlift::execute()
     }
 }
 
+// Overloading operator
+Airlift& Airlift::operator=(const Airlift& airlift){
+    this->fromTerritory = airlift.fromTerritory;
+    this->toTerritory = airlift.toTerritory;
+    this->numOfArmies = airlift.numOfArmies;
+    return *this;
+}
+
 ostream &operator<<(ostream &out, const Airlift& airlift) {
-    out << "Airlift order";
+    out << airlift.orderType;
     if(airlift.isExecuted)
         out << " has been executed";
     else
@@ -379,6 +458,12 @@ Negotiate::~Negotiate()
     delete negotiator;
 }
 
+// Accessor
+string Negotiate::getOrderType()
+{
+    return this->orderType;
+}
+
 // Methods
 bool Negotiate::validate()
 {
@@ -395,8 +480,14 @@ void Negotiate::execute()
     }
 }
 
+// Overloading operator
+Negotiate& Negotiate::operator=(const Negotiate& negotiate){
+    this->negotiator = negotiate.negotiator;
+    return *this;
+}
+
 ostream &operator<<(ostream &out, const Negotiate& negotiate) {
-    out << "Negotiate order";
+    out << negotiate.orderType;
     if(negotiate.isExecuted)
         out << " has been executed";
     else
@@ -426,12 +517,6 @@ OrdersList::~OrdersList()
     listOrders.clear();
 }
 
-// Overloading operator
-OrdersList& OrdersList::operator=(const OrdersList& o){
-    this->listOrders = o.listOrders;
-    return *this;
-}
-
 // Methods
 void OrdersList::add(int index, Order *order)
 {
@@ -456,10 +541,16 @@ void OrdersList::move(int indexFrom, int indexTo)
     this->add(indexTo, movedOrder);
 }
 
+// Overloading operator
+OrdersList& OrdersList::operator=(const OrdersList& o){
+    this->listOrders = o.listOrders;
+    return *this;
+}
+
 ostream &operator<<(ostream &out, const OrdersList &ordersList)
 {
     out << "List of Orders:" << endl;
     for(int i = 0; i < ordersList.listOrders.size(); i++)
-        out << (i+1) << ". " << *ordersList.listOrders[i] << endl;
+        out << (i + 1) << ". " << (*ordersList.listOrders[i]).getOrderType() << endl;
     return out;
 }
