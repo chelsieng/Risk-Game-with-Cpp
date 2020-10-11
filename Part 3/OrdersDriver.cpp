@@ -25,6 +25,8 @@ int main()
     Order *negotiate = new Negotiate(player1, player2);
     Order *airlift = new Airlift(player1, territory1, territory2, numOfArmies);
 
+    cout << "\nTesting Deploy methods type(): " << deploy->getOrderType() << endl;
+
     cout << "\nTesting Deploy methods execute(): " << endl;
     deploy->execute();
 
@@ -54,18 +56,21 @@ int main()
     ordersList->addToLast(airlift);
 
     // List after added: [deploy, advance, bomb, blockade, negotiation, airlift]
-    cout << "\nOrdersList after everything is added:"<< endl
+    cout << "Expected list: [deploy, advance, bomb, blockade, negotiation, airlift]" << endl;
+    cout << "OrdersList after everything is added:"<< endl
         << *ordersList << endl;
 
     // Move Order in index 1 to index 3
     ordersList->move(1,3);
     // List after moving: [deploy, bomb, blockade, advance, negotiation, airlift]
+    cout << "Expected list: [deploy, bomb, blockade, advance, negotiation, airlift]" << endl;
     cout << "OrdersList after Order is moved:" << endl
         << *ordersList  << endl;
 
     // Delete Order at index 4
     ordersList->deleteAt(4);
     // List after deleting: [deploy, bomb, blockade, advance, airlift]
+    cout << "Expected list: [deploy, bomb, blockade, advance, airlift]" << endl;
     cout << "OrdersList after Order is deleted:" << endl
         << *ordersList  << endl;
 
