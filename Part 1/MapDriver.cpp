@@ -2,8 +2,9 @@
 #include "Map.h"
 
 int main() {
+    Player *player = new Player();
     //Creating territories
-    Territory *territory1 = new Territory();
+    Territory *territory1 = new Territory(player);
     Territory *territory2 = new Territory();
     Territory *territory3 = new Territory();
     Territory *territory4 = new Territory();
@@ -67,9 +68,9 @@ int main() {
     cout << "Continent 2: territories 4, 5 and 6 where territory 6 isn't connected to 4 or 5" << endl;
     cout << "Should print 'Invalid: A continent is not a connected subgraph'" << endl
          << endl;
-
     // Creating Map
     Map *map = new Map(graphs1, continents1);
+    cout << "Results:" << endl;
     if (!map->validate()) {
         cout << "Test case 1 failed." << endl;
     } else {

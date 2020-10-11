@@ -44,7 +44,7 @@ int Army::Army::getId() const {
 }
 
 ostream &operator<<(ostream &output, const Army &army) {
-    output << "Army " << army.id << " is owned by player " << army.owner << endl;
+    output << "Army " << *army.id << " is owned by player " << army.owner << endl;
     return output;
 } //End of insertion operator
 
@@ -104,7 +104,7 @@ ostream &operator<<(ostream &output, const Territory &territory) {
     if (!territory.armies->empty()) {
         output << "Army(ies) on territory " << territory.getId() << " :" << endl;
         for (Army *army : *territory.armies) {
-            cout << army;
+            cout << *army;
         }
         output << "The territory is owned by " << territory.owner << endl;
     } else {
@@ -188,7 +188,7 @@ void Continent::Continent::traverse(const int node, const Graph<int> *graph, vec
     }
 }
 
-const vector<Territory *> *Continent::Continent::getTerritoriesVector() {
+vector<Territory *> *Continent::Continent::getTerritoriesVector() const {
     return territoriesVector;
 }
 
@@ -200,16 +200,15 @@ int Continent::Continent::getId() const {
     return *id;
 }
 
-ostream &operator<<(ostream &output, Continent &continent) {
-    output << "Here is Continent " << continent.getId() << " and its territories: ";
+ostream &operator<<(ostream &output, const Continent &continent) {
     auto *territories = new vector<Territory *>;
     *territories = *continent.getTerritoriesVector();
+    output << "Here is Continent " << continent.getId() << " and its territories: " << endl;
     for (Territory *territory: *territories) {
         output << "Territory " << territory->getId() << endl;
     }
     return output;
 } //End of insertion operator
-
 Map::Map(vector<Graph<int> *> *graph, vector<Continent *> *continentsVector) {
     territoriesGraph = graph;
     continents = continentsVector;
@@ -342,10 +341,10 @@ vector<Territory *> *Map::Map::getTerritories() const {
 
 ostream &operator<<(ostream &output, const Map &map) {
     output << "The map is composed of " << map.getContinents()->size() << " continents and "
-           << map.getTerritories()->size() << "." << endl << "Here are all the list of continents and territories: "
+           << map.getTerritories()->size() << " territories." << endl << "Here are all the list of continents and territories: "
            << endl;
     for (Continent *continent : *map.getContinents()) {
-        cout << continent;
+        cout << *continent;
     }
     return output;
 } //End of insertion operator

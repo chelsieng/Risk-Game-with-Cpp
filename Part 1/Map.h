@@ -64,7 +64,7 @@ public:
 
     bool isConnected() const; //return true if all territories are connected in continent
 
-    const vector<Territory *> *getTerritoriesVector();
+    vector<Territory *> *getTerritoriesVector()const;
 
     Graph<int> *getTerritoriesGraph() const;
 
