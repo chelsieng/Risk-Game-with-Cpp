@@ -18,6 +18,8 @@ private:
     int *id = new int(0);
     Player *owner;
 
+    void copy(const Army&); //Copying value of army
+
 public:
     explicit Army(Player *); //Army constructor for player
     Army(const Army &); //Copy constructor
@@ -35,6 +37,7 @@ private:
     int *id = new int(0);
     Player *owner;
     vector<Army *> *armies;
+    void copy(const Territory&); //Copying value of territory
 
 public:
     Territory(); // Default Territory constructor with no armies present
@@ -53,7 +56,7 @@ private:
     int *id = new int(0);
     vector<Territory *> *territoriesVector;
     Graph<int> *territoriesGraph;
-
+    void copy(const Continent&); //Copying value of continent
     void traverse(int, const Graph<int> *, vector<int> *) const; //visiting each vertex of graph
 
 public:
@@ -77,7 +80,7 @@ class Map {
 private:
     vector<Continent *> *continents;
     vector<Graph<int> *> *territoriesGraph;
-
+    void copy(const Map&); //Copying value of map
     void traverse(int, const Graph<int> *, vector<int> *) const; //Visiting each vertex of graph
 
 public:

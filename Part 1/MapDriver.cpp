@@ -2,9 +2,8 @@
 #include "Map.h"
 
 int main() {
-    Player *player = new Player();
     //Creating territories
-    Territory *territory1 = new Territory(player);
+    Territory *territory1 = new Territory();
     Territory *territory2 = new Territory();
     Territory *territory3 = new Territory();
     Territory *territory4 = new Territory();

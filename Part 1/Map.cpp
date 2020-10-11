@@ -11,14 +11,16 @@ int Army::Army::counter = 0;
 //Constructor for armies of player
 Army::Army(Player *player) {
     owner = player;
-    static int counter = 0;
     *id = ++counter;
 }
 
+void Army::Army::copy(const Army &army) {
+    owner = new Player(army.owner);
+    *id = ++counter;
+}
 
 Army::Army(const Army &army) {
-    owner = army.owner;
-    static int counter = 0;
+    owner = new Player(army.owner);
     *id = ++counter;
 } //End of copy constructor
 
@@ -29,12 +31,13 @@ Army::~Army() {
 } //End of destructor
 
 Army &Army::operator=(const Army &army) {
-    if (this == &army) {
-        return *this;
+    //handling self assignment
+    if (this != &army) {
+        if (owner != nullptr) {
+            delete owner; //Handling memory
+        }
+        copy(army);
     }
-    delete owner;
-    owner = army.owner;
-    id = army.id;
     return *this;
 } //End of assignment operator
 
@@ -51,7 +54,7 @@ ostream &operator<<(ostream &output, const Army &army) {
 int Territory::Territory::counter = 0;
 
 // Constructor for a territory that is not the initial starting territory
-Territory::Territory::Territory() {
+Territory::Territory() {
     *id = ++counter;
     owner = nullptr;
     armies = new vector<Army *>;
@@ -70,10 +73,28 @@ Territory::Territory(Player *player) {
     }
 }
 
+void Territory::Territory::copy(const Territory &territory) {
+    *id = ++counter;
+    owner = new Player(territory.owner);
+    armies = new vector<Army *>;
+
+    //Copying armies in that copy territory
+    for (int i = 0; i < territory.armies->size(); i++) {
+        Army *army = new Army(territory.owner);
+        armies->push_back(army);
+    }
+}
+
 Territory::Territory(const Territory &territory) {
     *id = ++counter;
-    owner = territory.owner;
-    armies = territory.armies;
+    owner = new Player(territory.owner);
+    armies = new vector<Army *>;
+
+    //Copying armies in that copy territory
+    for (int i = 0; i < territory.armies->size(); i++) {
+        Army *army = new Army(territory.owner);
+        armies->push_back(army);
+    }
 } //End of copy constructor
 
 Territory::~Territory() {
@@ -84,14 +105,16 @@ Territory::~Territory() {
 } //End of destructor
 
 Territory &Territory::operator=(const Territory &territory) {
-    if (this == &territory) {
-        return *this;
+    //handling self assignment
+    if (this != &territory) {
+        if (owner != nullptr) {
+            delete owner; //Handling memory
+        }
+        if (armies != nullptr) {
+            delete armies;
+        }
+        copy(territory);
     }
-    delete owner;
-    delete armies;
-    owner = territory.owner;
-    armies = territory.armies;
-    id = territory.id;
     return *this;
 } //End of assignment operator
 
@@ -122,11 +145,36 @@ Continent::Continent(Graph<int> *graph, vector<Territory *> *territories) {
     territoriesVector = territories;
 }
 
+void Continent::Continent::copy(const Continent &continent) {
+    *id = ++counter;
+    territoriesGraph = new Graph<int>;
+    for (Territory *territory : *continent.territoriesVector) {
+        int territoryId = territory->getId();
+        territoriesGraph->add_vertex(territoryId);
+        for (int neighbourId : continent.territoriesGraph->get_neighbours(territoryId)) {
+            territoriesGraph->add_edge(territoryId, neighbourId);
+        }
+    }
+    territoriesVector = new vector<Territory *>;
+    for (Territory *territory: *continent.territoriesVector) {
+        territoriesVector->push_back(territory);
+    }
+}
+
 Continent::Continent(const Continent &continent) {
     *id = ++counter;
-    territoriesGraph = continent.territoriesGraph;
-    territoriesVector = continent.territoriesVector;
-
+    territoriesGraph = new Graph<int>;
+    for (Territory *territory : *continent.territoriesVector) {
+        int territoryId = territory->getId();
+        territoriesGraph->add_vertex(territoryId);
+        for (int neighbourId : continent.territoriesGraph->get_neighbours(territoryId)) {
+            territoriesGraph->add_edge(territoryId, neighbourId);
+        }
+    }
+    territoriesVector = new vector<Territory *>;
+    for (Territory *territory: *continent.territoriesVector) {
+        territoriesVector->push_back(territory);
+    }
 } //End of copy constructor
 
 Continent::~Continent() {
@@ -137,14 +185,16 @@ Continent::~Continent() {
 } //End of destructor
 
 Continent &Continent::operator=(const Continent &continent) {
-    if (this == &continent) {
-        return *this;
+    //handling self assignment
+    if (this != &continent) {
+        if (territoriesGraph != nullptr) {
+            delete territoriesGraph; //Handling memory
+        }
+        if (territoriesVector != nullptr) {
+            delete territoriesVector;
+        }
+        copy(continent);
     }
-    delete territoriesVector;
-    delete territoriesGraph;
-    territoriesGraph = continent.territoriesGraph;
-    territoriesVector = continent.territoriesVector;
-    id = continent.id;
     return *this;
 } //End of assignment operator
 
@@ -214,9 +264,26 @@ Map::Map(vector<Graph<int> *> *graph, vector<Continent *> *continentsVector) {
     continents = continentsVector;
 }
 
+void Map::Map::copy(const Map &map) {
+    continents = new vector<Continent *>;
+    for (Continent *continent: *map.continents) {
+        continents->push_back(continent);
+    }
+    territoriesGraph = new vector<Graph<int> *>;
+    for (Graph<int> *graph:*map.territoriesGraph) {
+        territoriesGraph->push_back(graph);
+    }
+}
+
 Map::Map(const Map &map) {
-    continents = map.continents;
-    territoriesGraph = map.territoriesGraph;
+    continents = new vector<Continent *>;
+    for (Continent *continent: *map.continents) {
+        continents->push_back(continent);
+    }
+    territoriesGraph = new vector<Graph<int> *>;
+    for (Graph<int> *graph:*map.territoriesGraph) {
+        territoriesGraph->push_back(graph);
+    }
 } //End of Copy Constructor
 
 Map::~Map() {
@@ -225,13 +292,16 @@ Map::~Map() {
 }//End of destructor
 
 Map &Map::operator=(const Map &map) {
-    if (this == &map) {
-        return *this;
+    //handling self assignment
+    if (this != &map) {
+        if (territoriesGraph != nullptr) {
+            delete territoriesGraph; //Handling memory
+        }
+        if (continents != nullptr) {
+            delete continents;
+        }
+        copy(map);
     }
-    delete continents;
-    delete territoriesGraph;
-    continents = map.continents;
-    territoriesGraph = map.territoriesGraph;
     return *this;
 } //End of assignment operator
 
@@ -341,7 +411,8 @@ vector<Territory *> *Map::Map::getTerritories() const {
 
 ostream &operator<<(ostream &output, const Map &map) {
     output << "The map is composed of " << map.getContinents()->size() << " continents and "
-           << map.getTerritories()->size() << " territories." << endl << "Here are all the list of continents and territories: "
+           << map.getTerritories()->size() << " territories." << endl
+           << "Here are all the list of continents and territories: "
            << endl;
     for (Continent *continent : *map.getContinents()) {
         cout << *continent;
