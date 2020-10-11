@@ -62,7 +62,7 @@ void MapLoader::ReadMap(string fileName) {
                             break;
 
                         vector<string> attributes = SplitWords(line);
-                        Continent* newContinent = new Continent(index, attributes[0], stoi(attributes[1])); //stoi converts str to int
+                        Continent* newContinent = new Continent(index, attributes[0], stoi(attributes[1])); 
                         map.addContinent(newContinent);
                         cout << "New Continent: " << line << endl;
                         index++;
