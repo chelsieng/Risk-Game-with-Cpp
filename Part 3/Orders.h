@@ -1,16 +1,17 @@
 #pragma once
-#ifndef A1_ORDERS_H
-#define A1_ORDERS_H
 
 #include <iostream>
 #include <vector>
 #include <string>
 
-#include "../Part 1/Map.h"
-#include "../Part 4/Player.h"
+#include "Map.h"
 
 using namespace std;
 using std::vector;
+
+// Forward declaration due to circular dependency
+class Player;
+class Territory;
 
 class Order
 {
@@ -78,7 +79,6 @@ private:
     Territory *toTerritory;            // Advancing territory
     int numOfArmies;                    // Number of armies to advance
     string orderType = "Advance";
-
 };
 
 
@@ -188,6 +188,3 @@ public:
 private:
     vector<Order*> listOrders;                  // vector to store Orders
 };
-
-
-#endif //A1_ORDERS_H

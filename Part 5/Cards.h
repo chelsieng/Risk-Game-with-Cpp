@@ -2,8 +2,6 @@
 //A1 Part five: h
 
 #pragma once
-#ifndef A1_CARDS_H
-#define A1_CARDS_H
 //#include "Orders.h"
 #include <string>
 #include <vector>
@@ -158,5 +156,3 @@ public:
 	int getSize() const;
 	friend ostream& operator<<(ostream& outs, const Hand& printMe);
 };
-
-#endif //A1_CARDS_H

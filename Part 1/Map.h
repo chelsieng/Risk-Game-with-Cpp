@@ -1,15 +1,17 @@
 #pragma once
-#ifndef A1_MAP_H
-#define A1_MAP_H
 
 #include <vector>
 #include <string>
 #include <map>
-#include "../Part 4/Player.h"
-#include "../Part 1/Graph.h"
+
+#include "Graph.h"
+#include "Player.h"
 
 using namespace std;
 using namespace graph;
+
+// Forward declaration due to circular dependency
+class Player;
 
 
 class Army {
@@ -41,7 +43,7 @@ private:
 
 public:
     Territory(); // Default Territory constructor with no armies present
-    explicit Territory(Player *); // Constructor for 1 player starting with 5 armies
+    explicit Territory(Player* player); // Constructor for 1 player starting with 5 armies
     Territory(const Territory &); //Copy Constructor
     ~Territory(); //Destructor
     Territory &operator=(const Territory &); //Assignment Operator
@@ -100,6 +102,3 @@ public:
 
     friend ostream &operator<<(ostream &, const Map &);
 }; //End of Map Class
-
-
-#endif //A1_MAP_H

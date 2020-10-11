@@ -41,8 +41,8 @@ int main() {	//None of this will do anything visible when run if not in main... 
 		takeMyHand.playCardAtIndex(0);
 		count++;
 	}
-	
+
 	cout << "\nEnd of driver!\n" << endl;
-	
+
 	return 0;
 };
