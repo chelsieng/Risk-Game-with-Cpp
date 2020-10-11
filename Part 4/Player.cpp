@@ -12,11 +12,11 @@ using namespace std;
 Player::Player() :
         playerHand{nullptr},
         playerOrdersList{nullptr},
-        playerTerritories(std::vector<Map::Territory*>{nullptr})
+        playerTerritories{nullptr}
 {}
 
 // parameterized constructor
-Player::Player(Hand* hand, OrdersList* OrdersList, vector<Map::Territory*> territories) {
+Player::Player(Hand* hand, OrdersList* OrdersList, vector<Map::Territory*>* territories) {
     this->playerHand = hand;
     this->playerOrdersList = OrdersList;
     this->playerTerritories = territories;
@@ -43,14 +43,16 @@ Player::Player(const Player &playerCopy) {
 
     // TERRITORIES
     // deallocate
-    for (Map::Territory* t : this->playerTerritories) {
+    for (Map::Territory* t : *this->playerTerritories) {
         delete t;
         t = nullptr;
     }
+    delete this->playerTerritories;
+    playerTerritories = nullptr;
 
     // copy using Territory copy constructor
-    for (auto pt : playerCopy.playerTerritories) {
-        this->playerTerritories.push_back(new Map::Territory(*pt));
+    for (auto pt : *playerCopy.playerTerritories) {
+        this->playerTerritories->push_back(new Map::Territory(*pt));
     }
 }
 
@@ -65,10 +67,12 @@ Player::~Player() {
     playerOrdersList = nullptr;
 
     // free territories
-    for (Map::Territory* t : playerTerritories) {
+    for (Map::Territory* t : *playerTerritories) {
         delete t;
         t = nullptr;
     }
+    delete this->playerTerritories;
+    playerTerritories = nullptr;
 }
 
 // Adding an order to the end of the player's order list
@@ -78,7 +82,7 @@ void Player::issueOrder(Order* orderToIssue) {
     this->playerOrdersList->addToLast(newOrder);
 }
 
-vector<Map::Territory*> Player::toDefend() {
+vector<Map::Territory*>* Player::toDefend() {
 
     // Creating two arbitrary territories
     // TODO
@@ -86,24 +90,24 @@ vector<Map::Territory*> Player::toDefend() {
     Map::Territory* terrToDefend2 = new Map::Territory();
 
     // Adding them to a list
-    vector<Map::Territory*> listToDefend;
-    listToDefend.push_back(terrToDefend1);
-    listToDefend.push_back(terrToDefend2);
+    vector<Map::Territory*>* listToDefend;
+    listToDefend->push_back(terrToDefend1);
+    listToDefend->push_back(terrToDefend2);
 
     // Returning territories to defend
     return listToDefend;
 }
 
-std::vector<Map::Territory*> Player::toAttack() {
+std::vector<Map::Territory*>* Player::toAttack() {
     // Creating two arbitrary territories
     // TODO
     Map::Territory* terrToAttack1 = new Map::Territory();
     Map::Territory* terrToAttack2 = new Map::Territory();
 
     // Adding them to a list
-    vector<Map::Territory*> listToAttack;
-    listToAttack.push_back(terrToAttack1);
-    listToAttack.push_back(terrToAttack2);
+    vector<Map::Territory*>* listToAttack;
+    listToAttack->push_back(terrToAttack1);
+    listToAttack->push_back(terrToAttack2);
 
     // Returning territories to defend
     return listToAttack;
@@ -123,10 +127,12 @@ Player &Player::operator=(const Player& player) {
     delete playerOrdersList;
     playerOrdersList = nullptr;
 
-    for (Map::Territory* t : playerTerritories) {
+    for (Map::Territory* t : *playerTerritories) {
         delete t;
         t = nullptr;
     }
+    delete playerTerritories;
+    playerTerritories = nullptr;
 
     playerHand = new Hand(*player.playerHand);
     playerOrdersList = new OrdersList(*player.playerOrdersList);
@@ -138,7 +144,7 @@ Player &Player::operator=(const Player& player) {
 }
 
 std::ostream &operator<<(ostream& out, const Player& player) {
-    out << "Player hand : " << &player.playerTerritories << endl;
+    out << "Player territories : " << player.playerTerritories << endl;
     out << "Player hand : " << player.playerHand << endl;
-    out << "Player hand : " << player.playerOrdersList << endl;
+    out << "Player orders : " << player.playerOrdersList << endl;
 }

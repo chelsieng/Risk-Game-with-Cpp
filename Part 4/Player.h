@@ -12,18 +12,18 @@ class Player {
 private:
     Hand* playerHand;
     OrdersList*  playerOrdersList;
-    vector<Map::Territory*> playerTerritories;
+    vector<Map::Territory*>* playerTerritories;
 
 public:
     Player(); // default Constructor
-    Player(Hand* hand, OrdersList* ordersList, vector<Map::Territory*> territories); // parameterized Constructor
+    Player(Hand* hand, OrdersList* ordersList, vector<Map::Territory*>* territories); // parameterized Constructor
     Player(const Player &player); // copy constructor
     ~Player(); // destructor
 
     // Methods
     void issueOrder(Order* orderToIssue);
-    vector<Map::Territory*> toDefend();
-    vector<Map::Territory*> toAttack();
+    vector<Map::Territory*>* toDefend();
+    vector<Map::Territory*>* toAttack();
 
     // assignment operator
     Player& operator = (const Player &player);
