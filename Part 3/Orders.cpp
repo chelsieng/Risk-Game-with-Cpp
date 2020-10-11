@@ -75,7 +75,7 @@ Deploy::Deploy() : Order()
 }
 
 // Parameterized constructor
-Deploy::Deploy(Player *player, Map::Territory *deployTerritory, int numOfArmies) : Order(player)
+Deploy::Deploy(Player *player, Territory *deployTerritory, int numOfArmies) : Order(player)
 {
     this->deployTerritory = deployTerritory;
     this->numOfArmies = numOfArmies;
@@ -133,7 +133,7 @@ Advance::Advance() : Order()
 }
 
 // Parameterized constructor
-Advance::Advance(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory, int numOfArmies) : Order(player)
+Advance::Advance(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies) : Order(player)
 {
     this->fromTerritory = fromTerritory;
     this->toTerritory = toTerritory;
@@ -192,7 +192,7 @@ Bomb::Bomb() : Order()
 }
 
 // Parameterized constructor
-Bomb::Bomb(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory) : Order(player)
+Bomb::Bomb(Player *player, Territory *fromTerritory, Territory *toTerritory) : Order(player)
 {
     this->fromTerritory = fromTerritory;
     this->toTerritory = toTerritory;
@@ -248,7 +248,7 @@ Blockade::Blockade() : Order()
 }
 
 // Parameterized constructor
-Blockade::Blockade(Player *player, Map::Territory *blockTerritory) : Order(player)
+Blockade::Blockade(Player *player, Territory *blockTerritory) : Order(player)
 {
     this->blockTerritory = blockTerritory;
 }
@@ -304,7 +304,7 @@ Airlift::Airlift() : Order()
 }
 
 // Parameterized constructor
-Airlift::Airlift(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory, int numOfArmies) : Order(player)
+Airlift::Airlift(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies) : Order(player)
 {
     this->fromTerritory = fromTerritory;
     this->toTerritory = toTerritory;

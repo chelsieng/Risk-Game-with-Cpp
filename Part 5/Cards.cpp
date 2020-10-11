@@ -333,9 +333,9 @@ void Deck::addToDeck(Card* theData)
 
 Card* Deck::draw()
 {
-	if (head == NULL) {
+	if (head == nullptr) {
 		cout << "The deck is empty! Cannot draw a card." << endl;
-		return NULL;
+		return nullptr;
 	}
 	else {
 		Card* topOfStack = head->getData();

@@ -6,11 +6,14 @@
 #include <vector>
 #include <string>
 
-#include "../Part 1/Map.h"
-#include "../Part 4/Player.h"
+#include "Map.h"
 
 using namespace std;
 using std::vector;
+
+// Forward declaration due to circular dependency
+class Player;
+class Territory;
 
 class Order
 {
@@ -34,14 +37,14 @@ class Deploy : public Order
 {
 public:
     Deploy();
-    Deploy(Player *player, Map::Territory *deployTerritory, int numOfArmies);
+    Deploy(Player *player, Territory *deployTerritory, int numOfArmies);
     Deploy(const Deploy &deploy);
     ~Deploy();
     bool validate() override;
     void execute() override;
     friend ostream& operator<<(ostream& out, const Deploy& deploy);
 private:
-    Map::Territory *deployTerritory;
+    Territory *deployTerritory;
     int numOfArmies;
     string name = "Deploy";
 };
@@ -51,15 +54,15 @@ class Advance : public Order
 {
 public:
     Advance();
-    Advance(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory, int numOfArmies);
+    Advance(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies);
     Advance(const Advance &advance);
     ~Advance();
     bool validate() override;
     void execute() override;
     friend ostream& operator<<(ostream& out, const Advance& advance);
 private:
-    Map::Territory *fromTerritory;
-    Map::Territory *toTerritory;
+    Territory *fromTerritory;
+    Territory *toTerritory;
     int numOfArmies;
     string name = "Advance";
 
@@ -70,15 +73,15 @@ class Bomb : public Order
 {
 public:
     Bomb();
-    Bomb(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory);
+    Bomb(Player *player, Territory *fromTerritory, Territory *toTerritory);
     Bomb(const Bomb &bomb);
     ~Bomb();
     bool validate() override;
     void execute() override;
     friend ostream& operator<<(ostream& out, const Bomb& bomb);
 private:
-    Map::Territory *fromTerritory;
-    Map::Territory *toTerritory;
+    Territory *fromTerritory;
+    Territory *toTerritory;
     string name = "Bomb";
 };
 
@@ -87,14 +90,14 @@ class Blockade : public Order
 {
 public:
     Blockade();
-    Blockade(Player *player, Map::Territory *blockTerritory);
+    Blockade(Player *player, Territory *blockTerritory);
     Blockade(const Blockade &blockage);
     ~Blockade();
     bool validate() override;
     void execute() override;
     friend ostream& operator<<(ostream& out, const Blockade& blockade);
 private:
-    Map::Territory *blockTerritory;
+    Territory *blockTerritory;
     string name = "Blockade";
 };
 
@@ -103,15 +106,15 @@ class Airlift : public Order
 {
 public:
     Airlift();
-    Airlift(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory, int numOfArmies);
+    Airlift(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies);
     Airlift(const Airlift &airlift);
     ~Airlift();
     bool validate() override;
     void execute() override;
     friend ostream& operator<<(ostream& out, const Airlift& airlift);
 private:
-    Map::Territory *fromTerritory;
-    Map::Territory *toTerritory;
+    Territory *fromTerritory;
+    Territory *toTerritory;
     int numOfArmies;
     string name = "Airlift";
 };

@@ -1,22 +1,23 @@
-#include "Player.h"
-#include "Cards.h"
-#include "Orders.h"
-#include "Map.h"
-
 #include <iostream>
 #include <vector>
 
+#include "Player.h"
+
 using namespace std;
+
+int Player::counter = 0;
 
 // default constructor
 Player::Player() :
         playerHand{nullptr},
         playerOrdersList{nullptr},
-        playerTerritories{nullptr}
+        playerTerritories{nullptr},
+        pID{++counter} // increasing player count
 {}
 
 // parameterized constructor
-Player::Player(Hand* hand, OrdersList* OrdersList, vector<Map::Territory*>* territories) {
+Player::Player(Hand* hand, OrdersList* OrdersList, vector<Territory*>* territories) {
+    pID = ++counter; // increasing player count
     this->playerHand = hand;
     this->playerOrdersList = OrdersList;
     this->playerTerritories = territories;
@@ -24,6 +25,7 @@ Player::Player(Hand* hand, OrdersList* OrdersList, vector<Map::Territory*>* terr
 
 // copy constructor
 Player::Player(const Player &playerCopy) {
+    pID = ++counter; // increasing player count
 
     // HAND
     // deallocate
@@ -43,7 +45,7 @@ Player::Player(const Player &playerCopy) {
 
     // TERRITORIES
     // deallocate
-    for (Map::Territory* t : *this->playerTerritories) {
+    for (Territory* t : *this->playerTerritories) {
         delete t;
         t = nullptr;
     }
@@ -52,12 +54,16 @@ Player::Player(const Player &playerCopy) {
 
     // copy using Territory copy constructor
     for (auto pt : *playerCopy.playerTerritories) {
-        this->playerTerritories->push_back(new Map::Territory(*pt));
+        this->playerTerritories->push_back(new Territory(*pt));
     }
 }
 
 // destructor
 Player::~Player() {
+
+    // reducing the count of players created
+    --counter;
+
     // free hand
     delete playerHand;
     playerHand = nullptr;
@@ -67,12 +73,21 @@ Player::~Player() {
     playerOrdersList = nullptr;
 
     // free territories
-    for (Map::Territory* t : *playerTerritories) {
+    for (Territory* t : *playerTerritories) {
         delete t;
         t = nullptr;
     }
     delete this->playerTerritories;
     playerTerritories = nullptr;
+}
+
+// Returning the player's ID
+int Player::getId() const {
+    return pID;
+}
+
+OrdersList* Player::getOrdersList() {
+    return this->playerOrdersList;
 }
 
 // Adding an order to the end of the player's order list
@@ -82,33 +97,12 @@ void Player::issueOrder(Order* orderToIssue) {
     this->playerOrdersList->addToLast(newOrder);
 }
 
-vector<Map::Territory*>* Player::toDefend() {
-
-    // Creating two arbitrary territories
-    // TODO
-    Map::Territory* terrToDefend1 = new Map::Territory();
-    Map::Territory* terrToDefend2 = new Map::Territory();
-
-    // Adding them to a list
-    vector<Map::Territory*>* listToDefend;
-    listToDefend->push_back(terrToDefend1);
-    listToDefend->push_back(terrToDefend2);
-
+vector<Territory*>* Player::toDefend(vector<Territory*>* listToDefend) {
     // Returning territories to defend
     return listToDefend;
 }
 
-std::vector<Map::Territory*>* Player::toAttack() {
-    // Creating two arbitrary territories
-    // TODO
-    Map::Territory* terrToAttack1 = new Map::Territory();
-    Map::Territory* terrToAttack2 = new Map::Territory();
-
-    // Adding them to a list
-    vector<Map::Territory*>* listToAttack;
-    listToAttack->push_back(terrToAttack1);
-    listToAttack->push_back(terrToAttack2);
-
+std::vector<Territory*>* Player::toAttack(vector<Territory*>* listToAttack) {
     // Returning territories to defend
     return listToAttack;
 }
@@ -120,6 +114,8 @@ Player &Player::operator=(const Player& player) {
         return *this;
     }
 
+    pID = ++counter; // increasing player count
+
     // deleting existing pointers
     delete playerHand;
     playerHand = nullptr;
@@ -127,24 +123,30 @@ Player &Player::operator=(const Player& player) {
     delete playerOrdersList;
     playerOrdersList = nullptr;
 
-    for (Map::Territory* t : *playerTerritories) {
+    for (Territory* t : *playerTerritories) {
         delete t;
         t = nullptr;
     }
     delete playerTerritories;
     playerTerritories = nullptr;
 
+    // creating a deep copy
     playerHand = new Hand(*player.playerHand);
     playerOrdersList = new OrdersList(*player.playerOrdersList);
-
-    // I cant implement this yet, I am missing a constructor for Territories
-//    playerTerritories = new Map::Territory(player.playerTerritories);
+    playerTerritories = new vector<Territory*>(*player.playerTerritories);
 
     return *this;
 }
 
 std::ostream &operator<<(ostream& out, const Player& player) {
-    out << "Player territories : " << player.playerTerritories << endl;
-    out << "Player hand : " << player.playerHand << endl;
-    out << "Player orders : " << player.playerOrdersList << endl;
+    out << "PLAYER " << player.getId() << " HAND : " << endl;
+    out << *player.playerHand << endl;
+    out << "PLAYER " << player.getId() <<  " TERRITORIES : " << endl;
+    for (auto terr : *player.playerTerritories) {
+        out << *terr << endl;
+    }
+    out << "PLAYER " << player.getId() << " ORDERS : " << endl;
+    out << *player.playerOrdersList << endl;
+
+    return out;
 }

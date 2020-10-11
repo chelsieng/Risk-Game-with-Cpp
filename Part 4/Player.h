@@ -1,29 +1,39 @@
 #pragma once
 
-#include "Cards.h"
-#include "Orders.h"
-#include "Map.h"
 #include <iostream>
 #include <vector>
 
+#include "Orders.h"
+#include "Cards.h"
+
 using namespace std;
+
+// Forward declaration due to circular dependency
+class OrdersList;
+class Territory;
+class Order;
+
 
 class Player {
 private:
+    static int counter;
+    int pID;
     Hand* playerHand;
     OrdersList*  playerOrdersList;
-    vector<Map::Territory*>* playerTerritories;
+    vector<Territory*>* playerTerritories;
 
 public:
     Player(); // default Constructor
-    Player(Hand* hand, OrdersList* ordersList, vector<Map::Territory*>* territories); // parameterized Constructor
+    Player(Hand* hand, OrdersList* ordersList, vector<Territory*>* territories); // parameterized Constructor
     Player(const Player &player); // copy constructor
     ~Player(); // destructor
 
     // Methods
     void issueOrder(Order* orderToIssue);
-    vector<Map::Territory*>* toDefend();
-    vector<Map::Territory*>* toAttack();
+    vector<Territory*>* toDefend(vector<Territory*>* listToDefend);
+    vector<Territory*>* toAttack(vector<Territory*>* listToAttack);
+    int getId() const;
+    OrdersList* getOrdersList();
 
     // assignment operator
     Player& operator = (const Player &player);

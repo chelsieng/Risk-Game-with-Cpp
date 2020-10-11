@@ -1,8 +1,8 @@
-#include "Map.h"
-#include "../Part 1/Graph.h"
 #include <vector>
 #include <string>
 #include <iostream>
+
+#include "Map.h"
 
 using namespace std;
 using namespace graph;
@@ -15,12 +15,12 @@ Army::Army(Player *player) {
 }
 
 void Army::Army::copy(const Army &army) {
-    owner = new Player(army.owner);
+    owner = new Player(*army.owner);
     *id = ++counter;
 }
 
 Army::Army(const Army &army) {
-    owner = new Player(army.owner);
+    owner = new Player(*army.owner);
     *id = ++counter;
 } //End of copy constructor
 
@@ -47,11 +47,11 @@ int Army::Army::getId() const {
 }
 
 ostream &operator<<(ostream &output, const Army &army) {
-    output << "Army " << *army.id << " is owned by player " << army.owner << endl;
+    output << "Army " << *army.id << " is owned by player " << army.owner->getId() << endl;
     return output;
 } //End of insertion operator
 
-int Territory::Territory::counter = 0;
+int Territory::counter = 0;
 
 // Constructor for a territory that is not the initial starting territory
 Territory::Territory() {
@@ -73,9 +73,9 @@ Territory::Territory(Player *player) {
     }
 }
 
-void Territory::Territory::copy(const Territory &territory) {
+void Territory::copy(const Territory &territory) {
     *id = ++counter;
-    owner = new Player(territory.owner);
+    owner = new Player(*territory.owner);
     armies = new vector<Army *>;
 
     //Copying armies in that copy territory
@@ -85,9 +85,10 @@ void Territory::Territory::copy(const Territory &territory) {
     }
 }
 
+// Copy Constructor for territory
 Territory::Territory(const Territory &territory) {
     *id = ++counter;
-    owner = new Player(territory.owner);
+    owner = new Player(*territory.owner);
     armies = new vector<Army *>;
 
     //Copying armies in that copy territory
@@ -119,17 +120,18 @@ Territory &Territory::operator=(const Territory &territory) {
 } //End of assignment operator
 
 //get ID of territory
-int Territory::Territory::getId() const {
+int Territory::getId() const {
     return *id;
 }
 
 ostream &operator<<(ostream &output, const Territory &territory) {
     if (!territory.armies->empty()) {
+        output << "Territory " << territory.getId() << " :" << endl;
         output << "Army(ies) on territory " << territory.getId() << " :" << endl;
         for (Army *army : *territory.armies) {
             cout << *army;
         }
-        output << "The territory is owned by " << territory.owner << endl;
+        output << "The territory is owned by " << territory.owner->getId() << endl;
     } else {
         output << "Territory " << territory.getId() << " is owned by no one" << endl;
     }
