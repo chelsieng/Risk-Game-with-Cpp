@@ -41,7 +41,7 @@ class Deploy : public Order
 public:
     // Constructors and destructor
     Deploy();
-    Deploy(Player *player, Map::Territory *deployTerritory, int numOfArmies);
+    Deploy(Player *player, Territory *deployTerritory, int numOfArmies);
     Deploy(const Deploy &deploy);
     ~Deploy();
     // Accessor
@@ -52,7 +52,7 @@ public:
     Deploy& operator=(Deploy const& o);
     friend ostream& operator<<(ostream& out, const Deploy& deploy);
 private:
-    Map::Territory *deployTerritory;         // Territory to deploy armies
+    Territory *deployTerritory;         // Territory to deploy armies
     int numOfArmies;                    // Number of armies to deploy
     string orderType = "Deploy";
 };
@@ -63,7 +63,7 @@ class Advance : public Order
 public:
     // Constructors and destructor
     Advance();
-    Advance(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory, int numOfArmies);
+    Advance(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies);
     Advance(const Advance &advance);
     ~Advance();
     // Accessor
@@ -74,8 +74,8 @@ public:
     Advance& operator=(Advance const& o);
     friend ostream& operator<<(ostream& out, const Advance& advance);
 private:
-    Map::Territory *fromTerritory;          // Starting territory
-    Map::Territory *toTerritory;            // Advancing territory
+    Territory *fromTerritory;          // Starting territory
+    Territory *toTerritory;            // Advancing territory
     int numOfArmies;                    // Number of armies to advance
     string orderType = "Advance";
 
@@ -87,7 +87,7 @@ class Bomb : public Order
 public:
     // Constructors and destructor
     Bomb();
-    Bomb(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory);
+    Bomb(Player *player, Territory *fromTerritory, Territory *toTerritory);
     Bomb(const Bomb &bomb);
     ~Bomb();
     // Accessor
@@ -98,8 +98,8 @@ public:
     Bomb& operator=(Bomb const& o);
     friend ostream& operator<<(ostream& out, const Bomb& bomb);
 private:
-    Map::Territory *fromTerritory;          // From territory
-    Map::Territory *toTerritory;            // Territory to bomb
+    Territory *fromTerritory;          // From territory
+    Territory *toTerritory;            // Territory to bomb
     string orderType = "Bomb";
 };
 
@@ -109,7 +109,7 @@ class Blockade : public Order
 public:
     // Constructors and destructor
     Blockade();
-    Blockade(Player *player, Map::Territory *blockTerritory);
+    Blockade(Player *player, Territory *blockTerritory);
     Blockade(const Blockade &blockage);
     ~Blockade();
     // Accessor
@@ -120,7 +120,7 @@ public:
     Blockade& operator=(Blockade const& o);
     friend ostream& operator<<(ostream& out, const Blockade& blockade);
 private:
-    Map::Territory *blockTerritory;         // Territory to block
+    Territory *blockTerritory;         // Territory to block
     string orderType = "Blockade";
 };
 
@@ -130,7 +130,7 @@ class Airlift : public Order
 public:
     // Constructors and destructor
     Airlift();
-    Airlift(Player *player, Map::Territory *fromTerritory, Map::Territory *toTerritory, int numOfArmies);
+    Airlift(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies);
     Airlift(const Airlift &airlift);
     ~Airlift();
     // Accessor
@@ -141,8 +141,8 @@ public:
     Airlift& operator=(Airlift const& o);
     friend ostream& operator<<(ostream& out, const Airlift& airlift);
 private:
-    Map::Territory *fromTerritory;          // Starting territory
-    Map::Territory *toTerritory;            // Advancing territory
+    Territory *fromTerritory;          // Starting territory
+    Territory *toTerritory;            // Advancing territory
     int numOfArmies;                    // Number of armies to advance
     string orderType = "Airlift";
 };

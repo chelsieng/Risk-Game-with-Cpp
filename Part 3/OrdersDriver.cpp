@@ -13,8 +13,8 @@ int main()
     // Initialize variables
     Player *player1 = new Player();
     Player *player2 = new Player();
-    Map::Territory *territory1 = new Map::Territory(player1);
-    Map::Territory *territory2 = new Map::Territory(player2);
+    Territory *territory1 = new Territory(player1);
+    Territory *territory2 = new Territory(player2);
     int numOfArmies = 5;
 
     // Testing each order subclass
