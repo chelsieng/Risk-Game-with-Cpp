@@ -1,44 +1,67 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <fstream>
+
 #include "MapLoader.h"
 
-// Constructor that reads a domination map file to create map object
+using namespace std;
+
+// Default constructor
+MapLoader::MapLoader() : fileName{""}
+{}
+
+// Parametrized constructor
 MapLoader::MapLoader(string fileName) {
-
+    this->fileName = fileName;
 }
 
-void MapLoader::copy(const MapLoader &mapLoader) {
-    fileName = new string(*mapLoader.fileName);
-}
+//void MapLoader::copy(const MapLoader &mapLoader) {
+//    fileName = mapLoader.fileName;
+//}
 
+//Copy Constructor
 MapLoader::MapLoader(MapLoader &mapLoader) {
-    fileName = new string(*mapLoader.fileName);
-} //Copy Constructor
+    fileName = mapLoader.fileName;
+}
 
+// Assignment Operator Overload
 MapLoader &MapLoader::operator=(const MapLoader &mapLoader) {
     //handling self assignment
     if (this != &mapLoader) {
-        if (fileName != nullptr) {
-            delete fileName; //Handling memory
-        }
-        if (resultMap != nullptr) {
-            delete mapLoader.resultMap;
-        }
-        copy(mapLoader);
+        this->fileName = mapLoader.fileName;
     }
     return *this;
-} // End of assignment operator
+}
 
+// Destructor
 MapLoader::~MapLoader() {
-    delete fileName;
-    delete resultMap;
-} //End of destructor
+    fileName = nullptr;
+}
 
 ostream &operator<<(ostream &output, const MapLoader &mapLoader) {
     return output;
 }
 
-Map *MapLoader::GetMap(std::string filePath) {
-    return nullptr;
+//Map *MapLoader::GetMap(std::string filePath) {
+//    return nullptr;
+//}
+
+// Reading the input file and generating a valid map
+void MapLoader::loadMap(string fileName) {
+    string line;
+    ifstream inFile(fileName);
+
+    std::ifstream input(fileName);
+    while (!input.eof()) {
+        string temp;
+        getline(input, temp, '\n');
+        std::cout << temp << "\n";
+    }
 }
+
+
+
 
 
 
