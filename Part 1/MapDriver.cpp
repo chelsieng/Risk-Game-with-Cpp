@@ -1,14 +1,28 @@
 #include <iostream>
 #include "Map.h"
 
+using namespace std;
+
 int main() {
+    //Name of territories
+    string *territoryName1 = new string("Dawson");
+    string *territoryName2 = new string ("WhiteHorse");
+    string *territoryName3 = new string ("CambridgeBay");
+    string *territoryName4 = new string("FairBanks");
+    string *territoryName5 = new string ("Valdez");
+    string *territoryName6 = new string ("Kodiak");
+
+    //Name of continents
+    string *continentName1 = new string("Canada");
+    string *continentName2 = new string("UnitedStates");
+
     //Creating territories
-    Territory *territory1 = new Territory();
-    Territory *territory2 = new Territory();
-    Territory *territory3 = new Territory();
-    Territory *territory4 = new Territory();
-    Territory *territory5 = new Territory();
-    Territory *territory6 = new Territory();
+    Territory *territory1 = new Territory(territoryName1);
+    Territory *territory2 = new Territory(territoryName2);
+    Territory *territory3 = new Territory(territoryName3);
+    Territory *territory4 = new Territory(territoryName4);
+    Territory *territory5 = new Territory(territoryName5);
+    Territory *territory6 = new Territory(territoryName6);
 
     //Creating territory vectors and graphs
     vector<Territory *> *territoriesVector1 = new vector<Territory *>;
@@ -45,8 +59,8 @@ int main() {
 
     // Creating continents
     // Assigning territories 1, 2 and 3 to continent 1 and territories 4, 5 and 6 to continent 2
-    Continent *continent1 = new Continent(territoriesGraph1, territoriesVector1);
-    Continent *continent2 = new Continent(territoriesGraph2, territoriesVector2);
+    Continent *continent1 = new Continent(continentName1, territoriesGraph1, territoriesVector1);
+    Continent *continent2 = new Continent(continentName2, territoriesGraph2, territoriesVector2);
 
     //Creating map graph
     Graph<int> *mapGraph1 = new Graph<int>;
@@ -90,8 +104,8 @@ int main() {
 
     // Creating continents
     // Assigning territories 1, 2 and 3 to continent 3 and territories 4, 5 and 6 to continent 4
-    Continent *continent3 = new Continent(territoriesGraph1, territoriesVector1);
-    Continent *continent4 = new Continent(territoriesGraph2, territoriesVector2);
+    Continent *continent3 = new Continent(continentName1, territoriesGraph1, territoriesVector1);
+    Continent *continent4 = new Continent(continentName2, territoriesGraph2, territoriesVector2);
 
     // Creating vector of continents in order to pass it to the Map constructor
     vector<Continent *> *continents2 = new vector<Continent *>;
@@ -131,8 +145,8 @@ int main() {
 
     // Creating continents
     // Assigning territories 1, 2 and 3 to continent 5 and territories 4, 5 and 6 to continent 6
-    Continent *continent5 = new Continent(territoriesGraph1, territoriesVector1);
-    Continent *continent6 = new Continent(territoriesGraph2, territoriesVector2);
+    Continent *continent5 = new Continent(continentName1, territoriesGraph1, territoriesVector1);
+    Continent *continent6 = new Continent(continentName2, territoriesGraph2, territoriesVector2);
 
     // Creating vector of continents in order to pass it to the Map constructor
     vector<Continent *> *continents3 = new vector<Continent *>;
@@ -141,6 +155,7 @@ int main() {
 
     //Creating map graph
     Graph<int> *mapGraph3 = new Graph<int>;
+
     //Adding continent5 and continent6 as vertex to mapGraph
     mapGraph3->add_vertex(continent5->getId());
     mapGraph3->add_vertex(continent6->getId());
@@ -170,9 +185,9 @@ int main() {
     territoriesVector2->push_back(territory3);
 
     // Creating continents
-    // Assigning territories 1, 2 and 3 to continent 5 and territories 3, 4, 5 and 6 to continent 6
-    Continent *continent7 = new Continent(territoriesGraph1, territoriesVector1);
-    Continent *continent8 = new Continent(territoriesGraph2, territoriesVector2);
+    // Assigning territories 1, 2 and 3 to continent 7 and territories 3, 4, 5 and 6 to continent 8
+    Continent *continent7 = new Continent(continentName1, territoriesGraph1, territoriesVector1);
+    Continent *continent8 = new Continent(continentName2, territoriesGraph2, territoriesVector2);
 
     // Creating vector of continents in order to pass it to the Map constructor
     vector<Continent *> *continents4 = new vector<Continent *>;
@@ -214,15 +229,18 @@ int main() {
     // Deleting territory 3 from continent 2
     territoriesVector2->pop_back();
 
+    //Name of 7th Territory
+    string *territoryName7 = new string ("EchoBay");
+
     // Adding extra territory in territories graph and connecting it, but not declaring it in territories vector
-    Territory *territory7 = new Territory();
+    Territory *territory7 = new Territory(territoryName7);
     territoriesGraph1->add_vertex(territory7->getId());
     territoriesGraph1->add_edge(territory7->getId(), territory1->getId());
 
     // Creating continents
-    // Assigning territories 1, 2, 3 and 7 (without declaring in territoriesVector1) to continent 7 and territories 4, 5 and 6 to continent 7
-    Continent *continent9 = new Continent(territoriesGraph1, territoriesVector1);
-    Continent *continent10 = new Continent(territoriesGraph2, territoriesVector2);
+    // Assigning territories 1, 2, 3 and 7 (without declaring in territoriesVector1) to continent 9 and territories 4, 5 and 6 to continent 10
+    Continent *continent9 = new Continent(continentName1, territoriesGraph1, territoriesVector1);
+    Continent *continent10 = new Continent(continentName2, territoriesGraph2, territoriesVector2);
 
     // Creating vector of continents in order to pass it to the Map constructor
     vector<Continent *> *continents5 = new vector<Continent *>;
