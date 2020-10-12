@@ -37,17 +37,19 @@ private:
     static int counter;
     int *id = new int(0);
     Player *owner;
+    string *territoryName;
     vector<Army *> *armies;
 
     void copy(const Territory &); //Copying value of territory
 
 public:
-    Territory(); // Default Territory constructor with no armies present
-    explicit Territory(Player *player); // Constructor for 1 player starting with 5 armies
+    Territory(string *name); // Default Territory constructor with no armies present
+    explicit Territory(Player *player, string *name); // Constructor for 1 player starting with 5 armies
     Territory(const Territory &); //Copy Constructor
     ~Territory(); //Destructor
     Territory &operator=(const Territory &); //Assignment Operator
     int getId() const;
+    string getTerritoryName() const;
 
     friend ostream &operator<<(ostream &, const Territory &); //insertion operator
 }; //end of Territory Class
@@ -56,6 +58,7 @@ class Continent {
 private:
     static int counter;
     int *id = new int(0);
+    string *continentName;
     vector<Territory *> *territoriesVector;
     Graph<int> *territoriesGraph;
 
@@ -63,7 +66,7 @@ private:
     void traverse(int, const Graph<int> *, vector<int> *) const; //visiting each vertex of graph
 
 public:
-    Continent(Graph<int> *, vector<Territory *> *); //Constructor with graph and list of territories
+    Continent(string *, Graph<int> *, vector<Territory *> *); //Constructor with graph and list of territories
     Continent(const Continent &); //Copy Constructor
     ~Continent(); //Destructor
     Continent &operator=(const Continent &); //Assignment Operator
@@ -75,6 +78,8 @@ public:
     Graph<int> *getTerritoriesGraph() const;
 
     int getId() const;
+
+    string getContinentName() const;
 
     friend ostream &operator<<(ostream &, const Continent &); //insertion operator
 }; //End of Continent Class

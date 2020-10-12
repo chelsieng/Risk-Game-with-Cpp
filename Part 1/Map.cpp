@@ -54,16 +54,18 @@ ostream &operator<<(ostream &output, const Army &army) {
 int Territory::counter = 0;
 
 // Constructor for a territory that is not the initial starting territory
-Territory::Territory() {
+Territory::Territory(string *name) {
     *id = ++counter;
     owner = nullptr;
+    territoryName = name;
     armies = new vector<Army *>;
 }
 
 // Constructor for the territory that players start on
-Territory::Territory(Player *player) {
+Territory::Territory(Player *player, string *name) {
     *id = ++counter;
     owner = player;
+    territoryName = name;
     armies = new vector<Army *>;
 
     // Create 5 armies in that territory
@@ -76,6 +78,7 @@ Territory::Territory(Player *player) {
 void Territory::copy(const Territory &territory) {
     *id = ++counter;
     owner = new Player(*territory.owner);
+    territoryName = new string(*territory.territoryName);
     armies = new vector<Army *>;
 
     //Copying armies in that copy territory
@@ -89,6 +92,7 @@ void Territory::copy(const Territory &territory) {
 Territory::Territory(const Territory &territory) {
     *id = ++counter;
     owner = new Player(*territory.owner);
+    territoryName = new string(*territoryName);
     armies = new vector<Army *>;
 
     //Copying armies in that copy territory
@@ -101,6 +105,7 @@ Territory::Territory(const Territory &territory) {
 Territory::~Territory() {
     delete owner;
     delete armies;
+    delete territoryName;
     delete id;
     --counter;
 } //End of destructor
@@ -114,6 +119,9 @@ Territory &Territory::operator=(const Territory &territory) {
         if (armies != nullptr) {
             delete armies;
         }
+        if (territoryName != nullptr) {
+            delete territoryName;
+        }
         copy(territory);
     }
     return *this;
@@ -124,9 +132,14 @@ int Territory::getId() const {
     return *id;
 }
 
+//get name of territory
+string Territory::getTerritoryName() const {
+    return *territoryName;
+}
+
 ostream &operator<<(ostream &output, const Territory &territory) {
     if (!territory.armies->empty()) {
-        output << "Territory " << territory.getId() << " :" << endl;
+        output << "Territory " << territory.getId() << ", " << territory.getTerritoryName() << ":" << endl;
         output << "Army(ies) on territory " << territory.getId() << " :" << endl;
         for (Army *army : *territory.armies) {
             cout << *army;
@@ -141,14 +154,16 @@ ostream &operator<<(ostream &output, const Territory &territory) {
 int Continent::Continent::counter = 0;
 
 //Constructor of continent containing a list of territories from connected graph of territories
-Continent::Continent(Graph<int> *graph, vector<Territory *> *territories) {
+Continent::Continent(string *name, Graph<int> *graph, vector<Territory *> *territories) {
     *id = ++counter;
+    continentName = name;
     territoriesGraph = graph;
     territoriesVector = territories;
 }
 
 void Continent::Continent::copy(const Continent &continent) {
     *id = ++counter;
+    continentName = new string(*continent.continentName);
     territoriesGraph = new Graph<int>;
     for (Territory *territory : *continent.territoriesVector) {
         int territoryId = territory->getId();
@@ -165,6 +180,7 @@ void Continent::Continent::copy(const Continent &continent) {
 
 Continent::Continent(const Continent &continent) {
     *id = ++counter;
+    continentName = new string(*continent.continentName);
     territoriesGraph = new Graph<int>;
     for (Territory *territory : *continent.territoriesVector) {
         int territoryId = territory->getId();
@@ -183,6 +199,7 @@ Continent::~Continent() {
     delete id;
     delete territoriesGraph;
     delete territoriesVector;
+    delete continentName;
     --counter;
 } //End of destructor
 
@@ -194,6 +211,9 @@ Continent &Continent::operator=(const Continent &continent) {
         }
         if (territoriesVector != nullptr) {
             delete territoriesVector;
+        }
+        if (continentName != nullptr) {
+            delete continentName;
         }
         copy(continent);
     }
@@ -252,12 +272,17 @@ int Continent::Continent::getId() const {
     return *id;
 }
 
+string Continent::Continent::getContinentName() const {
+    return *continentName;
+}
+
 ostream &operator<<(ostream &output, const Continent &continent) {
     auto *territories = new vector<Territory *>;
     *territories = *continent.getTerritoriesVector();
-    output << "Here is Continent " << continent.getId() << " and its territories: " << endl;
+    output << "Here is Continent " << continent.getId() << ", " << continent.getContinentName()
+           << " and its territories: " << endl;
     for (Territory *territory: *territories) {
-        output << "Territory " << territory->getId() << endl;
+        output << "Territory " << territory->getId() << ", " << territory->getTerritoryName() << endl;
     }
     return output;
 } //End of insertion operator
