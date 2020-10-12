@@ -155,6 +155,7 @@ int main() {
 
     //Creating map graph
     Graph<int> *mapGraph3 = new Graph<int>;
+
     //Adding continent5 and continent6 as vertex to mapGraph
     mapGraph3->add_vertex(continent5->getId());
     mapGraph3->add_vertex(continent6->getId());
@@ -184,7 +185,7 @@ int main() {
     territoriesVector2->push_back(territory3);
 
     // Creating continents
-    // Assigning territories 1, 2 and 3 to continent 5 and territories 3, 4, 5 and 6 to continent 6
+    // Assigning territories 1, 2 and 3 to continent 7 and territories 3, 4, 5 and 6 to continent 8
     Continent *continent7 = new Continent(continentName1, territoriesGraph1, territoriesVector1);
     Continent *continent8 = new Continent(continentName2, territoriesGraph2, territoriesVector2);
 
