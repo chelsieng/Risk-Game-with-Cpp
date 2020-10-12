@@ -5,7 +5,7 @@
 #include <map>
 
 #include "Graph.h"
-#include "Player.h"
+#include "../Part 4/Player.h"
 
 using namespace std;
 using namespace graph;
@@ -20,7 +20,7 @@ private:
     int *id = new int(0);
     Player *owner;
 
-    void copy(const Army&); //Copying value of army
+    void copy(const Army &); //Copying value of army
 
 public:
     explicit Army(Player *); //Army constructor for player
@@ -39,11 +39,12 @@ private:
     int *id = new int(0);
     Player *owner;
     vector<Army *> *armies;
-    void copy(const Territory&); //Copying value of territory
+
+    void copy(const Territory &); //Copying value of territory
 
 public:
     Territory(); // Default Territory constructor with no armies present
-    explicit Territory(Player* player); // Constructor for 1 player starting with 5 armies
+    explicit Territory(Player *player); // Constructor for 1 player starting with 5 armies
     Territory(const Territory &); //Copy Constructor
     ~Territory(); //Destructor
     Territory &operator=(const Territory &); //Assignment Operator
@@ -58,7 +59,8 @@ private:
     int *id = new int(0);
     vector<Territory *> *territoriesVector;
     Graph<int> *territoriesGraph;
-    void copy(const Continent&); //Copying value of continent
+
+    void copy(const Continent &); //Copying value of continent
     void traverse(int, const Graph<int> *, vector<int> *) const; //visiting each vertex of graph
 
 public:
@@ -69,7 +71,7 @@ public:
 
     bool isConnected() const; //return true if all territories are connected in continent
 
-    vector<Territory *> *getTerritoriesVector()const;
+    vector<Territory *> *getTerritoriesVector() const;
 
     Graph<int> *getTerritoriesGraph() const;
 
@@ -81,8 +83,9 @@ public:
 class Map {
 private:
     vector<Continent *> *continents;
-    vector<Graph<int> *> *territoriesGraph;
-    void copy(const Map&); //Copying value of map
+    vector<Graph<int> *> *mapGraph;
+
+    void copy(const Map &); //Copying value of map
     void traverse(int, const Graph<int> *, vector<int> *) const; //Visiting each vertex of graph
 
 public:
@@ -91,7 +94,6 @@ public:
     Map(const Map &); //Copy constructor
     ~Map(); //Destructor
     Map &operator=(const Map &); //Assignment Operator
-    bool isConnectedGraph() const;
 
     bool validate() const; //checking if map is a connected graph, continent is a subgraph
     // and if each territory belongs to one and only one continent

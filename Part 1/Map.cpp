@@ -261,8 +261,9 @@ ostream &operator<<(ostream &output, const Continent &continent) {
     }
     return output;
 } //End of insertion operator
+
 Map::Map(vector<Graph<int> *> *graph, vector<Continent *> *continentsVector) {
-    territoriesGraph = graph;
+    mapGraph = graph;
     continents = continentsVector;
 }
 
@@ -271,9 +272,9 @@ void Map::Map::copy(const Map &map) {
     for (Continent *continent: *map.continents) {
         continents->push_back(continent);
     }
-    territoriesGraph = new vector<Graph<int> *>;
-    for (Graph<int> *graph:*map.territoriesGraph) {
-        territoriesGraph->push_back(graph);
+    mapGraph = new vector<Graph<int> *>;
+    for (Graph<int> *graph:*map.mapGraph) {
+        mapGraph->push_back(graph);
     }
 }
 
@@ -282,22 +283,22 @@ Map::Map(const Map &map) {
     for (Continent *continent: *map.continents) {
         continents->push_back(continent);
     }
-    territoriesGraph = new vector<Graph<int> *>;
-    for (Graph<int> *graph:*map.territoriesGraph) {
-        territoriesGraph->push_back(graph);
+    mapGraph = new vector<Graph<int> *>;
+    for (Graph<int> *graph:*map.mapGraph) {
+        mapGraph->push_back(graph);
     }
 } //End of Copy Constructor
 
 Map::~Map() {
     delete continents;
-    delete territoriesGraph;
+    delete mapGraph;
 }//End of destructor
 
 Map &Map::operator=(const Map &map) {
     //handling self assignment
     if (this != &map) {
-        if (territoriesGraph != nullptr) {
-            delete territoriesGraph; //Handling memory
+        if (mapGraph != nullptr) {
+            delete mapGraph; //Handling memory
         }
         if (continents != nullptr) {
             delete continents;
@@ -306,32 +307,6 @@ Map &Map::operator=(const Map &map) {
     }
     return *this;
 } //End of assignment operator
-
-// Check if all territories are connected
-bool Map::Map::isConnectedGraph() const {
-    bool isConnectedGraph = true;
-    //Check every graph
-    for (Graph<int> *graph: *territoriesGraph) {
-        auto *visited = new vector<int>;
-        // For every vertex
-        for (int vertex : graph->get_vertices()) {
-
-            // Clear visited vector
-            visited->clear();
-
-            // Traverse that vertex
-            traverse(vertex, graph, visited);
-
-            // If not all vertices were visited
-            if (visited->size() != graph->get_vertices().size()) {
-                isConnectedGraph = false;
-                break;
-            }
-        }
-        delete visited;
-    }
-    return isConnectedGraph;
-}
 
 //Visiting each vertex
 void Map::Map::traverse(const int node, const Graph<int> *graph, vector<int> *visited) const {
@@ -350,6 +325,27 @@ void Map::Map::traverse(const int node, const Graph<int> *graph, vector<int> *vi
 
 bool Map::Map::validate() const {
     vector<Continent *> *continentsVector = this->continents;
+    // Check if map is a connected graph
+    //Check every graph
+    for (Graph<int> *graph: *mapGraph) {
+        auto *visited = new vector<int>;
+        // For every vertex
+        for (int vertex : graph->get_vertices()) {
+
+            // Clear visited vector
+            visited->clear();
+
+            // Traverse that vertex
+            traverse(vertex, graph, visited);
+
+            // If not all vertices were visited
+            if (visited->size() != graph->get_vertices().size()) {
+                cout << "Invalid: Map is not a connected graph." << endl;
+                return false;
+            }
+        }
+        delete visited;
+    }
     // Check if every territory in a continent is connected by choosing a starting vertex and
     // visiting recursively every connected vertex and when it is done, verify all vertex are
     // visited otherwise print "Unconnected continent" error
@@ -358,11 +354,6 @@ bool Map::Map::validate() const {
             cout << "Invalid: A continent is not a connected subgraph." << endl;
             return false;
         }
-    }
-    // Check if map is a connected graph
-    if (!(this->isConnectedGraph())) {
-        cout << "Invalid: Map is not a connected graph." << endl;
-        return false;
     }
     // Check if every territory belong to a single continent by making sure there are no duplicates
     // when going through every single territory of every single continent
@@ -388,7 +379,7 @@ bool Map::Map::validate() const {
     //Check if number of territories in graph == number of territories in vector
     //Otherwise print "Inconsistent number" error
     if (numOfTerritoriesGraph != numOfTerritoriesVector) {
-        cout << "Invalid: Inconsistent number of territories in graph and in vector";
+        cout << "Invalid: Inconsistent number of territories in graph and in vector" << endl;
         return false;
     }
     // Cleanup

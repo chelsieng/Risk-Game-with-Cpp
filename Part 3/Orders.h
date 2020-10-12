@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include "Map.h"
+#include "../Part 1/Map.h"
 
 using namespace std;
 using std::vector;
@@ -188,3 +188,4 @@ public:
 private:
     vector<Order*> listOrders;                  // vector to store Orders
 };
+
