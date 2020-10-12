@@ -18,14 +18,13 @@ int main()
     int numOfArmies = 5;
 
     // Testing each order subclass
+    // Create an object of each type of Order
     Order *deploy = new Deploy(player1, territory1, numOfArmies);
     Order *advance = new Advance(player1, territory1, territory2, numOfArmies);
     Order *bomb = new Bomb(player1,territory1, territory2);
     Order *blockade = new Blockade(player1, territory1);
     Order *negotiate = new Negotiate(player1, player2);
     Order *airlift = new Airlift(player1, territory1, territory2, numOfArmies);
-
-    cout << "\nTesting Deploy methods type(): " << deploy->getOrderType() << endl;
 
     cout << "\nTesting Deploy methods execute(): " << endl;
     deploy->execute();
