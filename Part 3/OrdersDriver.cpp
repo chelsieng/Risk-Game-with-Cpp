@@ -73,19 +73,19 @@ int main()
     cout << "OrdersList after Order is deleted:" << endl
         << *ordersList  << endl;
 
-    // Delete pointers
-    delete player1; player1 = nullptr;
-    delete player2; player2 = nullptr;
-    delete territory1; territory1 = nullptr;
-    delete territory2; territory2 = nullptr;
-    delete deploy; deploy = nullptr;
-    delete advance; advance = nullptr;
-    delete bomb; bomb = nullptr;
-    delete blockade; blockade = nullptr;
-    delete negotiate; negotiate = nullptr;
-    delete airlift; airlift = nullptr;
-    delete ordersList; ordersList = nullptr;
+    // Avoid memory leaks
+    player1 = nullptr;
+    player2 = nullptr;
+    territory1 = nullptr;
+    territory2 = nullptr;
+    deploy = nullptr;
+    advance = nullptr;
+    bomb = nullptr;
+    blockade = nullptr;
+    negotiate = nullptr;
+    airlift = nullptr;
+    ordersList = nullptr;
 
-    cout << "End of OrdersDriver" << endl;
+   cout << "End of OrdersDriver" << endl;
     return 0;
 }
