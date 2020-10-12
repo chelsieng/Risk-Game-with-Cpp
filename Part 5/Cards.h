@@ -2,10 +2,23 @@
 //A1 Part five: h
 
 #pragma once
-//#include "Orders.h"
+#ifndef A1_CARDS_H
+#define A1_CARDS_H
+#include "player.h"
+#include "Orders.h"
 #include <string>
 #include <vector>
 
+//Forward declaration to Orders and related classes
+class Orders;
+class Deploy; //Recruitment card uses this
+class Bomb;
+class Airlift;
+class Negotiate;	//Diplomacy card uses this
+class Blockade;
+class OrdersList;
+class Player;
+//
 using namespace std;
 //as per the instructions of the assignment, all data members (of user-made classes) must be of the pointer type
 //EDIT: change was made to say that the above is in fact, not the case. Honestly I wrote most of this before
@@ -39,8 +52,7 @@ public:
 	//So play() will simply create the order and add it to the list, NOT add it back to the deck.
 	//To do everything required, we will have another method in the Hand class to play() a specific card and then
 	// add it back to the game deck
-	void play();	//This should actually return an order (or a pointer to one) -> WAITING FOR ORDERS class to be implemented
-		//that is to say, won't remain void
+	void play(Player* p);	
 
 
 };//end of Card class
@@ -66,12 +78,19 @@ public:
 };//end of DiplomacyCard class
 
 class ReinforcementCard : public Card {
+private:
+	int numberOfTroops;
 public:
 	ReinforcementCard();
+	ReinforcementCard(int armies);
+	int getNumberOfTroops() const;
+	void setNumberOfTroops(int armies);
 	ReinforcementCard(const ReinforcementCard& copyMe);
 	ReinforcementCard& operator =(const ReinforcementCard& rightSide);
 	~ReinforcementCard();
 	friend ostream& operator<<(ostream& outs, const ReinforcementCard& printMe);
+
+
 };//end of ReinforcementCard class
 
 class AirliftCard : public Card {
@@ -144,15 +163,18 @@ private:
 	int limit;
 	std::vector<Card*> cardsInHand; //will be initialized in constructor
 public:
+	Hand(); //don't use the default constructor, no reason to.
 	Hand(int l, Deck* d);
 	Hand(const Hand& copyMe);
 	Hand& operator =(const Hand& rightSide);
 	~Hand();
 
 	void showCardsInHand();
-	void playCardAtIndex(int i);
+	void playCardAtIndex(int i, Player* p);
 	void addToHand(Card* c);
 	Card getCardatIndex(int i) const;
 	int getSize() const;
 	friend ostream& operator<<(ostream& outs, const Hand& printMe);
 };
+
+#endif //A1_CARDS_H
