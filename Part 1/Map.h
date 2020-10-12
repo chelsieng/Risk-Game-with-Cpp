@@ -13,7 +13,6 @@ using namespace graph;
 // Forward declaration due to circular dependency
 class Player;
 
-
 class Army {
 private:
     static int counter;
