@@ -159,5 +159,57 @@ int main() {
         cout << "Test case 3 passed." << endl << endl;
     }
 
+    // Deleting territory 3 from continent 2
+    territoriesVector2->pop_back();
+
+    // Adding extra territory in territories graph and connecting it, but not declaring it in territories vector
+    Territory *territory7 = new Territory();
+    territoriesGraph1->add_vertex(territory7->getId());
+    territoriesGraph1->add_edge(territory7->getId(), territory1->getId());
+
+    // Free memory
+    continents3->clear();
+//    delete continent5, continent6, continents3;
+
+    // Creating continents
+    // Assigning territories 1, 2, 3 and 7 (without declaring in territoriesVector1) to continent 7 and territories 4, 5 and 6 to continent 7
+    Continent *continent7 = new Continent(territoriesGraph1, territoriesVector1);
+    Continent *continent8 = new Continent(territoriesGraph2, territoriesVector2);
+
+    // Creating vector of continents in order to pass it to the Map constructor
+    vector<Continent *> *continents4 = new vector<Continent *>;
+    continents4->push_back(continent7);
+    continents4->push_back(continent8);
+
+    // Creating vector of graphs in order to pass it to the Map constructor
+    vector<Graph<int> *> *graphs4 = new vector<Graph<int> *>;
+    graphs4->push_back(territoriesGraph1);
+    graphs4->push_back(territoriesGraph2);
+
+    // Test case 4:
+    // Removed territory 3 from continent 2
+    // Now added new territory 7 to continent 1 and connected it to the other territories in the continent
+    // but did not add territory 7 in territoriesVector1 in order to create an inconsistency
+    // Should print 'Invalid: Inconsistent number of territories in graph and in vector'
+    cout << "Test case 4:" << endl;
+    cout << "Remove territory 3 from continent 2" << endl;
+    cout << "Now add new territory 7 to continent 1 and connect it to the other territories in the continent" << endl;
+    cout << "but don't declare/add territory 7 in continent vector in order to create an inconsistency" << endl;
+    cout
+            << "Should print 'Invalid: Inconsistent number of territories in graph and in vector'"
+            << endl << endl;
+
+    // Creating Map
+    Map *map4 = new Map(graphs4, continents4);
+    cout << "Results:" << endl << "--------" << endl;
+    if (!map4->validate()) {
+        cout << "Test case 4 failed." << endl << endl;
+    } else {
+        cout << "Test case 4 passed." << endl << endl;
+    }
+//    // Cleanup
+//    delete territory1, territory2, territory3, territory4, territory5, territory6, territory7;
+//    delete territoriesVector1, territoriesVector2, territoriesGraph1, territoriesGraph2;
+//    delete continent7, continent8, continents4;
     return 0;
 }

@@ -388,7 +388,7 @@ bool Map::Map::validate() const {
     //Check if number of territories in graph == number of territories in vector
     //Otherwise print "Inconsistent number" error
     if (numOfTerritoriesGraph != numOfTerritoriesVector) {
-        cout << "Invalid: Inconsistent number of territories in graph and in vector";
+        cout << "Invalid: Inconsistent number of territories in graph and in vector" << endl;
         return false;
     }
     // Cleanup
