@@ -12,6 +12,7 @@ using namespace std;
 class OrdersList;
 class Territory;
 class Order;
+class Hand;
 
 
 class Player {

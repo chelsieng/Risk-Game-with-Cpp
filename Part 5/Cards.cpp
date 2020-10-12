@@ -65,16 +65,22 @@ void Card::printDescription() const {
 	cout << this->getDescription() << endl;
 }
 
-void Card::play() //this won't actually be a void method, awaiting updates on OrdersList
+void Card::play(Player* p) 
 {
 	//switch(*type)
 	//create different order based on type
+	
+	if (type->compare("Bomb") == 0) { p->issueOrder(new Bomb()); } //Note that (type->compare(str)) defaults the equal to false (or 1 rather)
+	else if (type->compare("Diplomacy") == 0) { p->issueOrder(new Negotiate()); }
+	else  if (type->compare("Reinforcement") == 0) { p->issueOrder(new Deploy()); }
+	else  if (type->compare("Airlift") == 0) { p->issueOrder(new Airlift()); }
+	else  if (type->compare("Blockade") == 0) { p->issueOrder(new Blockade()); }
 	cout << "You played a card of type: " << *this->getType() << endl;
 	//return pointer to order created
 }
 
 BombCard::BombCard()
-	: Card("bomb")
+	: Card("Bomb")
 {
 	setDescription("This is a bomb card. More info will be added later");
 }
@@ -131,13 +137,37 @@ DiplomacyCard::~DiplomacyCard()
 }
 
 ReinforcementCard::ReinforcementCard()
-	: Card("Reinforcement")
+	: Card("Reinforcement"), numberOfTroops(1)
 {
-	setDescription("This is a reinforcement card. More info will be added later");
+	string str("This is a reinforcement card. It yields ");
+	str.append(to_string(numberOfTroops));
+	str.append(" armies. More info will be added later.");
+	setDescription(str);
+}
+
+ReinforcementCard::ReinforcementCard(int armies)
+	: Card("Reinforcement"), numberOfTroops(armies)
+{
+	
+	string str("This is a reinforcement card. It yields ");
+	str.append(to_string(numberOfTroops));
+	str.append(" armies. More info will be added later.");
+	setDescription(str);
+}
+
+int ReinforcementCard::getNumberOfTroops() const
+{
+	return numberOfTroops;
+}
+
+void ReinforcementCard::setNumberOfTroops(int armies) 
+{
+	numberOfTroops = armies;
 }
 
 ReinforcementCard::ReinforcementCard(const ReinforcementCard& copyMe)
 {
+	setNumberOfTroops(copyMe.getNumberOfTroops());
 	setType(*copyMe.getType());
 	setDescription(*copyMe.getType());
 }
@@ -149,6 +179,7 @@ ReinforcementCard& ReinforcementCard::operator=(const ReinforcementCard& rightSi
 	}
 	delete this->getType();
 	delete this->getDescription();
+	setNumberOfTroops(rightSide.getNumberOfTroops());
 	setType(*rightSide.getType());
 	setDescription(*rightSide.getDescription());
 	return *this;
@@ -276,8 +307,8 @@ Deck::Deck(deckNodePtr thehead)
 
 Deck::Deck(const Deck& copyMe)
 {
-	if (copyMe.head == nullptr) {
-		head = nullptr;
+	if (copyMe.head == NULL) {
+		head = NULL;
 	}
 	else {
 		head = new deckNode(copyMe.head->data, nullptr);
@@ -285,7 +316,7 @@ Deck::Deck(const Deck& copyMe)
 		deckNode* objHead = copyMe.head;
 		deckNode* current = objHead;
 
-		while (current->link != nullptr) {
+		while (current->link != NULL) {
 			position->link = new deckNode(current->link->data);
 			position = position->link;
 			current = current->link;
@@ -306,7 +337,7 @@ Deck& Deck::operator=(const Deck& rightSide)
 		deckNode* objHead = rightSide.head;
 		deckNode* current = objHead;
 
-		while (current->link != nullptr) {
+		while (current->link != NULL) {
 			delete position->link; //(again avoiding memory leaks)
 			position->link = new deckNode(current->link->data);
 			position = position->link;
@@ -333,9 +364,9 @@ void Deck::addToDeck(Card* theData)
 
 Card* Deck::draw()
 {
-	if (head == nullptr) {
+	if (head == NULL) {
 		cout << "The deck is empty! Cannot draw a card." << endl;
-		return nullptr;
+		return NULL;
 	}
 	else {
 		Card* topOfStack = head->getData();
@@ -346,19 +377,24 @@ Card* Deck::draw()
 
 void Deck::placeOnBottom(Card* theData)
 {
-	if (head == nullptr) {
+	if (head == NULL) {
 		addToDeck(theData);
 	}//end of if (deck empty)
 	else {
 		deckNodePtr position = head;
-		while (position->getLink() != nullptr) {
+		while (position->getLink() != NULL) {
 			position = position->getLink();
 		}
-		position->setLink(new deckNode(theData, nullptr));
+		position->setLink(new deckNode(theData, NULL));
 	}//end of else (deck not empty)
 }
 
 
+
+Hand::Hand()		//again you shouldn't use the default constructor
+	: limit(5), gameDeck(nullptr), cardsInHand()
+{
+}
 
 Hand::Hand(int l, Deck* d)
 	: limit(l), gameDeck(d), cardsInHand()	//again, note to self, DO NOT USE &(parameter) to try
@@ -402,6 +438,7 @@ Hand& Hand::operator=(const Hand& rightSide)
 
 Hand::~Hand()
 {
+	delete gameDeck;
 }
 
 void Hand::showCardsInHand()
@@ -414,10 +451,10 @@ void Hand::showCardsInHand()
 
 
 
-void Hand::playCardAtIndex(int i)
+void Hand::playCardAtIndex(int i, Player* p)
 {
 	Card cardToPlay = *cardsInHand.at(i);
-	cardsInHand.at(i)->play();
+	cardsInHand.at(i)->play(p);
 	gameDeck->placeOnBottom(cardsInHand.at(i));
 	cardsInHand.erase(cardsInHand.begin() + i); //the begin() part is necessary, it seems (can't just use index)
 
@@ -438,6 +475,7 @@ int Hand::getSize() const
 	return cardsInHand.size();
 }
 
+//STREAM OPERATOR OVERLOADS
 ostream& operator<<(ostream& outs, const Card& printMe)
 {
 	outs << *printMe.getDescription() << endl;
@@ -485,14 +523,14 @@ ostream& operator<<(ostream& outs, const deckNode& printMe)
 ostream& operator<<(ostream& outs, const Deck& printMe)
 {
 	outs << "Here are all the cards currently in this deck:\n" << endl;
-	if (printMe.getHead() == nullptr) {
+	if (printMe.getHead() == NULL) {
 		outs << "The deck is empty!" << endl;
 	}
 	else {
 		deckNode* objHead = printMe.getHead();
 		deckNode* current = objHead;
 		
-		while (current != nullptr) {
+		while (current != NULL) {
 			outs << *current->getData() << endl;
 			current = current->getLink();
 		}
