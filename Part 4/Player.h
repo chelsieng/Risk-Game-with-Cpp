@@ -33,6 +33,7 @@ public:
     vector<Territory*>* toDefend(vector<Territory*>* listToDefend);
     vector<Territory*>* toAttack(vector<Territory*>* listToAttack);
     int getId() const;
+    Hand* getHand();
     OrdersList* getOrdersList();
 
     // assignment operator
