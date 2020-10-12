@@ -26,6 +26,8 @@ Card::~Card()
 {
 	delete description;
 	delete type;
+	description = nullptr;
+	type = nullptr;
 }
 
 Card& Card::operator=(const Card& rightSide)
@@ -65,11 +67,11 @@ void Card::printDescription() const {
 	cout << this->getDescription() << endl;
 }
 
-void Card::play(Player* p) 
+void Card::play(Player* p)
 {
 	//switch(*type)
 	//create different order based on type
-	
+
 	if (type->compare("Bomb") == 0) { p->issueOrder(new Bomb()); } //Note that (type->compare(str)) defaults the equal to false (or 1 rather)
 	else if (type->compare("Diplomacy") == 0) { p->issueOrder(new Negotiate()); }
 	else  if (type->compare("Reinforcement") == 0) { p->issueOrder(new Deploy()); }
@@ -148,7 +150,7 @@ ReinforcementCard::ReinforcementCard()
 ReinforcementCard::ReinforcementCard(int armies)
 	: Card("Reinforcement"), numberOfTroops(armies)
 {
-	
+
 	string str("This is a reinforcement card. It yields ");
 	str.append(to_string(numberOfTroops));
 	str.append(" armies. More info will be added later.");
@@ -160,7 +162,7 @@ int ReinforcementCard::getNumberOfTroops() const
 	return numberOfTroops;
 }
 
-void ReinforcementCard::setNumberOfTroops(int armies) 
+void ReinforcementCard::setNumberOfTroops(int armies)
 {
 	numberOfTroops = armies;
 }
@@ -278,6 +280,8 @@ deckNode& deckNode::operator=(const deckNode& rightSide)
 
 deckNode::~deckNode()
 {	//filling this in with delete data and delete head caused major issues... Probably deletes things more than once?
+	data = nullptr;
+	link = nullptr;
 }
 
 deckNode* deckNode::getLink() const
@@ -290,12 +294,12 @@ Card* deckNode::getData() const
 	return data;
 }
 
-void deckNode::setData(Card* theData) 
+void deckNode::setData(Card* theData)
 {
 	data = theData;
 }
 
-void deckNode::setLink(deckNode* theLink) 
+void deckNode::setLink(deckNode* theLink)
 {
 	link = theLink;
 }
@@ -352,9 +356,18 @@ deckNode* Deck::getHead() const
 	return head;
 }
 
-Deck::~Deck()
+Deck::~Deck() //(Note that destructors get called automatically when an object goes out of scope)
 {
-	delete head;
+	deckNode* position = head;
+	deckNode* next = head->link;
+	while (next != NULL) {
+		delete position;
+		position = next;
+		next = next->link;
+	}
+	head = nullptr;
+	position = nullptr;
+	next = nullptr;
 }
 
 void Deck::addToDeck(Card* theData)
@@ -439,6 +452,7 @@ Hand& Hand::operator=(const Hand& rightSide)
 Hand::~Hand()
 {
 	delete gameDeck;
+	gameDeck = nullptr;
 }
 
 void Hand::showCardsInHand()
@@ -529,7 +543,7 @@ ostream& operator<<(ostream& outs, const Deck& printMe)
 	else {
 		deckNode* objHead = printMe.getHead();
 		deckNode* current = objHead;
-		
+
 		while (current != NULL) {
 			outs << *current->getData() << endl;
 			current = current->getLink();
