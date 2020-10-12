@@ -82,7 +82,7 @@ int main() {
     // Free memory
     continents1->clear();
 //    delete continent1;
-//    graphs1->clear();
+    graphs1->clear();
 //    delete graphs1;
     delete map1;
 
@@ -98,11 +98,11 @@ int main() {
 
     // Creating vector of graphs in order to pass it to the Map constructor
     vector<Graph<int> *> *graphs2 = new vector<Graph<int> *>;
-    graphs1->push_back(territoriesGraph1);
-    graphs1->push_back(territoriesGraph2);
+    graphs2->push_back(territoriesGraph1);
+    graphs2->push_back(territoriesGraph2);
 
     // Test case 2:
-    // Same setup as in test case 1, but connect territories 5 and 6
+    // Same setup as in test case 1, but connecting territories 5 and 6
     // Should pass
     cout << "Test case 2:" << endl;
     cout << "Same setup as in test case 1, but connect territories 5 and 6" << endl;
@@ -112,9 +112,51 @@ int main() {
     Map *map2 = new Map(graphs2, continents2);
     cout << "Results:" << endl << "--------" << endl;
     if (!map2->validate()) {
-        cout << "Test case 2 failed." << endl;
+        cout << "Test case 2 failed." << endl << endl;
     } else {
-        cout << "Test case 2 passed." << endl;
+        cout << "Test case 2 passed." << endl << endl;
+    }
+
+    // Adding territory 3 to territoriesVector2 (continent 2)
+    territoriesVector2->push_back(territory3);
+
+    // Free memory
+    continents2->clear();
+//    delete continent3, continent4, continents2;
+    graphs2->clear();
+    delete map2;
+
+    // Creating continents
+    // Assigning territories 1, 2 and 3 to continent 5 and territories 3, 4, 5 and 6 to continent 6
+    Continent *continent5 = new Continent(territoriesGraph1, territoriesVector1);
+    Continent *continent6 = new Continent(territoriesGraph2, territoriesVector2);
+
+    // Creating vector of continents in order to pass it to the Map constructor
+    vector<Continent *> *continents3 = new vector<Continent *>;
+    continents3->push_back(continent5);
+    continents3->push_back(continent6);
+
+    // Creating vector of graphs in order to pass it to the Map constructor
+    vector<Graph<int> *> *graphs3 = new vector<Graph<int> *>;
+    graphs3->push_back(territoriesGraph1);
+    graphs3->push_back(territoriesGraph2);
+
+    // Test case 3:
+    // Now adding territory 3 to continent 2 (territory 3 already belongs to continent 1)
+    // Should print 'Invalid: Duplicate territory in multiple continents'
+
+    cout << "Test case 3:" << endl;
+    cout << "Now add territory 3 to continent 2 (territory 3 already belongs to continent 1)" << endl;
+    cout << "Should print 'Invalid: Duplicate territory in multiple continents'" << endl
+         << endl;
+
+    // Creating Map
+    Map *map3 = new Map(graphs3, continents3);
+    cout << "Results:" << endl << "--------" << endl;
+    if (!map3->validate()) {
+        cout << "Test case 3 failed." << endl << endl;
+    } else {
+        cout << "Test case 3 passed." << endl << endl;
     }
 
     return 0;
