@@ -19,21 +19,23 @@ Order::Order()
 // Parameterized constructor
 Order::Order(Player *player)
 {
-    this->player = player;
+    delete this->player;
+    this->player = new Player(*player);
     this->isExecuted = false;
 }
 
 // Copy constructor
 Order::Order(const Order &order)
 {
-    this->player = order.player;
+    delete this->player;
+    this->player = new Player(*order.player);
     this->isExecuted = order.isExecuted;
 }
 
 // Destructor
 Order::~Order()
 {
-    delete player;
+    delete player; player = nullptr;
 }
 
 // Accessor
@@ -61,8 +63,14 @@ void Order::execute()
 
 // Overloading operator
 Order& Order::operator=(const Order& order){
-    this->player = order.player;
+    if(this == &order)
+        return *this;
+
+    // deallocate
+    delete this->player;
+    this->player = new Player(*order.player);
     this->isExecuted = order.isExecuted;
+
     return *this;
 }
 
@@ -89,21 +97,23 @@ Deploy::Deploy() : Order()
 // Parameterized constructor
 Deploy::Deploy(Player *player, Territory *deployTerritory, int numOfArmies) : Order(player)
 {
-    this->deployTerritory = deployTerritory;
+    delete this->deployTerritory;
+    this->deployTerritory = new Territory(*deployTerritory);
     this->numOfArmies = numOfArmies;
 }
 
 // Copy constructor
 Deploy::Deploy(const Deploy &deploy) : Order(deploy)
 {
-    this->deployTerritory = deploy.deployTerritory;
+    delete this->deployTerritory;
+    this->deployTerritory = new Territory(*deploy.deployTerritory);
     this->numOfArmies = deploy.numOfArmies;
 }
 
 // Destructor
 Deploy::~Deploy()
 {
-    delete deployTerritory;
+    delete deployTerritory; deployTerritory = nullptr;
 }
 
 // Accessor
@@ -129,18 +139,24 @@ void Deploy::execute()
 }
 
 // Overloading operator
-Deploy& Deploy::operator=(const Deploy& deploy){
-    this->deployTerritory = deploy.deployTerritory;
+Deploy& Deploy::operator=(const Deploy& deploy) {
+    if(this == &deploy)
+        return *this;
+
+    // deallocate
+    delete this->deployTerritory;
+    this->deployTerritory = new Territory(*deploy.deployTerritory);
     this->numOfArmies = deploy.numOfArmies;
+
     return *this;
 }
 
 ostream &operator<<(ostream &out, const Deploy& deploy) {
     out << deploy.orderType;
     if(deploy.isExecuted)
-        out << " has been executed";
+        out << " order has been executed";
     else
-        out << " has not been executed";
+        out << " order has not been executed";
     return out;
 }
 
@@ -159,24 +175,28 @@ Advance::Advance() : Order()
 // Parameterized constructor
 Advance::Advance(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies) : Order(player)
 {
-    this->fromTerritory = fromTerritory;
-    this->toTerritory = toTerritory;
+    delete this->fromTerritory;
+    this->fromTerritory = new Territory(*fromTerritory);
+    delete this->toTerritory;
+    this->toTerritory = new Territory(*toTerritory);
     this->numOfArmies = numOfArmies;
 }
 
 // Copy constructor
 Advance::Advance(const Advance &advance) : Order(advance)
 {
-    this->fromTerritory = advance.fromTerritory;
-    this->toTerritory = advance.toTerritory;
+    delete this->fromTerritory;
+    this->fromTerritory = new Territory(*advance.fromTerritory);
+    delete  this->toTerritory;
+    this->toTerritory = new Territory(*advance.toTerritory);
     this->numOfArmies = advance.numOfArmies;
 }
 
 // Destructor
 Advance::~Advance()
 {
-    delete fromTerritory;
-    delete toTerritory;
+    delete fromTerritory; fromTerritory = nullptr;
+    delete toTerritory; toTerritory = nullptr;
 }
 
 // Accessor
@@ -203,18 +223,25 @@ void Advance::execute()
 
 // Overloading operator
 Advance& Advance::operator=(const Advance& advance){
-    this->fromTerritory = advance.fromTerritory;
-    this->toTerritory = advance.toTerritory;
+    if(this == &advance)
+        return *this;
+
+    // deallocate
+    delete this->fromTerritory;
+    this->fromTerritory = new Territory(*advance.fromTerritory);
+    delete  this->toTerritory;
+    this->toTerritory = new Territory(*advance.toTerritory);
     this->numOfArmies = advance.numOfArmies;
+
     return *this;
 }
 
 ostream &operator<<(ostream &out, const Advance& advance) {
     out << advance.orderType;
     if(advance.isExecuted)
-        out << " has been executed";
+        out << " order has been executed";
     else
-        out << " has not been executed";
+        out << " order has not been executed";
     return out;
 }
 
@@ -232,22 +259,26 @@ Bomb::Bomb() : Order()
 // Parameterized constructor
 Bomb::Bomb(Player *player, Territory *fromTerritory, Territory *toTerritory) : Order(player)
 {
-    this->fromTerritory = fromTerritory;
-    this->toTerritory = toTerritory;
+    delete this->fromTerritory;
+    this->fromTerritory = new Territory(*fromTerritory);
+    delete this->toTerritory;
+    this->toTerritory = new Territory(*toTerritory);
 }
 
 // Copy constructor
 Bomb::Bomb(const Bomb &bomb) : Order(bomb)
 {
-    this->fromTerritory = bomb.fromTerritory;
-    this->toTerritory = bomb.toTerritory;
+    delete this->fromTerritory;
+    this->fromTerritory = new Territory(*bomb.fromTerritory);
+    delete  this->toTerritory;
+    this->toTerritory = new Territory(*bomb.toTerritory);
 }
 
 // Destructor
 Bomb::~Bomb()
 {
-    delete fromTerritory;
-    delete toTerritory;
+    delete fromTerritory; fromTerritory = nullptr;
+    delete toTerritory; toTerritory = nullptr;
 }
 
 // Accessor
@@ -275,17 +306,24 @@ void Bomb::execute()
 // Overloading operator
 Bomb& Bomb::operator=(const Bomb& bomb)
 {
-    this->fromTerritory = bomb.fromTerritory;
-    this->toTerritory = bomb.toTerritory;
+    if(this == &bomb)
+        return *this;
+
+    // deallocate
+    delete this->fromTerritory;
+    this->fromTerritory = new Territory(*bomb.fromTerritory);
+    delete  this->toTerritory;
+    this->toTerritory = new Territory(*bomb.toTerritory);
+
     return *this;
 }
 
 ostream &operator<<(ostream &out, const Bomb& bomb) {
     out << bomb.orderType;
     if(bomb.isExecuted)
-        out << " has been executed";
+        out << " order has been executed";
     else
-        out << " has not been executed";
+        out << " order has not been executed";
     return out;
 }
 
@@ -302,20 +340,22 @@ Blockade::Blockade() : Order()
 // Parameterized constructor
 Blockade::Blockade(Player *player, Territory *blockTerritory) : Order(player)
 {
-    this->blockTerritory = blockTerritory;
+    delete this->blockTerritory;
+    this->blockTerritory = new Territory(*blockTerritory);
 }
 
 // Copy constructor
 Blockade::Blockade(const Blockade &blockade) : Order(blockade)
 {
-    this->blockTerritory = blockade.blockTerritory;
+    delete this->blockTerritory;
+    this->blockTerritory = new Territory(*blockade.blockTerritory);
     this->isExecuted = blockade.isExecuted;
 }
 
 // Destructor
 Blockade::~Blockade()
 {
-    delete blockTerritory;
+    delete blockTerritory; blockTerritory = nullptr;
 }
 
 // Accessor
@@ -342,16 +382,23 @@ void Blockade::execute()
 
 // Overloading operator
 Blockade& Blockade::operator=(const Blockade& blockade){
-    this->blockTerritory = blockade.blockTerritory;
+    if(this == &blockade)
+        return *this;
+
+    // deallocate
+    delete this->blockTerritory;
+    this->blockTerritory = new Territory(*blockade.blockTerritory);
+    this->isExecuted = blockade.isExecuted;
+
     return *this;
 }
 
 ostream &operator<<(ostream &out, const Blockade& blockade) {
     out << blockade.orderType;
     if(blockade.isExecuted)
-        out << " has been executed";
+        out << " order has been executed";
     else
-        out << " has not been executed";
+        out << " order has not been executed";
     return out;
 }
 
@@ -370,23 +417,28 @@ Airlift::Airlift() : Order()
 // Parameterized constructor
 Airlift::Airlift(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies) : Order(player)
 {
-    this->fromTerritory = fromTerritory;
-    this->toTerritory = toTerritory;
+    delete fromTerritory;
+    this->fromTerritory = new Territory(*fromTerritory);
+    delete toTerritory;
+    this->toTerritory = new Territory(*toTerritory);
     this->numOfArmies = numOfArmies;
 }
 
 // Copy constructor
 Airlift::Airlift(const Airlift &airlift) : Order(airlift)
 {
-    this->fromTerritory = airlift.fromTerritory;
-    this->toTerritory = airlift.toTerritory;
+    delete this->fromTerritory;
+    this->fromTerritory = new Territory(*airlift.fromTerritory);
+    delete  this->toTerritory;
+    this->toTerritory = new Territory(*airlift.toTerritory);
+    this->numOfArmies = airlift.numOfArmies;
 }
 
 // Destructor
 Airlift::~Airlift()
 {
-    delete fromTerritory;
-    delete toTerritory;
+    delete fromTerritory; fromTerritory = nullptr;
+    delete toTerritory; toTerritory = nullptr;
 }
 
 // Accessor
@@ -414,18 +466,25 @@ void Airlift::execute()
 
 // Overloading operator
 Airlift& Airlift::operator=(const Airlift& airlift){
-    this->fromTerritory = airlift.fromTerritory;
-    this->toTerritory = airlift.toTerritory;
+    if(this == &airlift)
+        return *this;
+
+    // deallocate
+    delete this->fromTerritory;
+    this->fromTerritory = new Territory(*airlift.fromTerritory);
+    delete  this->toTerritory;
+    this->toTerritory = new Territory(*airlift.toTerritory);
     this->numOfArmies = airlift.numOfArmies;
+
     return *this;
 }
 
 ostream &operator<<(ostream &out, const Airlift& airlift) {
     out << airlift.orderType;
     if(airlift.isExecuted)
-        out << " has been executed";
+        out << " order has been executed";
     else
-        out << " has not been executed";
+        out << " order has not been executed";
     return out;
 }
 
@@ -442,20 +501,22 @@ Negotiate::Negotiate() : Order()
 // Parameterized constructor
 Negotiate::Negotiate(Player *player, Player *negotiator) : Order(player)
 {
-    this->negotiator = negotiator;
+    delete negotiator;
+    this->negotiator = new Player(*negotiator);
 }
 
 // Copy constructor
 Negotiate::Negotiate(const Negotiate &negotiate) : Order(negotiate)
 {
-    this->negotiator = negotiate.negotiator;
+    delete this->negotiator;
+    this->negotiator = new Player(*negotiate.negotiator);
     this->isExecuted = negotiate.isExecuted;
 }
 
 // Destructor
 Negotiate::~Negotiate()
 {
-    delete negotiator;
+    delete negotiator; negotiator = nullptr;
 }
 
 // Accessor
@@ -482,16 +543,23 @@ void Negotiate::execute()
 
 // Overloading operator
 Negotiate& Negotiate::operator=(const Negotiate& negotiate){
-    this->negotiator = negotiate.negotiator;
+    if(this == &negotiate)
+        return *this;
+
+    // deallocate
+    delete this->negotiator;
+    this->negotiator = new Player(*negotiate.negotiator);
+    this->isExecuted = negotiate.isExecuted;
+
     return *this;
 }
 
 ostream &operator<<(ostream &out, const Negotiate& negotiate) {
     out << negotiate.orderType;
     if(negotiate.isExecuted)
-        out << " has been executed";
+        out << " order has been executed";
     else
-        out << " has not been executed";
+        out << " order has not been executed";
     return out;
 }
 
@@ -502,19 +570,32 @@ ostream &operator<<(ostream &out, const Negotiate& negotiate) {
 // Default constructor
 OrdersList::OrdersList()
 {
-    vector<Order*> listOrders;
+    listOrders.clear();
 }
 
 // Copy constructor
-OrdersList::OrdersList(const OrdersList &orders)
+OrdersList::OrdersList(const OrdersList &ordersList)
 {
-    this->listOrders = orders.listOrders;
+    for(Order *order : this->listOrders)
+    {
+        delete order;
+        order = nullptr;
+    }
+    this->listOrders.clear();
+
+    for(Order *order : ordersList.listOrders)
+        this->addToLast(new Order(*order));
 }
 
 // Destructor
 OrdersList::~OrdersList()
 {
-    listOrders.clear();
+    for(Order *order : this->listOrders)
+    {
+        delete order;
+        order = nullptr;
+    }
+    this->listOrders.clear();
 }
 
 // Methods
@@ -542,8 +623,15 @@ void OrdersList::move(int indexFrom, int indexTo)
 }
 
 // Overloading operator
-OrdersList& OrdersList::operator=(const OrdersList& o){
-    this->listOrders = o.listOrders;
+OrdersList& OrdersList::operator=(const OrdersList& ordersList){
+    if(this == &ordersList)
+        return *this;
+
+    // deallocate
+    this->listOrders.clear();
+    for(Order *order : ordersList.listOrders)
+        this->addToLast(new Order(*order));
+
     return *this;
 }
 
