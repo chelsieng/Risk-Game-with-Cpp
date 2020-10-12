@@ -48,15 +48,23 @@ int main() {
     Continent *continent1 = new Continent(territoriesGraph1, territoriesVector1);
     Continent *continent2 = new Continent(territoriesGraph2, territoriesVector2);
 
+    //Creating map graph
+    Graph<int> *mapGraph1 = new Graph<int>;
+    //Adding continent1 and continent2 as vertex to mapGraph
+    mapGraph1->add_vertex(continent1->getId());
+    mapGraph1->add_vertex(continent2->getId());
+
+    //Connecting continent 1-2 to mapGraph
+    mapGraph1->add_edge(continent1->getId(), continent2->getId());
+
     // Creating vector of continents in order to pass it to the Map constructor
     vector<Continent *> *continents1 = new vector<Continent *>;
     continents1->push_back(continent1);
     continents1->push_back(continent2);
 
-    // Creating vector of graphs in order to pass it to the Map constructor
+    // Creating vector of mapGraph in order to pass it to the Map constructor
     vector<Graph<int> *> *graphs1 = new vector<Graph<int> *>;
-    graphs1->push_back(territoriesGraph1);
-    graphs1->push_back(territoriesGraph2);
+    graphs1->push_back(mapGraph1);
 
     // Test case 1:
     // Continent 1: territories 1, 2 and 3 which are connected
@@ -69,7 +77,8 @@ int main() {
          << endl;
     // Creating Map
     Map *map1 = new Map(graphs1, continents1);
-    cout << "Results:" << endl << "--------" << endl;
+    cout << *map1;
+    cout << endl << "Results:" << endl << "--------" << endl;
     if (!map1->validate()) {
         cout << "Test case 1 failed." << endl << endl;
     } else {
@@ -78,13 +87,6 @@ int main() {
 
     // Connecting territories 5 and 6
     territoriesGraph2->add_edge(territory5->getId(), territory6->getId());
-
-    // Free memory
-    continents1->clear();
-//    delete continent1;
-    graphs1->clear();
-//    delete graphs1;
-    delete map1;
 
     // Creating continents
     // Assigning territories 1, 2 and 3 to continent 3 and territories 4, 5 and 6 to continent 4
@@ -96,10 +98,19 @@ int main() {
     continents2->push_back(continent3);
     continents2->push_back(continent4);
 
+    //Creating map graph
+    Graph<int> *mapGraph2 = new Graph<int>;
+
+    //Adding continent3 and continent4 as vertex to mapGraph
+    mapGraph2->add_vertex(continent3->getId());
+    mapGraph2->add_vertex(continent4->getId());
+
+    //Connecting continent 3-4 to mapGraph
+    mapGraph2->add_edge(continent3->getId(), continent4->getId());
+
     // Creating vector of graphs in order to pass it to the Map constructor
     vector<Graph<int> *> *graphs2 = new vector<Graph<int> *>;
-    graphs2->push_back(territoriesGraph1);
-    graphs2->push_back(territoriesGraph2);
+    graphs2->push_back(mapGraph2);
 
     // Test case 2:
     // Same setup as in test case 1, but connecting territories 5 and 6
@@ -110,24 +121,16 @@ int main() {
 
     // Creating Map
     Map *map2 = new Map(graphs2, continents2);
-    cout << "Results:" << endl << "--------" << endl;
+    cout << *map2;
+    cout << endl << "Results:" << endl << "--------" << endl;
     if (!map2->validate()) {
         cout << "Test case 2 failed." << endl << endl;
     } else {
         cout << "Test case 2 passed." << endl << endl;
     }
 
-    // Adding territory 3 to territoriesVector2 (continent 2)
-    territoriesVector2->push_back(territory3);
-
-    // Free memory
-    continents2->clear();
-//    delete continent3, continent4, continents2;
-    graphs2->clear();
-    delete map2;
-
     // Creating continents
-    // Assigning territories 1, 2 and 3 to continent 5 and territories 3, 4, 5 and 6 to continent 6
+    // Assigning territories 1, 2 and 3 to continent 5 and territories 4, 5 and 6 to continent 6
     Continent *continent5 = new Continent(territoriesGraph1, territoriesVector1);
     Continent *continent6 = new Continent(territoriesGraph2, territoriesVector2);
 
@@ -136,27 +139,76 @@ int main() {
     continents3->push_back(continent5);
     continents3->push_back(continent6);
 
+    //Creating map graph
+    Graph<int> *mapGraph3 = new Graph<int>;
+    //Adding continent5 and continent6 as vertex to mapGraph
+    mapGraph3->add_vertex(continent5->getId());
+    mapGraph3->add_vertex(continent6->getId());
+
     // Creating vector of graphs in order to pass it to the Map constructor
     vector<Graph<int> *> *graphs3 = new vector<Graph<int> *>;
-    graphs3->push_back(territoriesGraph1);
-    graphs3->push_back(territoriesGraph2);
+    graphs3->push_back(mapGraph3);
 
     // Test case 3:
-    // Now adding territory 3 to continent 2 (territory 3 already belongs to continent 1)
-    // Should print 'Invalid: Duplicate territory in multiple continents'
-
+    // Same setup as in test case 2, but continent 5 and 6 are not connected
+    // Should print "Invalid: Map is not a connected graph"
     cout << "Test case 3:" << endl;
-    cout << "Now add territory 3 to continent 2 (territory 3 already belongs to continent 1)" << endl;
-    cout << "Should print 'Invalid: Duplicate territory in multiple continents'" << endl
-         << endl;
+    cout << "Same setup as in test case 2, but continent 5 and 6 are not connected" << endl;
+    cout << "Should print 'Invalid: Map is not a connected graph'" << endl << endl;
 
     // Creating Map
     Map *map3 = new Map(graphs3, continents3);
-    cout << "Results:" << endl << "--------" << endl;
+    cout << *map3;
+    cout << endl << "Results:" << endl << "--------" << endl;
     if (!map3->validate()) {
         cout << "Test case 3 failed." << endl << endl;
     } else {
         cout << "Test case 3 passed." << endl << endl;
+    }
+
+    // Adding territory 3 to territoriesVector2 (continent 2)
+    territoriesVector2->push_back(territory3);
+
+    // Creating continents
+    // Assigning territories 1, 2 and 3 to continent 5 and territories 3, 4, 5 and 6 to continent 6
+    Continent *continent7 = new Continent(territoriesGraph1, territoriesVector1);
+    Continent *continent8 = new Continent(territoriesGraph2, territoriesVector2);
+
+    // Creating vector of continents in order to pass it to the Map constructor
+    vector<Continent *> *continents4 = new vector<Continent *>;
+    continents4->push_back(continent7);
+    continents4->push_back(continent8);
+
+    //Creating map graph
+    Graph<int> *mapGraph4 = new Graph<int>;
+
+    //Adding continent7 and continent8 as vertex to mapGraph
+    mapGraph4->add_vertex(continent7->getId());
+    mapGraph4->add_vertex(continent8->getId());
+
+    //Connecting continent 7-8 to mapGraph
+    mapGraph4->add_edge(continent7->getId(), continent8->getId());
+
+    // Creating vector of graphs in order to pass it to the Map constructor
+    vector<Graph<int> *> *graphs4 = new vector<Graph<int> *>;
+    graphs4->push_back(mapGraph4);
+
+    // Test case 4:
+    // Now adding territory 3 to continent 2 (territory 3 already belongs to continent 1)
+    // Should print 'Invalid: Duplicate territory in multiple continents'
+    cout << "Test case 4:" << endl;
+    cout << "Now adding territory 3 to continent 2 (territory 3 already belongs to continent 1)" << endl;
+    cout << "Should print 'Invalid: Duplicate territory in multiple continents'" << endl
+         << endl;
+
+    // Creating Map
+    Map *map4 = new Map(graphs4, continents4);
+    cout << *map4;
+    cout << endl << "Results:" << endl << "--------" << endl;
+    if (!map4->validate()) {
+        cout << "Test case 4 failed." << endl << endl;
+    } else {
+        cout << "Test case 4 passed." << endl << endl;
     }
 
     // Deleting territory 3 from continent 2
@@ -167,49 +219,51 @@ int main() {
     territoriesGraph1->add_vertex(territory7->getId());
     territoriesGraph1->add_edge(territory7->getId(), territory1->getId());
 
-    // Free memory
-    continents3->clear();
-//    delete continent5, continent6, continents3;
-
     // Creating continents
     // Assigning territories 1, 2, 3 and 7 (without declaring in territoriesVector1) to continent 7 and territories 4, 5 and 6 to continent 7
-    Continent *continent7 = new Continent(territoriesGraph1, territoriesVector1);
-    Continent *continent8 = new Continent(territoriesGraph2, territoriesVector2);
+    Continent *continent9 = new Continent(territoriesGraph1, territoriesVector1);
+    Continent *continent10 = new Continent(territoriesGraph2, territoriesVector2);
 
     // Creating vector of continents in order to pass it to the Map constructor
-    vector<Continent *> *continents4 = new vector<Continent *>;
-    continents4->push_back(continent7);
-    continents4->push_back(continent8);
+    vector<Continent *> *continents5 = new vector<Continent *>;
+    continents5->push_back(continent9);
+    continents5->push_back(continent10);
+
+    //Creating map graph
+    Graph<int> *mapGraph5 = new Graph<int>;
+    //Adding continent9 and continent10 as vertex to mapGraph
+    mapGraph5->add_vertex(continent9->getId());
+    mapGraph5->add_vertex(continent10->getId());
+
+    //Connecting continent 9-10 to mapGraph
+    mapGraph5->add_edge(continent9->getId(), continent10->getId());
 
     // Creating vector of graphs in order to pass it to the Map constructor
-    vector<Graph<int> *> *graphs4 = new vector<Graph<int> *>;
-    graphs4->push_back(territoriesGraph1);
-    graphs4->push_back(territoriesGraph2);
+    vector<Graph<int> *> *graphs5 = new vector<Graph<int> *>;
+    graphs5->push_back(mapGraph5);
 
-    // Test case 4:
+    // Test case 5:
     // Removed territory 3 from continent 2
     // Now added new territory 7 to continent 1 and connected it to the other territories in the continent
     // but did not add territory 7 in territoriesVector1 in order to create an inconsistency
     // Should print 'Invalid: Inconsistent number of territories in graph and in vector'
-    cout << "Test case 4:" << endl;
-    cout << "Remove territory 3 from continent 2" << endl;
-    cout << "Now add new territory 7 to continent 1 and connect it to the other territories in the continent" << endl;
-    cout << "but don't declare/add territory 7 in continent vector in order to create an inconsistency" << endl;
+    cout << "Test case 5:" << endl;
+    cout << "Removed territory 3 from continent 2" << endl;
+    cout << "Now adding new territory 7 to continent 1 and connected it to the other territories in the continent"
+         << endl;
+    cout << "but did not add territory 7 in continent vector in order to create an inconsistency" << endl;
     cout
             << "Should print 'Invalid: Inconsistent number of territories in graph and in vector'"
             << endl << endl;
 
     // Creating Map
-    Map *map4 = new Map(graphs4, continents4);
-    cout << "Results:" << endl << "--------" << endl;
-    if (!map4->validate()) {
-        cout << "Test case 4 failed." << endl << endl;
+    Map *map5 = new Map(graphs5, continents5);
+    cout << *map5;
+    cout << endl << "Results:" << endl << "--------" << endl;
+    if (!map5->validate()) {
+        cout << "Test case 5 failed." << endl << endl;
     } else {
-        cout << "Test case 4 passed." << endl << endl;
+        cout << "Test case 5 passed." << endl << endl;
     }
-//    // Cleanup
-//    delete territory1, territory2, territory3, territory4, territory5, territory6, territory7;
-//    delete territoriesVector1, territoriesVector2, territoriesGraph1, territoriesGraph2;
-//    delete continent7, continent8, continents4;
     return 0;
 }
