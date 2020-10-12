@@ -554,3 +554,4 @@ ostream &operator<<(ostream &out, const OrdersList &ordersList)
         out << (i + 1) << ". " << (*ordersList.listOrders[i]).getOrderType() << endl;
     return out;
 }
+

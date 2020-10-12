@@ -68,12 +68,54 @@ int main() {
     cout << "Should print 'Invalid: A continent is not a connected subgraph'" << endl
          << endl;
     // Creating Map
-    Map *map = new Map(graphs1, continents1);
-    cout << "Results:" << endl;
-    if (!map->validate()) {
-        cout << "Test case 1 failed." << endl;
+    Map *map1 = new Map(graphs1, continents1);
+    cout << "Results:" << endl << "--------" << endl;
+    if (!map1->validate()) {
+        cout << "Test case 1 failed." << endl << endl;
     } else {
-        cout << "Test case 1 passed." << endl;
+        cout << "Test case 1 passed." << endl << endl;
     }
+
+    // Connecting territories 5 and 6
+    territoriesGraph2->add_edge(territory5->getId(), territory6->getId());
+
+    // Free memory
+    continents1->clear();
+//    delete continent1;
+//    graphs1->clear();
+//    delete graphs1;
+    delete map1;
+
+    // Creating continents
+    // Assigning territories 1, 2 and 3 to continent 3 and territories 4, 5 and 6 to continent 4
+    Continent *continent3 = new Continent(territoriesGraph1, territoriesVector1);
+    Continent *continent4 = new Continent(territoriesGraph2, territoriesVector2);
+
+    // Creating vector of continents in order to pass it to the Map constructor
+    vector<Continent *> *continents2 = new vector<Continent *>;
+    continents2->push_back(continent3);
+    continents2->push_back(continent4);
+
+    // Creating vector of graphs in order to pass it to the Map constructor
+    vector<Graph<int> *> *graphs2 = new vector<Graph<int> *>;
+    graphs1->push_back(territoriesGraph1);
+    graphs1->push_back(territoriesGraph2);
+
+    // Test case 2:
+    // Same setup as in test case 1, but connect territories 5 and 6
+    // Should pass
+    cout << "Test case 2:" << endl;
+    cout << "Same setup as in test case 1, but connect territories 5 and 6" << endl;
+    cout << "Should pass with no error printed" << endl << endl;
+
+    // Creating Map
+    Map *map2 = new Map(graphs2, continents2);
+    cout << "Results:" << endl << "--------" << endl;
+    if (!map2->validate()) {
+        cout << "Test case 2 failed." << endl;
+    } else {
+        cout << "Test case 2 passed." << endl;
+    }
+
     return 0;
 }
