@@ -86,8 +86,14 @@ int Player::getId() const {
     return pID;
 }
 
+// Returning the player's order list
 OrdersList* Player::getOrdersList() {
     return this->playerOrdersList;
+}
+
+// Returning the player's hand
+Hand* Player::getHand() {
+    return this->playerHand;
 }
 
 // Adding an order to the end of the player's order list
