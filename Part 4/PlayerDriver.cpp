@@ -83,7 +83,7 @@ int main() {
     territoryListP2->push_back(p2territory4);
     territoryListP2->push_back(p2territory5);
 
-////----------------------------------------------------------------------
+//----------------------------------------------------------------------
 
     //CREATING ORDERS AND ORDER LIST
     int numOfArmies = 5;
@@ -154,8 +154,7 @@ int main() {
         cout << *t << endl;
     }
 
-
-//// PLAYER 1 ATTACKING TERRITORIES
+// PLAYER 1 ATTACKING TERRITORIES
     // Creating two arbitrary territories
     Territory* terrToAttack1 = new Territory(new Player(), genericName);
     Territory* terrToAttack2 = new Territory(new Player(), genericName);
