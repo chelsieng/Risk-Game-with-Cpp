@@ -10,6 +10,7 @@ int main() {
     MapLoader* m2 = new MapLoader("mexico.map");
     MapLoader* m3 = new MapLoader("artic.map");
     MapLoader* m4 = new MapLoader("northern-europe.map");
+    MapLoader* m5 = new MapLoader("newworld.map");
 
     m->loadMap("/Users/jacobguirguis/Documents/Concordia/7_Fall_2020/COMP_345/Project/COMP-345/Part 2/swiss.map")->validate();
     m2->loadMap("/Users/jacobguirguis/Documents/Concordia/7_Fall_2020/COMP_345/Project/COMP-345/Part 2/mexico.map")->validate();
