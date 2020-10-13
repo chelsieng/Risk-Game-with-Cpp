@@ -13,8 +13,12 @@ int main()
     // Initialize variables
     Player *player1 = new Player();
     Player *player2 = new Player();
-    Territory *territory1 = new Territory(player1);
-    Territory *territory2 = new Territory(player2);
+
+    string *name1 = new string("name1");
+    string *name2 = new string("name2");
+    Territory *territory1 = new Territory(player1, name1);
+    Territory *territory2 = new Territory(player2, name2);
+
     int numOfArmies = 5;
 
     // Testing each order subclass
@@ -74,17 +78,19 @@ int main()
         << *ordersList  << endl;
 
     // Delete pointers
-    delete player1; player1 = nullptr;
-    delete player2; player2 = nullptr;
-    delete territory1; territory1 = nullptr;
-    delete territory2; territory2 = nullptr;
-    delete deploy; deploy = nullptr;
-    delete advance; advance = nullptr;
-    delete bomb; bomb = nullptr;
-    delete blockade; blockade = nullptr;
-    delete negotiate; negotiate = nullptr;
-    delete airlift; airlift = nullptr;
-    delete ordersList; ordersList = nullptr;
+    player1 = nullptr;
+    player2 = nullptr;
+    name1 = nullptr;
+    name2 = nullptr;
+    territory1 = nullptr;
+    territory2 = nullptr;
+    deploy = nullptr;
+    advance = nullptr;
+    bomb = nullptr;
+    blockade = nullptr;
+    negotiate = nullptr;
+    airlift = nullptr;
+    ordersList = nullptr;
 
     cout << "End of OrdersDriver" << endl;
     return 0;

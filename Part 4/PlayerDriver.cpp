@@ -55,12 +55,14 @@ int main() {
 
     // CREATING TERRITORIES FOR PLAYERS
 
+    string* genericName = new string("Canada");
+
     // Player 1
-    Territory *p1territory1 = new Territory(p1);
-    Territory *p1territory2 = new Territory(p1);
-    Territory *p1territory3 = new Territory(p1);
-    Territory *p1territory4 = new Territory(p1);
-    Territory *p1territory5 = new Territory(p1);
+    Territory *p1territory1 = new Territory(p1, genericName);
+    Territory *p1territory2 = new Territory(p1, genericName);
+    Territory *p1territory3 = new Territory(p1, genericName);
+    Territory *p1territory4 = new Territory(p1, genericName);
+    Territory *p1territory5 = new Territory(p1, genericName);
 
     territoryListP1->push_back(p1territory1);
     territoryListP1->push_back(p1territory2);
@@ -69,11 +71,11 @@ int main() {
     territoryListP1->push_back(p1territory5);
 
     // Player 2
-    Territory *p2territory1 = new Territory(p2);
-    Territory *p2territory2 = new Territory(p2);
-    Territory *p2territory3 = new Territory(p2);
-    Territory *p2territory4 = new Territory(p2);
-    Territory *p2territory5 = new Territory(p2);
+    Territory *p2territory1 = new Territory(p2, genericName);
+    Territory *p2territory2 = new Territory(p2, genericName);
+    Territory *p2territory3 = new Territory(p2, genericName);
+    Territory *p2territory4 = new Territory(p2, genericName);
+    Territory *p2territory5 = new Territory(p2, genericName);
 
     territoryListP2->push_back(p2territory1);
     territoryListP2->push_back(p2territory2);
@@ -139,8 +141,8 @@ int main() {
 
     // PLAYER 1 DEFENDING THEIR TERRITORIES
     // Creating two arbitrary territories
-    Territory* terrToDefend1 = new Territory(p1);
-    Territory* terrToDefend2 = new Territory(p1);
+    Territory* terrToDefend1 = new Territory(p1, genericName);
+    Territory* terrToDefend2 = new Territory(p1, genericName);
 
     // Adding them to a list
     vector<Territory*>* listToDefend = new vector<Territory*>();
@@ -152,11 +154,10 @@ int main() {
         cout << *t << endl;
     }
 
-
 // PLAYER 1 ATTACKING TERRITORIES
     // Creating two arbitrary territories
-    Territory* terrToAttack1 = new Territory(new Player());
-    Territory* terrToAttack2 = new Territory(new Player());
+    Territory* terrToAttack1 = new Territory(new Player(), genericName);
+    Territory* terrToAttack2 = new Territory(new Player(), genericName);
 
     // Adding them to a list
     vector<Territory*>* listToAttack = new vector<Territory*>();

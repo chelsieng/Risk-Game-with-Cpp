@@ -19,16 +19,14 @@ Order::Order()
 // Parameterized constructor
 Order::Order(Player *player)
 {
-    delete this->player;
-    this->player = new Player(*player);
+    this->player = (player);
     this->isExecuted = false;
 }
 
 // Copy constructor
 Order::Order(const Order &order)
 {
-    delete this->player;
-    this->player = new Player(*order.player);
+    this->player = (order.player);
     this->isExecuted = order.isExecuted;
 }
 
@@ -68,7 +66,7 @@ Order& Order::operator=(const Order& order){
 
     // deallocate
     delete this->player;
-    this->player = new Player(*order.player);
+    this->player = (order.player);
     this->isExecuted = order.isExecuted;
 
     return *this;
@@ -97,16 +95,14 @@ Deploy::Deploy() : Order()
 // Parameterized constructor
 Deploy::Deploy(Player *player, Territory *deployTerritory, int numOfArmies) : Order(player)
 {
-    delete this->deployTerritory;
-    this->deployTerritory = new Territory(*deployTerritory);
+    this->deployTerritory = (deployTerritory);
     this->numOfArmies = numOfArmies;
 }
 
 // Copy constructor
 Deploy::Deploy(const Deploy &deploy) : Order(deploy)
 {
-    delete this->deployTerritory;
-    this->deployTerritory = new Territory(*deploy.deployTerritory);
+    this->deployTerritory = (deploy.deployTerritory);
     this->numOfArmies = deploy.numOfArmies;
 }
 
@@ -145,7 +141,7 @@ Deploy& Deploy::operator=(const Deploy& deploy) {
 
     // deallocate
     delete this->deployTerritory;
-    this->deployTerritory = new Territory(*deploy.deployTerritory);
+    this->deployTerritory = (deploy.deployTerritory);
     this->numOfArmies = deploy.numOfArmies;
 
     return *this;
@@ -175,20 +171,16 @@ Advance::Advance() : Order()
 // Parameterized constructor
 Advance::Advance(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies) : Order(player)
 {
-    delete this->fromTerritory;
-    this->fromTerritory = new Territory(*fromTerritory);
-    delete this->toTerritory;
-    this->toTerritory = new Territory(*toTerritory);
+    this->fromTerritory = (fromTerritory);
+    this->toTerritory = (toTerritory);
     this->numOfArmies = numOfArmies;
 }
 
 // Copy constructor
 Advance::Advance(const Advance &advance) : Order(advance)
 {
-    delete this->fromTerritory;
-    this->fromTerritory = new Territory(*advance.fromTerritory);
-    delete  this->toTerritory;
-    this->toTerritory = new Territory(*advance.toTerritory);
+    this->fromTerritory = (advance.fromTerritory);
+    this->toTerritory = (advance.toTerritory);
     this->numOfArmies = advance.numOfArmies;
 }
 
@@ -228,9 +220,9 @@ Advance& Advance::operator=(const Advance& advance){
 
     // deallocate
     delete this->fromTerritory;
-    this->fromTerritory = new Territory(*advance.fromTerritory);
+    this->fromTerritory = (advance.fromTerritory);
     delete  this->toTerritory;
-    this->toTerritory = new Territory(*advance.toTerritory);
+    this->toTerritory = (advance.toTerritory);
     this->numOfArmies = advance.numOfArmies;
 
     return *this;
@@ -259,19 +251,15 @@ Bomb::Bomb() : Order()
 // Parameterized constructor
 Bomb::Bomb(Player *player, Territory *fromTerritory, Territory *toTerritory) : Order(player)
 {
-    delete this->fromTerritory;
-    this->fromTerritory = new Territory(*fromTerritory);
-    delete this->toTerritory;
-    this->toTerritory = new Territory(*toTerritory);
+    this->fromTerritory = (fromTerritory);
+    this->toTerritory = (toTerritory);
 }
 
 // Copy constructor
 Bomb::Bomb(const Bomb &bomb) : Order(bomb)
 {
-    delete this->fromTerritory;
-    this->fromTerritory = new Territory(*bomb.fromTerritory);
-    delete  this->toTerritory;
-    this->toTerritory = new Territory(*bomb.toTerritory);
+    this->fromTerritory = (bomb.fromTerritory);
+    this->toTerritory = (bomb.toTerritory);
 }
 
 // Destructor
@@ -311,9 +299,9 @@ Bomb& Bomb::operator=(const Bomb& bomb)
 
     // deallocate
     delete this->fromTerritory;
-    this->fromTerritory = new Territory(*bomb.fromTerritory);
+    this->fromTerritory = (bomb.fromTerritory);
     delete  this->toTerritory;
-    this->toTerritory = new Territory(*bomb.toTerritory);
+    this->toTerritory = (bomb.toTerritory);
 
     return *this;
 }
@@ -340,15 +328,13 @@ Blockade::Blockade() : Order()
 // Parameterized constructor
 Blockade::Blockade(Player *player, Territory *blockTerritory) : Order(player)
 {
-    delete this->blockTerritory;
-    this->blockTerritory = new Territory(*blockTerritory);
+    this->blockTerritory = (blockTerritory);
 }
 
 // Copy constructor
 Blockade::Blockade(const Blockade &blockade) : Order(blockade)
 {
-    delete this->blockTerritory;
-    this->blockTerritory = new Territory(*blockade.blockTerritory);
+    this->blockTerritory = (blockade.blockTerritory);
     this->isExecuted = blockade.isExecuted;
 }
 
@@ -387,7 +373,7 @@ Blockade& Blockade::operator=(const Blockade& blockade){
 
     // deallocate
     delete this->blockTerritory;
-    this->blockTerritory = new Territory(*blockade.blockTerritory);
+    this->blockTerritory = (blockade.blockTerritory);
     this->isExecuted = blockade.isExecuted;
 
     return *this;
@@ -417,20 +403,16 @@ Airlift::Airlift() : Order()
 // Parameterized constructor
 Airlift::Airlift(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies) : Order(player)
 {
-    delete fromTerritory;
-    this->fromTerritory = new Territory(*fromTerritory);
-    delete toTerritory;
-    this->toTerritory = new Territory(*toTerritory);
+    this->fromTerritory = (fromTerritory);
+    this->toTerritory = (toTerritory);
     this->numOfArmies = numOfArmies;
 }
 
 // Copy constructor
 Airlift::Airlift(const Airlift &airlift) : Order(airlift)
 {
-    delete this->fromTerritory;
-    this->fromTerritory = new Territory(*airlift.fromTerritory);
-    delete  this->toTerritory;
-    this->toTerritory = new Territory(*airlift.toTerritory);
+    this->fromTerritory = (airlift.fromTerritory);
+    this->toTerritory = (airlift.toTerritory);
     this->numOfArmies = airlift.numOfArmies;
 }
 
@@ -471,9 +453,9 @@ Airlift& Airlift::operator=(const Airlift& airlift){
 
     // deallocate
     delete this->fromTerritory;
-    this->fromTerritory = new Territory(*airlift.fromTerritory);
+    this->fromTerritory = (airlift.fromTerritory);
     delete  this->toTerritory;
-    this->toTerritory = new Territory(*airlift.toTerritory);
+    this->toTerritory = (airlift.toTerritory);
     this->numOfArmies = airlift.numOfArmies;
 
     return *this;
@@ -501,15 +483,13 @@ Negotiate::Negotiate() : Order()
 // Parameterized constructor
 Negotiate::Negotiate(Player *player, Player *negotiator) : Order(player)
 {
-    delete negotiator;
-    this->negotiator = new Player(*negotiator);
+    this->negotiator = (negotiator);
 }
 
 // Copy constructor
 Negotiate::Negotiate(const Negotiate &negotiate) : Order(negotiate)
 {
-    delete this->negotiator;
-    this->negotiator = new Player(*negotiate.negotiator);
+    this->negotiator = (negotiate.negotiator);
     this->isExecuted = negotiate.isExecuted;
 }
 
@@ -548,7 +528,7 @@ Negotiate& Negotiate::operator=(const Negotiate& negotiate){
 
     // deallocate
     delete this->negotiator;
-    this->negotiator = new Player(*negotiate.negotiator);
+    this->negotiator = (negotiate.negotiator);
     this->isExecuted = negotiate.isExecuted;
 
     return *this;
@@ -576,11 +556,6 @@ OrdersList::OrdersList()
 // Copy constructor
 OrdersList::OrdersList(const OrdersList &ordersList)
 {
-    for(Order *order : this->listOrders)
-    {
-        delete order;
-        order = nullptr;
-    }
     this->listOrders.clear();
 
     for(Order *order : ordersList.listOrders)
