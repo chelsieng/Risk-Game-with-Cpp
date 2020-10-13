@@ -24,6 +24,7 @@ public:
 
     // Reading input file
     static void loadMap(string fileName);
+    static std::vector<string> parseString(string s);
 
     friend ostream &operator<<(ostream &, const MapLoader &); // insertion stream operator
 };
