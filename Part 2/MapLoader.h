@@ -9,6 +9,7 @@ class MapLoader {
 private:
     string fileName;
     static Map* validMap;
+
 //    std::vector<std::vector<std::string>> countries;
 //    std::vector<std::vector<std::string>> continents;
 
@@ -23,7 +24,7 @@ public:
     ~MapLoader(); //Destructor
 
     // Reading input file
-    static void loadMap(string fileName);
+    static Map* loadMap(string fileName);
     static std::vector<string> parseString(string s);
 
     friend ostream &operator<<(ostream &, const MapLoader &); // insertion stream operator
