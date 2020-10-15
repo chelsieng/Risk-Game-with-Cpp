@@ -6,7 +6,6 @@
 #include <sstream>
 
 #include "MapLoader.h"
-#include "Graph.h"
 
 using namespace std;
 
@@ -49,7 +48,8 @@ Map* MapLoader::loadMap(string fileName) {
 
     vector<vector<Territory*>*> continentList;
     vector<string*> continentName;
-    vector<Graph<int>*> graphList;
+//    vector<Graph<int>*> graphList;
+    auto mapGraph = new Graph<int>;
     vector<Territory*> countryList;
     map<int, string> countryMap{};
     vector<vector<string>> borderSpecs;
@@ -71,7 +71,7 @@ Map* MapLoader::loadMap(string fileName) {
 
                 continentList.push_back(new vector<Territory*>());
                 continentName.push_back(&parseString(line).at(1));
-                graphList.push_back(new Graph<int>());
+//                graphList.push_back(new Graph<int>());
                 getline(input, line);
             }
         }
@@ -114,17 +114,17 @@ Map* MapLoader::loadMap(string fileName) {
 
         //--------------------------BUILDING GRAPH----------------------------
 
-        // A dding all the territory vertices to the graph
+        // Adding all the territory vertices to the graph
         int clCounter = 0;
         for (auto cl : continentList) {
             for (auto cont : *cl) {
                 int glCounter = 0;
-                for (auto gl : graphList) {
+//                for (auto gl : graphList) {
                     if (clCounter == glCounter) {
-                        gl->add_vertex(cont->getId());
+                        mapGraph->add_vertex(cont->getId());
                     }
                     glCounter++;
-                }
+//                }
             }
             clCounter++;
         }
@@ -138,17 +138,17 @@ Map* MapLoader::loadMap(string fileName) {
                  borderSpecs.push_back(parseString(line));
 
                 // Creating the edges between countries
-                for (auto gl : graphList) {
-                    for (auto vert : gl->get_vertices()) {
+//                for (auto gl : graphList) {
+                    for (auto vert : mapGraph->get_vertices()) {
                         for(auto borders : borderSpecs) {
                             if (vert == stoi(borders.at(0))) {
                                 for (int i = 1 ; i < borders.size(); i++) {
-                                    gl->add_edge(vert, stoi(borders.at(i)));
+                                    mapGraph->add_edge(vert, stoi(borders.at(i)));
                                 }
                             }
                         }
                     }
-                }
+//                }
                 getline(input, line);
             }
         }
@@ -157,15 +157,14 @@ Map* MapLoader::loadMap(string fileName) {
 
     vector<Continent*>* continentVector = new vector<Continent*>();
     for (int i = 0; i < continentList.size(); i++) {
-        continentVector->push_back(new Continent(continentName.at(i), graphList.at(i), continentList.at(i)));
+        continentVector->push_back(new Continent(continentName.at(i), mapGraph, continentList.at(i)));
     }
 
-    vector<Graph<int> *>* graphListPointer = &graphList;
 
 
     input.close();
 
-    return new Map(graphListPointer, continentVector);
+    return new Map(mapGraph, continentVector);
 }
 
 // Helper method to parse input file lines
