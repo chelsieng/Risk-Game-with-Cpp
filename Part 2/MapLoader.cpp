@@ -113,7 +113,7 @@ Map* MapLoader::loadMap(const string &filePath) {
 
         //------------------------COUNTRIES VECTOR----------------------------
 
-        // When reader hits the continents list
+        // When reader hits the countries list
         if (line.find("[countries]") == 0) {
 
             // read new line
@@ -137,7 +137,7 @@ Map* MapLoader::loadMap(const string &filePath) {
 
             // Adding the country lists (continents) to the continent vector
             // Looping same number of times as number of continents
-            // Checking if the country's continent ID matches the index of thr continent in the vector
+            // Checking if the country's continent ID matches the index of the continent in the vector
             // Adding the country to the right continent
             for (int i = 0; i < continentList.size(); i++) {
                 for (auto j : countryMap) {
