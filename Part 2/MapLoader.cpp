@@ -156,7 +156,7 @@ Map* MapLoader::loadMap(const string &filePath) {
 
         // Adding all the territory vertices to the graph
         // Looping through continents and their territories
-        // adding a vertex for each continent in the mapGraph
+        // adding vertices of all territories from each continent to the mapGraph
         for (auto cont : continentList) {
             for (auto terr : *cont) {
                 mapGraph->add_vertex(terr->getId());
