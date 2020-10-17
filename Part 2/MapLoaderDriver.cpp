@@ -1,19 +1,42 @@
 #include <string>
 #include "MapLoader.h"
-#include "Map.h"
 
 using namespace std;
 
 int main() {
 
-    MapLoader* m = new MapLoader("swiss.map");
-    MapLoader* m2 = new MapLoader("mexico.map");
-    MapLoader* m3 = new MapLoader("artic.map");
-    MapLoader* m4 = new MapLoader("northern-europe.map");
-    MapLoader* m5 = new MapLoader("newworld.map");
+    auto* m = new MapLoader("../part 2/mexico.map");
+    auto* m1 = new MapLoader("../part 2/artic.map");
+    auto* m2 = new MapLoader("../part 2/northern-europe.map");
+    auto* m3 = new MapLoader("../part 2/swiss.map");
 
-    m->loadMap("/Users/jacobguirguis/Documents/Concordia/7_Fall_2020/COMP_345/Project/COMP-345/Part 2/swiss.map")->validate();
-    m2->loadMap("/Users/jacobguirguis/Documents/Concordia/7_Fall_2020/COMP_345/Project/COMP-345/Part 2/mexico.map")->validate();
-    m3->loadMap("/Users/jacobguirguis/Documents/Concordia/7_Fall_2020/COMP_345/Project/COMP-345/Part 2/artic.map")->validate();
-    m4->loadMap("/Users/jacobguirguis/Documents/Concordia/7_Fall_2020/COMP_345/Project/COMP-345/Part 2/northern-europe.map")->validate();
+    if (m->getMap()->validate()) {
+        cout << "PASS : " << m->getMapName() << " is a valid map" << endl;
+    } else {
+        cout << "FAIL : " << m->getMapName() << " is NOT a valid map" << endl;
+    }
+
+    cout << endl;
+
+    if (m1->getMap()->validate()) {
+        cout << "PASS : " << m1->getMapName() << " is a valid map" << endl;
+    } else {
+        cout << "FAIL : " << m1->getMapName() << " is NOT a valid map" << endl;
+    }
+
+    cout << endl;
+
+    if (m2->getMap()->validate()) {
+        cout << "PASS : " << m2->getMapName() << " is a valid map" << endl;
+    } else {
+        cout << "FAIL : " << m2->getMapName() << " is NOT a valid map" << endl;
+    }
+
+    cout << endl;
+
+    if (m3->getMap()->validate()) {
+        cout << "PASS : " << m3->getMapName() << " is a valid map" << endl;
+    } else {
+        cout << "FAIL : " << m3->getMapName() << " is NOT a valid map" << endl;
+    }
 }
