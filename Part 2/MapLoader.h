@@ -1,30 +1,57 @@
 #pragma once
+#include "Map.h"
+#include <iostream>
+using namespace graph;
+using namespace std;
 
-#include <string>
-#include <vector>
-#include "../Part 1/Map.h"
+/*///////////////////////////////////////////////////
+//--------------Load Map from file ----------------//
+//Load Continent ,Countries, and their link infos  //
+///////////////////////////////////////////////////*/
 
-class MapLoader {
+class MapLoader
+{
+    static int m_read_state;    //stream reading state
+/*
+	read all file data into a buffer;
+	returns buffer pointer;
+*/
 
-private:
-    string filePath;
-    // Reading input file
-    Map* resultMap;
-    static Map* loadMap(const string& filePath); //helper method
+    static char* read_file(char* file_name, size_t* bufsize);
+/*
+* read line from buffer;
+* returns new line pointer;
+*/
+    static char* read_line(char** line_start);
+    /*get atom from line*/
+    static char* get_atom(char** str);
+    /*check line header and change read state*/
+    static bool	 check_read_state(char* line_start);
 
+    /*read Map from file*/
+    static Map* load_map_d(string file_name);
+    /*input file name*/
+    string	m_file_name;
 public:
-    MapLoader(); // Default Constructor
-    explicit MapLoader(const string& filePath); //Constructor to read a domination file
-    MapLoader(MapLoader &); //Copy constructor
-    MapLoader &operator=(const MapLoader &); //Assignment operator
 
-    ~MapLoader(); //Destructor
-    // Parsing lines read from input file
-    static std::vector<string> parseString(string s);
-    // Map getter
-    Map* getMap();
-    //File Name getter
-    string getMapName();
-    // insertion stream operator
-    friend ostream &operator<<(ostream &, const MapLoader &);
+    // Default Constructor
+    MapLoader();
+    //Constructor to read a domination file
+    MapLoader(string fileName);
+    //Copy constructor
+    MapLoader(MapLoader&);
+
+    //Destructor
+    ~MapLoader(); 
+
+    //Assignment operator
+    MapLoader& operator=(const MapLoader&);
+
+    // Loading input file
+    Map* load();
+
+    // insertion stream
+    friend ostream& operator<<(ostream&, const MapLoader&);
+
 };
+
