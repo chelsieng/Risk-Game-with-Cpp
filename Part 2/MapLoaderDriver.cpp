@@ -1,42 +1,61 @@
+//
+// Created by Raffi Alan Bezirjian on 2020-10-16.
+//
+
 #include <string>
 #include "MapLoader.h"
+#include "Map.h"
 
 using namespace std;
 
 int main() {
 
-    auto* m = new MapLoader("../part 2/mexico.map");
-    auto* m1 = new MapLoader("../part 2/artic.map");
-    auto* m2 = new MapLoader("../part 2/northern-europe.map");
-    auto* m3 = new MapLoader("../part 2/swiss.map");
 
-    if (m->getMap()->validate()) {
-        cout << "PASS : " << m->getMapName() << " is a valid map" << endl;
-    } else {
-        cout << "FAIL : " << m->getMapName() << " is NOT a valid map" << endl;
+
+    MapLoader* m = new MapLoader("../artic.map");
+    //MapLoader* m2 = new MapLoader("../mexico.map");
+    // MapLoader* m3 = new MapLoader("../swiss.map");
+    // MapLoader* m4 = new MapLoader("../northern-europe.map");
+    //MapLoader* m5 = new MapLoader("../canada.map");
+
+    cout << *m << *(m->load());
+
+    return 0;
+
+
+
+/*Testing Invalid Mexico Maps*/
+
+/**
+
+
+     int k;
+    vector<string> file_vec = {"../mexico_err1.map", "../mexico_err2.map"};
+
+
+    for(auto file_name:file_vec)
+    {
+        MapLoader* m = new MapLoader(file_name);
+
+
+        cout<<"\nReading map file :" <<*m <<endl;
+
+        Map* map = m->load();
+
+        if(map)
+        {
+            cout <<  "Writing map data" <<endl;
+            cout << *map;
+        }
+        else{
+            cout <<  "Error: Cannot Read Map File" <<endl;
+        }
+
     }
 
-    cout << endl;
+    return 0;
 
-    if (m1->getMap()->validate()) {
-        cout << "PASS : " << m1->getMapName() << " is a valid map" << endl;
-    } else {
-        cout << "FAIL : " << m1->getMapName() << " is NOT a valid map" << endl;
-    }
 
-    cout << endl;
+*/
 
-    if (m2->getMap()->validate()) {
-        cout << "PASS : " << m2->getMapName() << " is a valid map" << endl;
-    } else {
-        cout << "FAIL : " << m2->getMapName() << " is NOT a valid map" << endl;
-    }
-
-    cout << endl;
-
-    if (m3->getMap()->validate()) {
-        cout << "PASS : " << m3->getMapName() << " is a valid map" << endl;
-    } else {
-        cout << "FAIL : " << m3->getMapName() << " is NOT a valid map" << endl;
-    }
 }
