@@ -15,6 +15,11 @@
 #include <stdio.h>
 int MapLoader::m_read_state = READ_STATE_UNKNOWN;
 
+/* This is a function that compares characters of two strings 
+This function starts comparing the first character of each string. 
+If they are equal to each other, it continues with the following pairs until the characters differ, 
+until a terminating null-character is reached, or until num characters match in both strings, whichever happens first.*/
+
 int strncmp(const char* s1, const char* s2, size_t n)
 {
     unsigned char a, b;
