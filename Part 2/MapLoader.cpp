@@ -337,7 +337,7 @@ Map* MapLoader::load_map_d(string file_name)
         continents->push_back(new Continent(new string(cont_name_vec[tmp_cont_id]), ter_graph, ter_in_cont));
         tmp_cont_id++;
     }
-     /*create continents graph*/
+    /*create continents graph*/
     Graph<int>* cont_graph = new Graph<int>;
 
     bool cont_link_info[100][100];//link info of all continents
@@ -369,5 +369,6 @@ Map* MapLoader::load_map_d(string file_name)
 
     graph_vec->push_back(cont_graph);
 
-    return new Map(graph_vec, continents);
+
+    return new Map(cont_graph, continents);
 }
