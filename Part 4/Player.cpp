@@ -96,6 +96,10 @@ Hand* Player::getHand() {
     return this->playerHand;
 }
 
+vector<Territory*>* Player::getPlayerTerritories(){
+    return this->playerTerritories;
+}
+
 // Adding an order to the end of the player's order list
 // A subclass of Order (order types) will be passed as a parameter.
 void Player::issueOrder(Order* orderToIssue) {
@@ -156,3 +160,5 @@ std::ostream &operator<<(ostream& out, const Player& player) {
 
     return out;
 }
+
+

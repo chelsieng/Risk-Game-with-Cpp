@@ -32,14 +32,35 @@ int main() {	//None of this will do anything visible when run if not in main... 
 	cout << *theDeck << endl;
 	cout << "Now we will draw the top 5 cards of the deck into a hand.\n\n" << endl;
 
+	//creating a random territory to check some stuff out
+    string *territoryName1 = new string("Dawson");
+    Territory *territory1 = new Territory(territoryName1);
+
 	//creating everything we need for a new player, including a hand object
 	//-> taken directly from player driver
 	Hand* player1Hand = new Hand(5, theDeck); // Creating the player's hands
 	OrdersList* orderListP1 = new OrdersList(); // Creating the player's list of orders
 	vector<Territory*>* territoryListP1 = new vector<Territory*>(); // Creating the player's list of territories
 
+	territoryListP1->push_back(territory1);
+
 	Player* p1 = new Player(player1Hand, orderListP1, territoryListP1);
-////////
+////////Make a second player:
+    Hand* player2Hand = new Hand(5, theDeck); // Creating the player's hands
+    OrdersList* orderListP2 = new OrdersList(); // Creating the player's list of orders
+    vector<Territory*>* territoryListP2 = new vector<Territory*>(); // Creating the player's list of territories
+
+    Player* p2 = new Player(player1Hand, orderListP1, territoryListP1);
+ ///////Make a vector of players:
+ std::vector<Player*> thePlayers;
+ thePlayers.push_back(p1);
+ thePlayers.push_back(p2);
+
+    player1Hand->addToHand(theDeck->draw());
+    player1Hand->addToHand(theDeck->draw());
+    player1Hand->addToHand(theDeck->draw());
+    player1Hand->addToHand(theDeck->draw());
+    player1Hand->addToHand(theDeck->draw());
 
 	//show contents of hand
 	cout << *player1Hand << endl;
@@ -49,7 +70,7 @@ int main() {	//None of this will do anything visible when run if not in main... 
 
 	int count = 0;
 	while (count < 5) {
-		player1Hand->playCardAtIndex(0, p1);
+		player1Hand->playCardAtIndex(0, p1, thePlayers);
 		count++;
 	}
 

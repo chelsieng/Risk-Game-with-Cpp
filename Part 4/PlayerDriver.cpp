@@ -46,6 +46,14 @@ int main() {
 
     // CREATING PLAYER 2
     Hand* playerHandP2 = new Hand(5, deck); // Creating the player's hands
+    //FROM DOM: the hand constructor no longer draws from its deck automatically, so I've added these here
+        //to make sure that this driver still runs smoothly.
+    player1Hand->addToHand(deck->draw());
+    player1Hand->addToHand(deck->draw());
+    player1Hand->addToHand(deck->draw());
+    player1Hand->addToHand(deck->draw());
+    player1Hand->addToHand(deck->draw());
+
     OrdersList* orderListP2 = new OrdersList(); // Creating the player's list of orders
     vector<Territory*>* territoryListP2 = new vector<Territory*>(); // Creating the player's list of territories
 

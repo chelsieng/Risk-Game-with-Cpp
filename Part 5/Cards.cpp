@@ -78,7 +78,38 @@ void Card::play(Player* p)
 	else  if (type->compare("Airlift") == 0) { p->issueOrder(new Airlift()); }
 	else  if (type->compare("Blockade") == 0) { p->issueOrder(new Blockade()); }
 	cout << "You played a card of type: " << *this->getType() << endl;
-	//return pointer to order created
+	//return pointer to order created -> hm no I guess not?
+}
+
+void Card::play(Player *p, std::vector<Player*> allPlayers) {
+
+    cout << "woah it's the new version of this method" << endl;
+    if (type->compare("Bomb") == 0) {
+        cout << "You are playing a card of type bomb. \n";
+                bool fromFound = false;
+                Territory* fromTerritory;
+                Territory* toTerritory;
+                while(fromFound == false) {
+                    cout << "Please type the name of the territory you are bombing from." << endl;
+                    string answer;
+                    getline(cin,answer); //get their response
+                    for(Territory* t : *p->getPlayerTerritories()){ //see if they actually own this territory
+                        if(t->getTerritoryName() == answer){
+                            cout << "Understood!" << endl;
+                            fromTerritory = t;
+                            fromFound = true;
+                        }
+                    }//end of for (search player's list of territories)
+                    if(fromFound == false)
+                    cout << "You do not own a territory by that name! Please try again." << endl;
+                }//end of while (establish valid FromTerritory)
+        p->issueOrder(new Bomb()); }
+    else if (type->compare("Diplomacy") == 0) { p->issueOrder(new Negotiate()); }
+    else  if (type->compare("Reinforcement") == 0) { p->issueOrder(new Deploy()); }
+    else  if (type->compare("Airlift") == 0) { p->issueOrder(new Airlift()); }
+    else  if (type->compare("Blockade") == 0) { p->issueOrder(new Blockade()); }
+    cout << "You played a card of type: " << *this->getType() << endl;
+
 }
 
 BombCard::BombCard()
@@ -409,14 +440,11 @@ Hand::Hand()		//again you shouldn't use the default constructor
 {
 }
 
+
 Hand::Hand(int l, Deck* d)
 	: limit(l), gameDeck(d), cardsInHand()	//again, note to self, DO NOT USE &(parameter) to try
 {													//to initialize pointer: DOING SO DOES NOT WORK!!!
-
-	for (int i = 0; i < limit; i++) {
-		Card* c = d->draw();
-		cardsInHand.push_back(c);
-	}
+    //No longer draws cards automatically
 }
 
 Hand::Hand(const Hand& copyMe)
@@ -465,12 +493,21 @@ void Hand::showCardsInHand()
 
 
 
-void Hand::playCardAtIndex(int i, Player* p)
+void Hand::playCardAtIndex(int i, Player* p) //"default" version, don't use in game engine
 {
 	Card cardToPlay = *cardsInHand.at(i);
 	cardsInHand.at(i)->play(p);
 	gameDeck->placeOnBottom(cardsInHand.at(i));
 	cardsInHand.erase(cardsInHand.begin() + i); //the begin() part is necessary, it seems (can't just use index)
+
+}
+
+void Hand::playCardAtIndex(int i, Player* p, const std::vector<Player*>& allPlayers)
+{
+    Card cardToPlay = *cardsInHand.at(i);
+    cardsInHand.at(i)->play(p, allPlayers);                         //uses new version of play() method
+    gameDeck->placeOnBottom(cardsInHand.at(i));
+    cardsInHand.erase(cardsInHand.begin() + i); //the begin() part is necessary, it seems (can't just use index)
 
 }
 
@@ -495,6 +532,7 @@ ostream& operator<<(ostream& outs, const Card& printMe)
 	outs << *printMe.getDescription() << endl;
 	return outs;
 }
+
 
 //Since we have the above, overloading the << operator for the specific card types is a bit useless, but the assignment demands it :b
 
