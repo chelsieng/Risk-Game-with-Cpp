@@ -1,5 +1,7 @@
 //Author: Dominique Cartier
+
 ///A1 Part five: Driver
+
 #pragma once
 #include <iostream>
 #include "Cards.h"
@@ -45,6 +47,7 @@ int main() {	//None of this will do anything visible when run if not in main... 
 	territoryListP1->push_back(territory1);
 
 	Player* p1 = new Player(player1Hand, orderListP1, territoryListP1);
+<<<<<<< HEAD
 ////////Make a second player:
     Hand* player2Hand = new Hand(5, theDeck); // Creating the player's hands
     OrdersList* orderListP2 = new OrdersList(); // Creating the player's list of orders
@@ -61,12 +64,13 @@ int main() {	//None of this will do anything visible when run if not in main... 
     player1Hand->addToHand(theDeck->draw());
     player1Hand->addToHand(theDeck->draw());
     player1Hand->addToHand(theDeck->draw());
+=======
+>>>>>>> 3b8d639c7e7c701a6e3f24f8fde9726e8adaf1c1
 
 	//show contents of hand
 	cout << *player1Hand << endl;
 
 	cout << "\nNow, let's play all of them!\n" << endl;
-/////////
 
 	int count = 0;
 	while (count < 5) {
@@ -74,11 +78,9 @@ int main() {	//None of this will do anything visible when run if not in main... 
 		count++;
 	}
 
-
 	cout << "\nJust to be sure, let's have a look at your list of orders:\n" << endl;
-
 	cout << *orderListP1 << endl;
-    	cout << "\nEnd of driver!\n" << endl;
+	cout << "\nEnd of driver!\n" << endl;
 
 	return 0;
 };
