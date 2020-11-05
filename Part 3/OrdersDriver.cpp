@@ -13,10 +13,12 @@ int main()
     // Initialize variables
     Player *player1 = new Player();
     Player *player2 = new Player();
+
     string *name1 = new string("name1");
     string *name2 = new string("name2");
     Territory *territory1 = new Territory(player1, name1);
     Territory *territory2 = new Territory(player2, name2);
+
     int numOfArmies = 5;
 
     // Testing each order subclass

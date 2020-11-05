@@ -1,5 +1,7 @@
 //Author: Dominique Cartier
+
 ///A1 Part five: Driver
+
 #pragma once
 #include <iostream>
 #include "Cards.h"
@@ -39,13 +41,11 @@ int main() {	//None of this will do anything visible when run if not in main... 
 	vector<Territory*>* territoryListP1 = new vector<Territory*>(); // Creating the player's list of territories
 
 	Player* p1 = new Player(player1Hand, orderListP1, territoryListP1);
-////////
 
 	//show contents of hand
 	cout << *player1Hand << endl;
 
 	cout << "\nNow, let's play all of them!\n" << endl;
-/////////
 
 	int count = 0;
 	while (count < 5) {
@@ -53,11 +53,9 @@ int main() {	//None of this will do anything visible when run if not in main... 
 		count++;
 	}
 
-
 	cout << "\nJust to be sure, let's have a look at your list of orders:\n" << endl;
-
 	cout << *orderListP1 << endl;
-    	cout << "\nEnd of driver!\n" << endl;
+	cout << "\nEnd of driver!\n" << endl;
 
 	return 0;
 };
