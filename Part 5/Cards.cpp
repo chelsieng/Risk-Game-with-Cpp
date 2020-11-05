@@ -545,8 +545,8 @@ ostream& operator<<(ostream& outs, const Deck& printMe)
 		deckNode* current = objHead;
 
 		while (current != NULL) {
-			outs << *current->getData() << endl;
-			current = current->getLink();
+			outs << *current->getData() ;
+			current = current->getLink(); //removed the endl that was here before cause there was no need for all the spaces
 		}
 	}
 	return outs;
