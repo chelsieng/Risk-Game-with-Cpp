@@ -1,4 +1,3 @@
-
 #pragma once
 #include <iostream>
 #include <cstdlib> //so that we can create random numbers

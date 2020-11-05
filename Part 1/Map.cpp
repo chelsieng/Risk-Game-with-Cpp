@@ -225,22 +225,20 @@ Continent &Continent::operator=(const Continent &continent) {
 bool Continent::Continent::isConnected() const {
     auto *visited = new vector<int>;
     bool isConnected = true;
-    auto *terrID = new vector<int>;
-    for (auto terr: *territoriesVector) {
-        terrID->push_back(terr->getId());
-    }
+
     // For every vertex
     for (int vertex : territoriesGraph->get_vertices()) {
 
         // Clear visited vector
         visited->clear();
-        if ((std::find(terrID->begin(), terrID->end(), vertex) != terrID->end())) {
-            traverse(vertex, territoriesGraph, visited);
-        }
+
+        // Traverse that vertex
+        traverse(vertex, territoriesGraph, visited);
 
         // If not all vertices were visited
-        if (visited->size() != terrID->size() && (std::find(terrID->begin(), terrID->end(), vertex) != terrID->end())) {
+        if (visited->size() != territoriesGraph->get_vertices().size()) {
             isConnected = false;
+            break;
         }
     }
     delete visited;
@@ -250,23 +248,15 @@ bool Continent::Continent::isConnected() const {
 
 //Visiting each vertex
 void Continent::Continent::traverse(const int node, const Graph<int> *graph, vector<int> *visited) const {
-    auto *terrID = new vector<int>;
-    for (auto terr: *territoriesVector) {
-        terrID->push_back(terr->getId());
-    }
     // Mark node as visited
     visited->push_back(node);
 
     // For every neighbour of node
     for (int neighbour : graph->get_neighbours(node)) {
-        if (std::find(terrID->begin(), terrID->end(), neighbour) != terrID->end()) {
-            // If neighbour of node isn't visited
-            if (!(std::find(visited->begin(), visited->end(), neighbour) != visited->end())) {
-                // Traverse into neighbour
-                traverse(neighbour, graph, visited);
-            }
-        } else {
-            continue;
+        // If neighbour of node isn't visited
+        if (!(std::find(visited->begin(), visited->end(), neighbour) != visited->end())) {
+            // Traverse into neighbour
+            traverse(neighbour, graph, visited);
         }
     }
 }
@@ -298,7 +288,7 @@ ostream &operator<<(ostream &output, const Continent &continent) {
     return output;
 } //End of insertion operator
 
-Map::Map(Graph<int> *graph, vector<Continent *> *continentsVector) {
+Map::Map(vector<Graph<int> *> *graph, vector<Continent *> *continentsVector) {
     mapGraph = graph;
     continents = continentsVector;
 }
@@ -308,13 +298,9 @@ void Map::Map::copy(const Map &map) {
     for (Continent *continent: *map.continents) {
         continents->push_back(continent);
     }
-    mapGraph = new Graph<int>;
-    for (Territory *territory : *map.getTerritories()) {
-        int territoryId = territory->getId();
-        mapGraph->add_vertex(territoryId);
-        for (int neighbourId : map.mapGraph->get_neighbours(territoryId)) {
-            mapGraph->add_edge(territoryId, neighbourId);
-        }
+    mapGraph = new vector<Graph<int> *>;
+    for (Graph<int> *graph:*map.mapGraph) {
+        mapGraph->push_back(graph);
     }
 }
 
@@ -323,13 +309,9 @@ Map::Map(const Map &map) {
     for (Continent *continent: *map.continents) {
         continents->push_back(continent);
     }
-    mapGraph = new Graph<int>;
-    for (Territory *territory : *map.getTerritories()) {
-        int territoryId = territory->getId();
-        mapGraph->add_vertex(territoryId);
-        for (int neighbourId : map.mapGraph->get_neighbours(territoryId)) {
-            mapGraph->add_edge(territoryId, neighbourId);
-        }
+    mapGraph = new vector<Graph<int> *>;
+    for (Graph<int> *graph:*map.mapGraph) {
+        mapGraph->push_back(graph);
     }
 } //End of Copy Constructor
 
@@ -352,30 +334,6 @@ Map &Map::operator=(const Map &map) {
     return *this;
 } //End of assignment operator
 
-bool Map::Map::isConnected() const {
-    auto *visited = new vector<int>;
-    bool isConnected = true;
-
-    // For every vertex
-    for (int vertex : mapGraph->get_vertices()) {
-        // Clear visited vector
-        visited->clear();
-
-        // Traverse that vertex
-        traverse(vertex, mapGraph, visited);
-
-        // If not all vertices were visited
-        if (visited->size() != mapGraph->get_vertices().size()) {
-            isConnected = false;
-            break;
-        }
-    }
-
-    delete visited;
-
-    return isConnected;
-}
-
 //Visiting each vertex
 void Map::Map::traverse(const int node, const Graph<int> *graph, vector<int> *visited) const {
     // Mark node as visited
@@ -393,6 +351,36 @@ void Map::Map::traverse(const int node, const Graph<int> *graph, vector<int> *vi
 
 bool Map::Map::validate() const {
     vector<Continent *> *continentsVector = this->continents;
+    // Check if map is a connected graph
+    //Check every graph
+    for (Graph<int> *graph: *mapGraph) {
+        auto *visited = new vector<int>;
+        // For every vertex
+        for (int vertex : graph->get_vertices()) {
+
+            // Clear visited vector
+            visited->clear();
+
+            // Traverse that vertex
+            traverse(vertex, graph, visited);
+
+            // If not all vertices were visited
+            if (visited->size() != graph->get_vertices().size()) {
+                cout << "Invalid: Map is not a connected graph." << endl;
+                return false;
+            }
+        }
+        delete visited;
+    }
+    // Check if every territory in a continent is connected by choosing a starting vertex and
+    // visiting recursively every connected vertex and when it is done, verify all vertex are
+    // visited otherwise print "Unconnected continent" error
+    for (Continent *continent : *continentsVector) {
+        if (!(continent->isConnected())) {
+            cout << "Invalid: A continent is not a connected subgraph." << endl;
+            return false;
+        }
+    }
     // Check if every territory belong to a single continent by making sure there are no duplicates
     // when going through every single territory of every single continent
     // Also check if there are territories that are in the territories graph, but not in the
@@ -414,19 +402,10 @@ bool Map::Map::validate() const {
             }
         }
     }
-    // Check if every territory in a continent is connected by choosing a starting vertex and
-    // visiting recursively every connected vertex and when it is done, verify all vertex are
-    // visited otherwise print "Unconnected continent" error
-    for (Continent *continent : *continentsVector) {
-        if (!(continent->isConnected())) {
-            cout << "Invalid: A continent is not a connected subgraph." << endl;
-            return false;
-        }
-    }
-    // Check if map is a connected graph
-    //    Check every graph
-    if (!(isConnected())) {
-        cout << "Invalid: Map is not a connected graph." << endl;
+    //Check if number of territories in graph == number of territories in vector
+    //Otherwise print "Inconsistent number" error
+    if (numOfTerritoriesGraph != numOfTerritoriesVector) {
+        cout << "Invalid: Inconsistent number of territories in graph and in vector" << endl;
         return false;
     }
     // Cleanup

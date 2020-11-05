@@ -87,18 +87,18 @@ public:
 class Map {
 private:
     vector<Continent *> *continents;
-    Graph<int> *mapGraph;
+    vector<Graph<int> *> *mapGraph;
 
     void copy(const Map &); //Copying value of map
     void traverse(int, const Graph<int> *, vector<int> *) const; //Visiting each vertex of graph
 
 public:
-    Map(Graph<int> *, vector<Continent *> *);
+    Map(vector<Graph<int> *> *, vector<Continent *> *);
 
     Map(const Map &); //Copy constructor
     ~Map(); //Destructor
     Map &operator=(const Map &); //Assignment Operator
-    bool isConnected() const;
+
     bool validate() const; //checking if map is a connected graph, continent is a subgraph
     // and if each territory belongs to one and only one continent
 
