@@ -22,31 +22,38 @@ class MapLoader
 */
 
     static char* read_file(char* file_name, size_t* bufsize);
+
 /*
 * read line from buffer;
 * returns new line pointer;
 */
+
     static char* read_line(char** line_start);
+	
     /*get atom from line*/
     static char* get_atom(char** str);
     /*check line header and change read state*/
     static bool	 check_read_state(char* line_start);
 
     /*read Map from file*/
-    static Map* load_map_d(string file_name);
+    static Map* load_map_d(char* file_name);
+
     /*input file name*/
-    string	m_file_name;
+    char *m_file_name;
+
 public:
 
     // Default Constructor
     MapLoader();
+	
     //Constructor to read a domination file
-    MapLoader(string fileName);
+    MapLoader(char* fileName);
+	
     //Copy constructor
     MapLoader(MapLoader&);
 
     //Destructor
-    ~MapLoader(); 
+    ~MapLoader();
 
     //Assignment operator
     MapLoader& operator=(const MapLoader&);
@@ -54,7 +61,7 @@ public:
     // Loading input file
     Map* load();
 
-    // insertion stream
+    // Insertion stream
     friend ostream& operator<<(ostream&, const MapLoader&);
 
 };
