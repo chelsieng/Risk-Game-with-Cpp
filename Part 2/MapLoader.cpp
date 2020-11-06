@@ -13,12 +13,12 @@
 #define READ_STATE_BORDER		4
 
 #include <stdio.h>
+
 int MapLoader::m_read_state = READ_STATE_UNKNOWN;
 
-/* This is a function that compares characters of two strings 
-This function starts comparing the first character of each string. 
-If they are equal to each other, it continues with the following pairs until the characters differ, 
-until a terminating null-character is reached, or until num characters match in both strings, whichever happens first.*/
+/* This is a function that compares characters of two strings.It starts comparing the first character of each string.
+If they are equal to each other, it continues with the following pairs until the characters differ,
+until a terminating null-character is reached, or until num characters match in both strings(whichever happens first) */
 
 int strncmp(const char* s1, const char* s2, size_t n)
 {
@@ -40,7 +40,7 @@ MapLoader::MapLoader()
 };
 
 //Constructor to read a domination file
-MapLoader::MapLoader(string fileName)
+MapLoader::MapLoader(char* fileName)
 {
     m_file_name = fileName;
 }
@@ -54,6 +54,9 @@ MapLoader::MapLoader(MapLoader& tmp)
 //Destructor
 MapLoader::~MapLoader() {
 
+    /* For avoiding memory leaks; deallocating memory of pointer member */
+
+    delete m_file_name;
 };
 
 
@@ -103,7 +106,7 @@ char* MapLoader::read_line(char** p_line_start)
         if ((*line_start == '\r') || (*line_start == '\n'))
             ++line_start;
         else if (line_start[0] == '\xef' && line_start[1] == '\xbb' && line_start[2] == '\xbf')
-            line_start += 3;         // U+FFFE (BOM)
+            line_start += 3;
         else
             break;
     }
@@ -159,13 +162,11 @@ char* MapLoader::read_file(char* file_name,size_t* bufsize)
     long sz;
     long bytes_read;
     char* buf;
+
     /*create file pointer*/
     FILE* fp;
-#ifdef WIN32
-    fopen_s(&fp, file_name, "rb");
-#else
     fp = fopen(file_name, "rb");
-#endif
+
     if (!fp)
     {
         return 0;
@@ -210,21 +211,33 @@ char* MapLoader::read_file(char* file_name,size_t* bufsize)
     return buf;
 }
 
-Map* MapLoader::load_map_d(string file_name)
+Map* MapLoader::load_map_d(char* file_name)
 {
 
 ///////read file into buffer////////////////////
     size_t buffer_size = 0;
-    char* buffer = read_file((char*)file_name.c_str(), &buffer_size);
+    char* buffer = read_file((char*)file_name, &buffer_size);
+
+    /*
+           Printing Valid/Invalid
+    */
 
     if(buffer == 0)
     {
-        return 0;
+        cout << "\n***************************" << endl;
+        cout << "This Is An Invalid Map File" << endl;
+        cout << "***************************" << endl;
+        exit(11);
     }
+
+    cout << "\n***************************" << endl;
+    cout << "This Is A Valid Map File" << endl;
+    cout << "****************************" << endl;
 
     m_read_state = READ_STATE_UNKNOWN;
 
     char* line_start = buffer;
+    
 ///////////Data from file///////////
     vector<string>	cont_name_vec;
     vector<string>	country_vec;
@@ -234,7 +247,6 @@ Map* MapLoader::load_map_d(string file_name)
     vector<vector<int>> all_ter_link_info;
 
 ///////////Read Buffer to Text/////////////
-
     while (1)
     {
         /*read line from buffer*/
@@ -296,7 +308,13 @@ Map* MapLoader::load_map_d(string file_name)
         line_start = line_end;
     }
 
-    vector<Graph<int>*>* graph_vec = new vector<Graph<int>*>;
+    /*
+        Removed code:
+
+         vector<Graph<int>*>* graph_vec = new vector<Graph<int>*>;
+
+    */
+
     vector<Continent*>* continents = new vector<Continent*>;
 
 /////////////Create All Territories///////////////////
@@ -320,7 +338,8 @@ Map* MapLoader::load_map_d(string file_name)
             ter_graph->add_vertex(all_ter_vec[cur_ter_id]->getId());
             ter_in_cont->push_back(all_ter_vec[cur_ter_id]);
 
-            /*find linked territories in the same continent*/
+            /*find linked territories*/
+
             for (auto linked_ter_id : all_ter_link_info[cur_ter_id])
             {
 
@@ -343,32 +362,40 @@ Map* MapLoader::load_map_d(string file_name)
     bool cont_link_info[100][100];//link info of all continents
 
 
+    
+/*
     /*create continents link info*/
-    for(unsigned int i = 0; i < all_ter_link_info.size(); i ++)
-    {
-        for(int j = 0; j < continents->size(); j ++)
-        {
-            cont_link_info[i][j] = false;
-        }
+//    for(unsigned int i = 0; i < all_ter_link_info.size(); i ++)
+//    {
+//        for(int j = 0; j < continents->size(); j ++)
+//        {
+//            cont_link_info[i][j] = false;
+//        }
+//
+//        for(unsigned int j  = 1;j < all_ter_link_info[i].size(); j ++)
+//        {
+//
+//            int src = cont_id_for_ter_vec[i];
+//            int dst = cont_id_for_ter_vec[all_ter_link_info[i][j]];
+//
+//            /*create a single link between two continents*/
+//            if (src < dst && cont_link_info[src][dst] == false)
+//            {
+//                cont_link_info[src][dst] = true;
+//                cont_graph->add_edge((*continents)[src]->getId(),
+//                                     (*continents)[dst]->getId());
+//            }
+//        }
+//    }
 
-        for(unsigned int j  = 1;j < all_ter_link_info[i].size(); j ++)
-        {
-
-            int src = cont_id_for_ter_vec[i];
-            int dst = cont_id_for_ter_vec[all_ter_link_info[i][j]];
-
-            /*create a single link between two continents*/
-            if (src < dst && cont_link_info[src][dst] == false)
-            {
-                cont_link_info[src][dst] = true;
-                cont_graph->add_edge((*continents)[src]->getId(),
-                                     (*continents)[dst]->getId());
-            }
-        }
-    }
-
-    graph_vec->push_back(cont_graph);
+// graph_vec->push_back(cont_graph);
 
 
+
+
+
+
+    // Return Map Object
     return new Map(cont_graph, continents);
 }
+
