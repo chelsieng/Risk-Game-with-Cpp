@@ -5,19 +5,19 @@ using namespace std;
 
 int main() {
     //Name of territories
-    string *territoryName1 = new string("Dawson");
-    string *territoryName2 = new string("WhiteHorse");
-    string *territoryName3 = new string("CambridgeBay");
-    string *territoryName4 = new string("FairBanks");
-    string *territoryName5 = new string("Valdez");
-    string *territoryName6 = new string("Kodiak");
-    string *territoryName7 = new string("Iceleand");
-    string *territoryName8 = new string("GreatBritain");
+    string territoryName1 = "Dawson";
+    string territoryName2 = "WhiteHorse";
+    string territoryName3 = "CambridgeBay";
+    string territoryName4 = "FairBanks";
+    string territoryName5 = "Valdez";
+    string territoryName6 = "Kodiak";
+    string territoryName7 = "Iceleand";
+    string territoryName8 = "GreatBritain";
 
     //Name of continents
-    string *continentName1 = new string("Canada");
-    string *continentName2 = new string("UnitedStates");
-    string *continentName3 = new string("Europe");
+    string continentName1 = "Canada";
+    string continentName2 = "UnitedStates";
+    string continentName3 = "Europe";
 
     //Creating territories
     Territory *territory1 = new Territory(territoryName1);
