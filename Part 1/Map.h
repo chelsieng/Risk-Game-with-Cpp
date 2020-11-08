@@ -37,14 +37,14 @@ private:
     static int counter;
     int *id = new int(0);
     Player *owner;
-    string *territoryName;
+    string territoryName;
     vector<Army *> *armies;
 
     void copy(const Territory &); //Copying value of territory
 
 public:
-    Territory(string *name); // Default Territory constructor with no armies present
-    explicit Territory(Player *player, string *name); // Constructor for 1 player starting with 5 armies
+    Territory(string name); // Default Territory constructor with no armies present
+    explicit Territory(Player *player, string name); // Constructor for 1 player starting with 5 armies
     Territory(const Territory &); //Copy Constructor
     ~Territory(); //Destructor
     Territory &operator=(const Territory &); //Assignment Operator
@@ -58,7 +58,7 @@ class Continent {
 private:
     static int counter;
     int *id = new int(0);
-    string *continentName;
+    string continentName;
     vector<Territory *> *territoriesVector;
     Graph<int> *territoriesGraph;
 
@@ -66,7 +66,7 @@ private:
     void traverse(int, const Graph<int> *, vector<int> *) const; //visiting each vertex of graph
 
 public:
-    Continent(string *, Graph<int> *, vector<Territory *> *); //Constructor with graph and list of territories
+    Continent(string, Graph<int> *, vector<Territory *> *); //Constructor with graph and list of territories
     Continent(const Continent &); //Copy Constructor
     ~Continent(); //Destructor
     Continent &operator=(const Continent &); //Assignment Operator
