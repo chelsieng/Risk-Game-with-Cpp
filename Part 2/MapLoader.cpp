@@ -4,7 +4,7 @@
 #include <map>
 #include <fstream>
 #include <sstream>
-
+#include <iterator>
 #include "MapLoader.h"
 
 using namespace std;
