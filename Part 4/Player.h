@@ -36,10 +36,12 @@ public:
     int getId() const;
     Hand* getHand();
     OrdersList* getOrdersList();
+    vector<Territory*>* getPlayerTerritories();
 
     // assignment operator
     Player& operator = (const Player &player);
 
     // stream insertion operator (free function)
     friend ostream& operator << (ostream& ostream, const Player &player);
+
 };

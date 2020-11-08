@@ -4,7 +4,7 @@
 #pragma once
 #ifndef A1_CARDS_H
 #define A1_CARDS_H
-#include "Player.h"
+#include "player.h"
 #include "Orders.h"
 #include <string>
 #include <vector>
@@ -53,6 +53,7 @@ public:
     //To do everything required, we will have another method in the Hand class to play() a specific card and then
     // add it back to the game deck
     void play(Player* p);
+    void play(Player* p, std::vector<Player*> allPlayers);
 
 
 };//end of Card class
@@ -170,7 +171,9 @@ public:
     ~Hand();
 
     void showCardsInHand();
-    void playCardAtIndex(int i, Player* p);
+    void playCardAtIndex(int i, Player* p); //this version only creates "default orders"- don't use in game engine
+    void playCardAtIndex(int i, Player* p, const std::vector<Player*>& allPlayers); // -> updated version that takes vector of players
+    //(in practice, all the players of the game), so we can create proper orders with their non-default constructors
     void addToHand(Card* c);
     Card getCardatIndex(int i) const;
     int getSize() const;
