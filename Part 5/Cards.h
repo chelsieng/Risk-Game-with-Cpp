@@ -4,7 +4,7 @@
 #pragma once
 #ifndef A1_CARDS_H
 #define A1_CARDS_H
-#include "player.h"
+#include "Player.h"
 #include "Orders.h"
 #include <string>
 #include <vector>
