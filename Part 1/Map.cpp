@@ -195,9 +195,15 @@ Continent::Continent(const Continent &continent) {
 
 Continent::~Continent() {
     *id = --counter;
-    delete territoriesGraph;
-    territoriesGraph = nullptr;
-    territoriesVector->clear();
+    if (&this->territoriesGraph != &territoriesGraph){
+        if (territoriesGraph != nullptr){
+            delete territoriesGraph;
+            territoriesGraph = nullptr;
+        }
+    }
+    for (auto terr : *territoriesVector){
+        delete terr;
+    }
     delete territoriesVector;
     territoriesVector = nullptr;
 } //End of destructor
@@ -284,7 +290,7 @@ string Continent::Continent::getContinentName() const {
 ostream &operator<<(ostream &output, const Continent &continent) {
     auto *territories = new vector<Territory *>;
     *territories = *continent.getTerritoriesVector();
-    output << "Here is Continent " << continent.getId() << ", " << continent.getContinentName()
+    output << endl<< "Here is Continent " << continent.getId() << ", " << continent.getContinentName()
            << " and its territories: " << endl;
     for (Territory *territory: *territories) {
         output << "Territory " << territory->getId() << ", " << territory->getTerritoryName() << endl;
@@ -328,10 +334,19 @@ Map::Map(const Map &map) {
 } //End of Copy Constructor
 
 Map::~Map() {
+    for (auto cont : *continents){
+        delete cont;
+    }
     delete continents;
-    continents = nullptr;
-    delete mapGraph;
-    mapGraph = nullptr;
+    continents= nullptr;
+    if (&this->mapGraph != &mapGraph){
+        if (mapGraph != nullptr){
+            delete mapGraph;
+            mapGraph = nullptr;
+        }
+    }
+//    delete mapGraph;
+//    mapGraph = nullptr;
 }//End of destructor
 
 Map &Map::operator=(const Map &map) {
