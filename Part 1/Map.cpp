@@ -143,11 +143,20 @@ ostream &operator<<(ostream &output, const Territory &territory) {
             cout << *army;
         }
         output << "The territory is owned by " << territory.owner->getId() << endl;
-    } else {
-        output << "Territory " << territory.getId() << " is owned by no one" << endl;
+    }
+    else if(territory.owner != nullptr){
+        output << "The territory " << territory.getTerritoryName() << " is owned by P" << territory.owner->getId() << endl;
+    }
+    else {
+        output << "The Territory " << territory.getTerritoryName() << " is owned by no one" << endl;
     }
     return output;
-} //End of insertion operator
+}
+
+void Territory::setOwner(Player *p) {
+    this->owner = p;
+}
+//End of insertion operator
 
 int Continent::Continent::counter = 0;
 

@@ -12,7 +12,8 @@ Player::Player() :
         playerHand{nullptr},
         playerOrdersList{nullptr},
         playerTerritories{nullptr},
-        pID{++counter} // increasing player count
+        pID{++counter}, // increasing player count
+        reinforcementPool{0}
 {}
 
 // parameterized constructor
@@ -21,6 +22,7 @@ Player::Player(Hand* hand, OrdersList* OrdersList, vector<Territory*>* territori
     this->playerHand = hand;
     this->playerOrdersList = OrdersList;
     this->playerTerritories = territories;
+    this->reinforcementPool = 0;
 }
 
 // copy constructor
@@ -157,6 +159,16 @@ std::ostream &operator<<(ostream& out, const Player& player) {
     }
     out << "PLAYER " << player.getId() << " ORDERS : " << endl;
     out << *player.playerOrdersList << endl;
+    out << "PLAYER " << player.getId() << " AVAILABLE (UNUSED) REINFORCEMENT : " << endl;
+    out << player.reinforcementPool << endl;
 
     return out;
+}
+
+int Player::getReinforcementPool() const {
+    return reinforcementPool;
+}
+
+void Player::setReinforcementPool(int i) {
+    this->reinforcementPool = i;
 }

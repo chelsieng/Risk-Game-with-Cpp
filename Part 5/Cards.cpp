@@ -479,7 +479,7 @@ Hand& Hand::operator=(const Hand& rightSide)
 
 Hand::~Hand()
 {
-    delete gameDeck;
+    delete gameDeck; //careful, this can cause deleting the same thing more than once (error) if we also call delete on the game deck
     gameDeck = nullptr;
 }
 

@@ -50,6 +50,7 @@ public:
     Territory &operator=(const Territory &); //Assignment Operator
     int getId() const;
     string getTerritoryName() const;
+    void setOwner(Player *p);
 
     friend ostream &operator<<(ostream &, const Territory &); //insertion operator
 }; //end of Territory Class

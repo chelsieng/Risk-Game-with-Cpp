@@ -22,6 +22,7 @@ private:
     Hand* playerHand;
     OrdersList*  playerOrdersList;
     vector<Territory*>* playerTerritories;
+    int reinforcementPool;
 
 public:
     Player(); // default Constructor
@@ -34,6 +35,8 @@ public:
     vector<Territory*>* toDefend(vector<Territory*>* listToDefend);
     vector<Territory*>* toAttack(vector<Territory*>* listToAttack);
     int getId() const;
+    int getReinforcementPool() const;
+    void setReinforcementPool(int i);
     Hand* getHand();
     OrdersList* getOrdersList();
     vector<Territory*>* getPlayerTerritories();

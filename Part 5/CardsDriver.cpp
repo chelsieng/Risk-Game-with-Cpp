@@ -33,8 +33,8 @@ int main() {	//None of this will do anything visible when run if not in main... 
     cout << "Now we will draw the top 5 cards of the deck into a hand.\n\n" << endl;
 
     //creating a random territory to check some stuff out
-    string *territoryName1 = new string("Dawson");
-    Territory *territory1 = new Territory(*territoryName1);
+    string territoryName1("Dawson");
+    Territory *territory1 = new Territory(territoryName1);
 
     //creating everything we need for a new player, including a hand object
     //-> taken directly from player driver
@@ -80,5 +80,15 @@ int main() {	//None of this will do anything visible when run if not in main... 
     cout << *orderListP1 << endl;
     cout << "\nEnd of driver!\n" << endl;
 
+    delete territory1;
+    delete territoryListP1;
+    delete territoryListP2;
+    delete orderListP1;
+    delete orderListP2;
+    //the deletes below will cause issues- I think because the cards are not dynamically created, their constructors
+    //are called automatically, so calling the destructors below causes over-deletions.
+ //   delete theDeck;
+ //   delete player1Hand; causes issues
+ //   delete player2Hand;
     return 0;
 };
