@@ -83,10 +83,10 @@ void Card::play(Player* p)
 
 void Card::play(Player *p, std::vector<Player*> allPlayers) {
 
-    cout << "woah it's the new version of this method" << endl;
     if (type->compare("Bomb") == 0) {
-        cout << "You are playing a card of type bomb. \n";
+        cout << "You are playing a card of type: " << *this->getType() << ".\n";
         bool fromFound = false;
+        bool toFound = false;
         Territory* fromTerritory;
         Territory* toTerritory;
         while(fromFound == false) {
@@ -103,11 +103,138 @@ void Card::play(Player *p, std::vector<Player*> allPlayers) {
             if(fromFound == false)
                 cout << "You do not own a territory by that name! Please try again." << endl;
         }//end of while (establish valid FromTerritory)
-        p->issueOrder(new Bomb()); }
-    else if (type->compare("Diplomacy") == 0) { p->issueOrder(new Negotiate()); }
-    else  if (type->compare("Reinforcement") == 0) { p->issueOrder(new Deploy()); }
-    else  if (type->compare("Airlift") == 0) { p->issueOrder(new Airlift()); }
-    else  if (type->compare("Blockade") == 0) { p->issueOrder(new Blockade()); }
+        while(toFound == false) {
+            cout << "Please type the name of the territory you would like to bomb." << endl;
+            string answer;
+            getline(cin,answer); //get their response
+            for(Player* p : allPlayers) {
+                for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
+                    if (t->getTerritoryName() == answer) {
+                        cout << "Understood!" << endl;
+                        toTerritory = t;
+                        toFound = true;
+                    }
+                }//end of for (search player's list of territories)
+                if(toFound == true){break;}
+            } //end of for (search through all players)
+            if(toFound == false)
+                cout << "Nobody owns a territory by that name! Please try again." << endl;
+        }//end of while (establish valid ToTerritory)
+        p->issueOrder(new Bomb(p, fromTerritory, toTerritory)); } ///END OF BOMB STUFF
+    else if (type->compare("Diplomacy") == 0) {
+        cout << "You are playing a card of type: " << *this->getType() << ".\n";
+        bool found = false;
+        Player* toNegotiate;
+        while(found == false) {
+            cout << "Please indicate the number of the player you would like to negotiate with (type '2' for player 2, etc.)."
+                    << endl;
+            int answer;
+            cin >> answer;
+            if(answer > allPlayers.size() || answer < 1){
+                cout << "That player does not exist! Please try again." << endl;
+            }//end of if (not valid player)
+            else if(answer == p->getId()){
+                cout << "You can't negotiate with yourself! Please try again." << endl;
+            }//end of if (chose themself)
+            else {
+                found = true;
+                for(Player* pl : allPlayers){
+                    if(pl->getId() == answer){ toNegotiate = pl;}
+                }//end of for (set the indicated player as the one to negotiate with)
+                cout << "Understood!" << endl;
+            }//end of else (valid player)
+        }//end of while (find player)
+        p->issueOrder(new Negotiate(p, toNegotiate)); } ///END OF DIPLOMACY STUFF
+
+    else  if (type->compare("Reinforcement") == 0) {
+        cout << "You are playing a card of type: " << *this->getType() << ".\n";
+        ReinforcementCard* reinforce = dynamic_cast<ReinforcementCard*>(this);
+        //I think rather than issue a deploy order, this should add armies to ones reinforcement pool?
+        p->setReinforcementPool(p->getReinforcementPool() + reinforce->getNumberOfTroops());
+        cout << reinforce->getNumberOfTroops() << " armies have been added to your reinforcement pool" <<endl;
+        //p->issueOrder(new Deploy()); so yeah it doesn't issue a deploy order anymore.
+         } ///END OF REINFORCEMENT STUFF
+
+    else  if (type->compare("Blockade") == 0) {
+        cout << "You are playing a card of type: " << *this->getType() << ".\n";
+        bool fromFound = false;
+        bool toFound = false;
+        Territory* fromTerritory;
+        Territory* toTerritory;
+        while(fromFound == false) {
+            cout << "Please type the name of the territory you are blockading." << endl;
+            string answer;
+         //   cin >> answer;
+         //cin.ignore();
+            getline(cin,answer); //get their response
+            for(Territory* t : *p->getPlayerTerritories()){ //see if they actually own this territory
+                if(t->getTerritoryName() == answer){
+                    cout << "Understood!" << endl;
+                    fromTerritory = t;
+                    fromFound = true;
+                }
+            }//end of for (search player's list of territories)
+            if(fromFound == false)
+                cout << "You do not own a territory by that name! Please try again." << endl;
+        }//end of while (establish valid FromTerritory)
+        p->issueOrder(new Blockade(p, fromTerritory)); } ///END OF BLOCKADE STUFF
+
+    else  if (type->compare("Airlift") == 0) {
+        cout << "You are playing a card of type: " << *this->getType() << ".\n";
+        bool fromFound = false;
+        bool toFound = false;
+        Territory* fromTerritory;
+        Territory* toTerritory;
+        while(fromFound == false) {
+            cout << "Please type the name of the territory you are moving armies from." << endl;
+            string answer;
+            getline(cin,answer); //get their response
+            for(Territory* t : *p->getPlayerTerritories()){ //see if they actually own this territory
+                if(t->getTerritoryName() == answer){
+                    cout << "Understood!" << endl;
+                    fromTerritory = t;
+                    fromFound = true;
+                }
+            }//end of for (search player's list of territories)
+            if(fromFound == false)
+                cout << "You do not own a territory by that name! Please try again." << endl;
+        }//end of while (establish valid FromTerritory)
+        while(toFound == false) {
+            cout << "Please type the name of the territory you are moving armies to." << endl;
+            string answer;
+            getline(cin,answer); //get their response
+            for(Player* p : allPlayers) {
+                for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
+                    if (t->getTerritoryName() == answer) {
+                        cout << "Understood!" << endl;
+                        toTerritory = t;
+                        toFound = true;
+                    }
+                }//end of for (search player's list of territories)
+                if(toFound == true){break;}
+            } //end of for (search through all players)
+            if(toFound == false)
+                cout << "Nobody owns a territory by that name! Please try again." << endl;
+        }//end of while (establish valid ToTerritory)
+        //Get number of armies to move:
+        bool finished = false;
+        int numArmies = 0;
+        while(finished == false){
+            cout << "How many armies are you moving?" << endl;
+            cin >> numArmies;
+            if(numArmies < 0){
+                cout << "Invalid number of armies. Please try again." << endl;
+            }//end of if (invalid)
+            else if(numArmies > fromTerritory->getNumberOfArmies()){
+                cout << "This territory does not have that many armies! Please try again." << endl;
+            }//end of if (invalid)
+            else{
+                finished = true;
+                cout << "Understood!" << endl;
+            }//end of else (valid)
+        }//end of while (get number of territories)
+        p->issueOrder(new Airlift(p, fromTerritory, toTerritory, numArmies)); } ///END OF AIRLIFT STUFF
+
     cout << "You played a card of type: " << *this->getType() << endl;
 
 }

@@ -156,6 +156,10 @@ ostream &operator<<(ostream &output, const Territory &territory) {
 void Territory::setOwner(Player *p) {
     this->owner = p;
 }
+
+int Territory::getNumberOfArmies() const {
+    return armies->size();
+}
 //End of insertion operator
 
 int Continent::Continent::counter = 0;
