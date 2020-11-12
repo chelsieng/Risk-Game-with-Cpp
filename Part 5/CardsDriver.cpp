@@ -19,10 +19,10 @@ int main() {	//None of this will do anything visible when run if not in main... 
     Deck* theDeck = new Deck(&head);
 
     theDeck->addToDeck(&bomb1);
-    theDeck->addToDeck(&diplomacy1);
-    theDeck->addToDeck(&blockade1);
-    theDeck->addToDeck(&airlift1);
     theDeck->addToDeck(&reinforcement2);
+    theDeck->addToDeck(&diplomacy1);
+    theDeck->addToDeck(&airlift1);
+    theDeck->addToDeck(&blockade1);
 
     BombCard b2 = bomb1;
     b2.setDescription("An altered bomb card created as a deep copy :O");
@@ -33,8 +33,10 @@ int main() {	//None of this will do anything visible when run if not in main... 
     cout << "Now we will draw the top 5 cards of the deck into a hand.\n\n" << endl;
 
     //creating a random territory to check some stuff out
-    string *territoryName1 = new string("Dawson");
-    Territory *territory1 = new Territory(*territoryName1);
+    string territoryName1("Area 51");
+    Territory *territory1 = new Territory(territoryName1);
+    string territoryName2("Shell City");
+    Territory *territory2 = new Territory(territoryName2);
 
     //creating everything we need for a new player, including a hand object
     //-> taken directly from player driver
@@ -50,7 +52,9 @@ int main() {	//None of this will do anything visible when run if not in main... 
     OrdersList* orderListP2 = new OrdersList(); // Creating the player's list of orders
     vector<Territory*>* territoryListP2 = new vector<Territory*>(); // Creating the player's list of territories
 
-    Player* p2 = new Player(player1Hand, orderListP1, territoryListP1);
+    territoryListP2->push_back(territory2);
+
+    Player* p2 = new Player(player1Hand, orderListP1, territoryListP2);
     ///////Make a vector of players:
     std::vector<Player*> thePlayers;
     thePlayers.push_back(p1);
@@ -71,6 +75,7 @@ int main() {	//None of this will do anything visible when run if not in main... 
     int count = 0;
     while (count < 5) {
         player1Hand->playCardAtIndex(0, p1, thePlayers);
+        cout << "\n" << endl;
         count++;
     }
 
@@ -80,5 +85,17 @@ int main() {	//None of this will do anything visible when run if not in main... 
     cout << *orderListP1 << endl;
     cout << "\nEnd of driver!\n" << endl;
 
+    //deletes that have been commented out cause issues (bad exit code) -> must look into this
+  //  delete territory2;
+  //  delete territory1;
+    delete territoryListP1;
+    delete territoryListP2;
+ //   delete orderListP1;
+ //   delete orderListP2;
+    //the deletes below will cause issues- I think because the cards are not dynamically created, their constructors
+    //are called automatically, so calling the destructors below causes over-deletions.
+ //   delete theDeck;
+ //   delete player1Hand; causes issues
+ //   delete player2Hand;
     return 0;
 };

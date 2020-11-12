@@ -35,8 +35,8 @@ public:
     Card(const Card&); //"In Call by value, a copy of the variable is passed whereas in Call by reference,
     //a variable itself is passed", "for efficiency reasons, constant call by reference is usually
     //used in place of call by value for classes""
-    ~Card();
-    Card& operator =(const Card& rightSide);
+    virtual ~Card(); ///added, so that CARDS is polymorphic
+    virtual Card& operator =(const Card& rightSide);
 
     //A note on const:
     //A variable declared as const (like the reference "printMe" below) can only call const methods, and const object can only be passed to methods that are expecting a const object
@@ -74,7 +74,7 @@ public:
     DiplomacyCard();
     DiplomacyCard(const DiplomacyCard& copyMe);
     DiplomacyCard& operator =(const DiplomacyCard& rightSide);
-    ~DiplomacyCard();
+   ~DiplomacyCard();
     friend ostream& operator<<(ostream& outs, const DiplomacyCard& printMe);
 };//end of DiplomacyCard class
 
