@@ -1,8 +1,11 @@
 #pragma once
 
 #include <iostream>
+#include <utility>
 #include <vector>
 #include <string>
+#include <cstdlib>      /* srand, rand */
+#include <cmath>        // Maths equations
 
 #include "../Part 1/Map.h"
 
@@ -39,12 +42,12 @@ public:
     virtual ~Order();
     // Accessor and Mutator for orderType
     string getOrderType()       { return this->orderType; };
-    void setType(string type)   { this->orderType = type; };
+    void setType(string type)   { this->orderType = move(type); };
     // Methods
     virtual bool validate();
     // pure virtual methods
     virtual void execute() = 0;
-    virtual ostream& getEffect(ostream& out) const = 0;
+    virtual ostream& printEffect(ostream& out) const = 0;
     virtual ostream& print(ostream& out) const = 0;
     // Overloading operators
     Order& operator=(Order const& o);
@@ -66,7 +69,7 @@ public:
     // Methods
     bool validate();
     void execute();
-    ostream& getEffect(ostream& out) const;
+    ostream& printEffect(ostream& out) const;
     ostream& print(ostream& out) const;
     // Overloading operators
     Deploy& operator=(Deploy const& o);
@@ -89,7 +92,7 @@ public:
     // Methods
     bool validate();
     void execute();
-    ostream& getEffect(ostream& out) const;
+    ostream& printEffect(ostream& out) const;
     ostream& print(ostream& out) const;
     // Overloading operators
     Advance& operator=(Advance const& o);
@@ -111,7 +114,7 @@ public:
     // Methods
     bool validate();
     void execute();
-    ostream& getEffect(ostream& out) const;
+    ostream& printEffect(ostream& out) const;
     ostream& print(ostream& out) const;
     // Overloading operators
     Bomb& operator=(Bomb const& o);
@@ -132,7 +135,7 @@ public:
     // Methods
     bool validate();
     void execute();
-    ostream& getEffect(ostream& out) const;
+    ostream& printEffect(ostream& out) const;
     ostream& print(ostream& out) const;
     // Overloading operators
     Blockade& operator=(Blockade const& o);
@@ -155,7 +158,7 @@ public:
     // Methods
     bool validate();
     void execute();
-    ostream& getEffect(ostream& out) const;
+    ostream& printEffect(ostream& out) const;
     ostream& print(ostream& out) const;
     // Overloading operators
     Airlift& operator=(Airlift const& o);
@@ -176,7 +179,7 @@ public:
     // Methods
     bool validate();
     void execute();
-    ostream& getEffect(ostream& out) const;
+    ostream& printEffect(ostream& out) const;
     ostream& print(ostream& out) const;
     // Overloading operators
     Negotiate& operator=(Negotiate const& o);
