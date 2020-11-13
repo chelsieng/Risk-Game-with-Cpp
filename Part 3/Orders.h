@@ -13,165 +13,181 @@ using std::vector;
 class Player;
 class Territory;
 
+/*
+ * Quick summary of what each order does
+ * Deploy:      place some armies on one of the current player’s territories
+ * Advance:     move armies from one of the current player’s territories (source) to an adjacent territory (target)
+ * Bomb:        destroy half of the armies on an opponent’s territory that is adjacent to the current player’s territories
+ * Blockade:    triple the number of armies on one of the current player’s territories and make it a neutral territory
+ * Airlift:     move some armies from one of the current player’s territories to any another territory
+ * Negotiate:   prevent the current player and the target player from attacking each other until the end of the turn
+ */
+
+// Abstract parent class Order
 class Order
 {
+protected:
+    bool isExecuted;            // Indicate whether order as been executed
+    string orderType;           // The type of order
+    Player *player;             // Player who is making the order
 public:
     // Constructors and destructor
+    // Order constructors cannot be used since it is an abstract class
     Order();
     Order(Player *player);
     Order(const Order &order);
-    ~Order();
-    // Accessor
-    virtual string getOrderType();
+    virtual ~Order();
+    // Accessor and Mutator for orderType
+    string getOrderType()       { return this->orderType; };
+    void setType(string type)   { this->orderType = type; };
     // Methods
     virtual bool validate();
-    virtual void execute();
+    // pure virtual methods
+    virtual void execute() = 0;
+    virtual ostream& getEffect(ostream& out) const = 0;
+    virtual ostream& print(ostream& out) const = 0;
     // Overloading operators
     Order& operator=(Order const& o);
     friend ostream& operator<<(ostream& out, const Order& order);
-protected:
-    bool isExecuted;            // Indicate whether order as been executed
-    string orderType = "Order"; // The type of order
-private:
-    Player *player;             // Player who is making the order
 };
 
 
 class Deploy : public Order
 {
+private:
+    Territory *targetTerritory;         // Territory to deploy armies
+    int numOfArmies;                    // Number of armies to deploy
 public:
     // Constructors and destructor
     Deploy();
-    Deploy(Player *player, Territory *deployTerritory, int numOfArmies);
+    Deploy(Player *player, Territory *targetTerritory, int numOfArmies);
     Deploy(const Deploy &deploy);
     ~Deploy();
-    // Accessor
-    string getOrderType()  override;
-    bool validate() override;
-    void execute() override;
+    // Methods
+    bool validate();
+    void execute();
+    ostream& getEffect(ostream& out) const;
+    ostream& print(ostream& out) const;
     // Overloading operators
     Deploy& operator=(Deploy const& o);
     friend ostream& operator<<(ostream& out, const Deploy& deploy);
-private:
-    Territory *deployTerritory;         // Territory to deploy armies
-    int numOfArmies;                    // Number of armies to deploy
-    string orderType = "Deploy";
 };
 
 
 class Advance : public Order
 {
+private:
+    Territory *sourceTerritory;        // Starting territory
+    Territory *targetTerritory;        // Advancing territory
+    int numOfArmies;                   // Number of armies to advance
 public:
     // Constructors and destructor
     Advance();
-    Advance(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies);
+    Advance(Player *player, Territory *sourceTerritory, Territory *targetTerritory, int numOfArmies);
     Advance(const Advance &advance);
     ~Advance();
-    // Accessor
-    string getOrderType() override;
-    bool validate() override;
-    void execute() override;
+    // Methods
+    bool validate();
+    void execute();
+    ostream& getEffect(ostream& out) const;
+    ostream& print(ostream& out) const;
     // Overloading operators
     Advance& operator=(Advance const& o);
     friend ostream& operator<<(ostream& out, const Advance& advance);
-private:
-    Territory *fromTerritory;          // Starting territory
-    Territory *toTerritory;            // Advancing territory
-    int numOfArmies;                    // Number of armies to advance
-    string orderType = "Advance";
 };
 
 
 class Bomb : public Order
 {
+private:
+    Territory *sourceTerritory;          // From territory
+    Territory *targetTerritory;            // Territory to bomb
 public:
     // Constructors and destructor
     Bomb();
-    Bomb(Player *player, Territory *fromTerritory, Territory *toTerritory);
+    Bomb(Player *player, Territory *sourceTerritory, Territory *targetTerritory);
     Bomb(const Bomb &bomb);
     ~Bomb();
-    // Accessor
-    string getOrderType() override;
-    bool validate() override;
-    void execute() override;
+    // Methods
+    bool validate();
+    void execute();
+    ostream& getEffect(ostream& out) const;
+    ostream& print(ostream& out) const;
     // Overloading operators
     Bomb& operator=(Bomb const& o);
     friend ostream& operator<<(ostream& out, const Bomb& bomb);
-private:
-    Territory *fromTerritory;          // From territory
-    Territory *toTerritory;            // Territory to bomb
-    string orderType = "Bomb";
 };
 
 
 class Blockade : public Order
 {
+private:
+    Territory *targetTerritory;         // Territory to block
 public:
     // Constructors and destructor
     Blockade();
-    Blockade(Player *player, Territory *blockTerritory);
+    Blockade(Player *player, Territory *targetTerritory);
     Blockade(const Blockade &blockage);
     ~Blockade();
-    // Accessor
-    string getOrderType() override;
-    bool validate() override;
-    void execute() override;
+    // Methods
+    bool validate();
+    void execute();
+    ostream& getEffect(ostream& out) const;
+    ostream& print(ostream& out) const;
     // Overloading operators
     Blockade& operator=(Blockade const& o);
     friend ostream& operator<<(ostream& out, const Blockade& blockade);
-private:
-    Territory *blockTerritory;         // Territory to block
-    string orderType = "Blockade";
 };
 
 
 class Airlift : public Order
 {
+private:
+    Territory *sourceTerritory;          // Starting territory
+    Territory *targetTerritory;            // Advancing territory
+    int numOfArmies;                    // Number of armies to advance
 public:
     // Constructors and destructor
     Airlift();
-    Airlift(Player *player, Territory *fromTerritory, Territory *toTerritory, int numOfArmies);
+    Airlift(Player *player, Territory *sourceTerritory, Territory *targetTerritory, int numOfArmies);
     Airlift(const Airlift &airlift);
     ~Airlift();
-    // Accessor
-    string getOrderType() override;
-    bool validate() override;
-    void execute() override;
+    // Methods
+    bool validate();
+    void execute();
+    ostream& getEffect(ostream& out) const;
+    ostream& print(ostream& out) const;
     // Overloading operators
     Airlift& operator=(Airlift const& o);
     friend ostream& operator<<(ostream& out, const Airlift& airlift);
-private:
-    Territory *fromTerritory;          // Starting territory
-    Territory *toTerritory;            // Advancing territory
-    int numOfArmies;                    // Number of armies to advance
-    string orderType = "Airlift";
 };
 
 
 class Negotiate : public Order
 {
+private:
+    Player *negotiator;         // The opponent player to be negotiated
 public:
     // Constructors and destructor
     Negotiate();
     Negotiate(Player *player, Player *negotiator);
     Negotiate(const Negotiate &negotiate);
     ~Negotiate();
-    // Accessor
-    string getOrderType() override;
     // Methods
-    bool validate() override;
-    void execute() override;
+    bool validate();
+    void execute();
+    ostream& getEffect(ostream& out) const;
+    ostream& print(ostream& out) const;
     // Overloading operators
     Negotiate& operator=(Negotiate const& o);
     friend ostream& operator<<(ostream& out, const Negotiate& negotiate);
-private:
-    Player *negotiator;         // The opponent player to be negotiated
-    string orderType = "Negotiate";
 };
 
 
 class OrdersList
 {
+private:
+    vector<Order*> listOrders;                  // vector to store Orders
 public:
     // Constructors and destructor
     OrdersList();
@@ -185,7 +201,5 @@ public:
     // Overloading operators
     OrdersList& operator=(OrdersList const& o);
     friend ostream& operator<<(ostream& out, const OrdersList &ordersList);
-private:
-    vector<Order*> listOrders;                  // vector to store Orders
 };
 

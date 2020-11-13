@@ -14,10 +14,10 @@ int main()
     Player *player1 = new Player();
     Player *player2 = new Player();
 
-    string *name1 = new string("name1");
-    string *name2 = new string("name2");
-    Territory *territory1 = new Territory(player1, name1);
-    Territory *territory2 = new Territory(player2, name2);
+    string *name1 = new string("North Korea");
+    string *name2 = new string("USA");
+    Territory *territory1 = new Territory(player1, *name1);
+    Territory *territory2 = new Territory(player2, *name2);
 
     int numOfArmies = 5;
 
@@ -78,19 +78,33 @@ int main()
         << *ordersList  << endl;
 
     // Delete pointers
-    player1 = nullptr;
-    player2 = nullptr;
+//    delete player1;
+//    delete player2;
+    delete name1;
+    delete name2;
+//    delete territory1;
+//    delete territory2;
+//    delete deploy;
+//    delete advance;
+//    delete bomb;
+//    delete blockade;
+//    delete negotiate;
+//    delete airlift;
+//    delete ordersList;
+
+//    player1 = nullptr;
+//    player2 = nullptr;
     name1 = nullptr;
     name2 = nullptr;
-    territory1 = nullptr;
-    territory2 = nullptr;
-    deploy = nullptr;
-    advance = nullptr;
-    bomb = nullptr;
-    blockade = nullptr;
-    negotiate = nullptr;
-    airlift = nullptr;
-    ordersList = nullptr;
+//    territory1 = nullptr;
+//    territory2 = nullptr;
+//    deploy = nullptr;
+//    advance = nullptr;
+//    bomb = nullptr;
+//    blockade = nullptr;
+//    negotiate = nullptr;
+//    airlift = nullptr;
+//    ordersList = nullptr;
 
     cout << "End of OrdersDriver" << endl;
     return 0;

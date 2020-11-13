@@ -160,6 +160,14 @@ void Territory::setOwner(Player *p) {
 int Territory::getNumberOfArmies() const {
     return armies->size();
 }
+
+void Territory::addArmy() {
+        armies->push_back(new Army(this->owner));
+}
+
+void Territory::removeArmy() {
+    armies->erase(this->armies->begin());      // delete one element
+}
 //End of insertion operator
 
 int Continent::Continent::counter = 0;
