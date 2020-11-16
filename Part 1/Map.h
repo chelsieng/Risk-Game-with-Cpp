@@ -117,6 +117,8 @@ public:
     bool validate() const; //checking if map is a connected graph, continent is a subgraph
     // and if each territory belongs to one and only one continent
 
+    bool areNeighbours(Territory *t1, Territory *t2) const; //return true if t2 is a neighbour of t1
+
     vector<Continent *> *getContinents() const;
 
     vector<Territory *> *getTerritories() const;

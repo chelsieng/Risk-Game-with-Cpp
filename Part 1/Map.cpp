@@ -466,6 +466,18 @@ bool Map::Map::validate() const {
     return true; //Map is validated
 }
 
+bool Map::areNeighbours(Territory *t1, Territory *t2) const {
+    bool isNeighbour = false;
+    for (int neighbourID : this->mapGraph->get_neighbours(t1->getId())) {
+        if (neighbourID == t2->getId()) {
+            isNeighbour = true;
+        } else {
+            isNeighbour = false;
+        }
+    }
+    return isNeighbour;
+}
+
 vector<Continent *> *Map::Map::getContinents() const {
     return continents;
 }
