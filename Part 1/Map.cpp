@@ -152,6 +152,10 @@ ostream &operator<<(ostream &output, const Territory &territory) {
     return output;
 }
 
+bool Territory::isOccupiedBy(Player *p) const {
+    return this->owner->getId() == p->getId();
+}
+
 void Territory::setOwner(Player *p) {
     this->owner = p;
 }
@@ -275,6 +279,17 @@ void Continent::Continent::traverse(const int node, const Graph<int> *graph, vec
             continue;
         }
     }
+}
+
+bool Continent::isOccupiedBy(Player *p) const {
+    bool occupied = false;
+    for (auto terr: *this->territoriesVector) {
+        if (terr->isOccupiedBy(p)) {
+            occupied = true;
+        }
+        occupied = false;
+    }
+    return occupied;
 }
 
 vector<Territory *> *Continent::Continent::getTerritoriesVector() const {

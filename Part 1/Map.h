@@ -56,6 +56,8 @@ public:
 
     void setOwner(Player *p);
 
+    bool isOccupiedBy(Player *p) const; //return true if territory is occupied by player p
+
     friend ostream &operator<<(ostream &, const Territory &); //insertion operator
 }; //end of Territory Class
 
@@ -78,6 +80,7 @@ public:
     Continent &operator=(const Continent &); //Assignment Operator
 
     bool isConnected() const; //return true if all territories are connected in continent
+    bool isOccupiedBy(Player *p) const; //return true if continent is controlled by player p
 
     vector<Territory *> *getTerritoriesVector() const;
 
