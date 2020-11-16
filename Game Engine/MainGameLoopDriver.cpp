@@ -35,7 +35,7 @@ int main() {
     string territoryName8("Bikini Bottom");
     Territory *territory8 = new Territory(territoryName8);
 
-    vector<Continent*> mapContinents; //THIS IS JUST A PLACEHOLDER FOR NOW
+    vector<Continent*> *mapContinents; //THIS IS JUST A PLACEHOLDER FOR NOW
 
     //creating everything we need for a new player, including a hand object
     //-> taken directly from player driver
@@ -81,6 +81,13 @@ int main() {
     ts->push_back(territory7);
     ts->push_back(territory8);
 
+    //making a map
+
+    vector<Territory *> *territoriesVector1;
+    vector<Territory *> *territoriesVector2;
+    vector<Territory *> *territoriesVector3;
+    Graph<int> *mapGraph;
+
 
     cout << "Here is our list of players:" << endl;
     for(int i = 0; i < ps1->size(); i++){
@@ -100,7 +107,7 @@ int main() {
 
     cout << "\nLet's enter the reinforcement phase function" << endl;
 
-    GameEngine::reinforcementPhase(ps1,ts,mapContinents);
+    GameEngine::reinforcementPhase(ps1, mapContinents);
 
     cout << "\nHere is our list of players now:\n" << endl;
     for(int i = 0; i < ps1->size(); i++){

@@ -98,12 +98,14 @@ void GameEngine::startupPhase(vector<Player *>* ps1, vector<Territory*>* ts) {
 
 ////END OF STARTUPPHASE FUNCTION
 
-void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Territory *> * theLands, vector<Continent *> theContinents) {
+void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *theContinents) {
 
     //Give each player a number of armies based on the number of territories they own
         //(number owned / 3, rounded down)
 
         for(int i = 0; i < ps1->size(); i++){
+            //Give each player a number of armies based on the number of territories they own
+            //(number owned / 3, rounded down)
             int toAdd = 0;
             Player* player = ps1->at(i);
             int numOfTerritories = player->getPlayerTerritories()->size();
@@ -111,7 +113,7 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Territory *> *
             player->setReinforcementPool(player->getReinforcementPool()+toAdd);
             cout << "Since P" << player->getId() << " owns " << numOfTerritories << " territories, they get "
              << toAdd << " armies added to their reinforcement pool" << endl;
-        }//end of for loop (add to reinforcement pool based on amount owned).
+
 
      //Assign bonus if player owns entire continent
         //for each player
@@ -120,17 +122,15 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Territory *> *
         ///So yeah we'll implement that once the control bonus has been added to the map class
 
      //Make sure each player gets a minimum of 3 armies this turn to deploy
-        for(int i = 0; i < ps1->size(); i++){
-            Player* player = ps1->at(i);
-            int toAdd = 0;
-            if(player->getReinforcementPool() < 3){
-                int toAdd = 3 - player->getReinforcementPool();
-                player->setReinforcementPool(player->getReinforcementPool() + toAdd);
-                cout << "P" << player->getId() << " didn't get many armies, so they have been given "
-                << toAdd << " more." << endl;
-            }//end of if (they had been given less than 3 until now)
-        }//end of for
 
+            if(toAdd < 3){
+                int minimum = 3 - toAdd;
+                player->setReinforcementPool(player->getReinforcementPool() + minimum);
+                cout << "P" << player->getId() << " didn't get many armies, so they have been given "
+                << minimum << " more." << endl;
+            }//end of if (they had been given less than 3 until now)
+
+        }//end of for loop (go through process for each player)
 }///end of reinforcementPhase function
 
 
