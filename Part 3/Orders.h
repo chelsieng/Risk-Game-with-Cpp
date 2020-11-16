@@ -19,11 +19,21 @@ class Territory;
 /*
  * Quick summary of what each order does
  * Deploy:      place some armies on one of the current player’s territories
+ *
  * Advance:     move armies from one of the current player’s territories (source) to an adjacent territory (target)
+ *              *The bomb order can only be created by playing the bomb card*
+ *
  * Bomb:        destroy half of the armies on an opponent’s territory that is adjacent to the current player’s territories
- * Blockade:    triple the number of armies on one of the current player’s territories and make it a neutral territory
+ *              *The bomb order can only be created by playing the bomb card*
+ *
+ * Blockade:    double the number of armies on one of the current player’s territories and make it a neutral territory
+ *              *The blockade order can only be created by playing the blockade card*
+ *
  * Airlift:     move some armies from one of the current player’s territories to any another territory
+ *              *The airlift order can only be created by playing the airlift card*
+ *
  * Negotiate:   prevent the current player and the target player from attacking each other until the end of the turn
+ *              *The negotiate order can only be created by playing the diplomacy card*
  */
 
 // Abstract parent class Order

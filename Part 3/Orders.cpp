@@ -121,11 +121,11 @@ ostream& Deploy::print(ostream& out) const {
         printEffect(out);
     } else
         out << " order has not been executed. ";
-    return out;
+    return out << endl;
 }
 
 ostream& Deploy::printEffect(ostream &out) const {
-    out << "Deploy " << this->numOfArmies << " armies units to " << this->targetTerritory->getTerritoryName() << endl;
+    out << "Deploy " << this->numOfArmies << " armies units to " << this->targetTerritory->getTerritoryName();
     return out;
 }
 
@@ -187,7 +187,6 @@ Advance::~Advance()
 // Methods
 bool Advance::validate()
 {
-    // TODO check adjacency
     // Advance order is valid only if the source territory belongs to the player that issued the order
     return (this->player->getId() == this->sourceTerritory->getOwner()->getId());
 }
@@ -243,11 +242,11 @@ ostream& Advance::print(ostream& out) const {
         this->printEffect(out);
     } else
         out << " order has not been executed.";
-    return out;
+    return out << endl;
 }
 
 ostream& Advance::printEffect(ostream &out) const {
-    out << "Advance " << this->numOfArmies << " armies units from " << this->sourceTerritory->getTerritoryName() << " to " << this->targetTerritory->getTerritoryName() << endl;
+    out << "Advance " << this->numOfArmies << " armies units from " << this->sourceTerritory->getTerritoryName() << " to " << this->targetTerritory->getTerritoryName();
     return out;
 }
 
@@ -308,7 +307,6 @@ Bomb::~Bomb()
 // Methods
 bool Bomb::validate()
 {
-    // TODO check adjacency
     // Bomb order is valid if
     // the source territory belongs to the player that issued the order, and
     // the target territory does not belongs to the player that issued the order
@@ -335,12 +333,12 @@ ostream& Bomb::print(ostream& out) const {
         this->printEffect(out);
     } else
         out << " order has not been executed.";
-    return out;
+    return out << endl;
 }
 
 ostream& Bomb::printEffect(ostream &out) const {
     out << this->sourceTerritory->getTerritoryName() << " bomb " << this->targetTerritory->getTerritoryName();
-    out << ". The number of armies in " << this->targetTerritory->getTerritoryName() << " is halves." << endl;
+    out << ". The number of armies in " << this->targetTerritory->getTerritoryName() << " is halved.";
     return out;
 }
 
@@ -424,11 +422,11 @@ ostream& Blockade::print(ostream& out) const {
         this->printEffect(out);
     } else
         out << " order has not been executed.";
-    return out;
+    return out << endl;
 }
 
 ostream& Blockade::printEffect(ostream &out) const {
-    out << this->targetTerritory->getTerritoryName() << " now belongs to the Neutral player. The number of armies is doubled." << endl;
+    out << this->targetTerritory->getTerritoryName() << " now belongs to the Neutral player. The number of armies is doubled.";
     return out;
 }
 
@@ -546,11 +544,11 @@ ostream& Airlift::print(ostream& out) const {
         this->printEffect(out);
     } else
         out << " order has not been executed.";
-    return out;
+    return out << endl;
 }
 
 ostream& Airlift::printEffect(ostream &out) const {
-    out << "Airlift " << this->numOfArmies << " armies from " << this->sourceTerritory->getTerritoryName() << " to " << this->targetTerritory->getTerritoryName() << endl;
+    out << "Airlift " << this->numOfArmies << " armies from " << this->sourceTerritory->getTerritoryName() << " to " << this->targetTerritory->getTerritoryName();
     return out;
 }
 
@@ -629,11 +627,12 @@ ostream& Negotiate::print(ostream& out) const {
         this->printEffect(out);
     } else
         out << " order has not been executed.";
-    return out;
+    return out << endl;
 }
 
 ostream& Negotiate::printEffect(ostream &out) const {
-    out << "Negotiate with Player" << this->negotiator->getId() << endl;
+    out << "Player" << this->player->getId() << " and Player" << this->negotiator->getId();
+    out << " cannot attack each other's territories until the end of the turn.";
     return out;
 }
 

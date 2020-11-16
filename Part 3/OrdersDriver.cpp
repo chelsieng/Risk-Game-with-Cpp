@@ -45,56 +45,56 @@ int main()
 
     cout << "\nTesting Deploy methods execute(): " << endl;
     deploy->execute();
-    deploy->printEffect(cout);
+    cout << *deploy;
 
     cout << "\nTesting Advance methods execute(): " << endl;
     advance->execute();
-    advance->printEffect(cout);
+    cout << *advance;
 
     cout << "\nTesting Bomb methods execute(): " << endl;
     bomb->execute();
-    bomb->printEffect(cout);
+    cout << *bomb;
 
     cout << "\nTesting Blockade methods execute(): " << endl;
     blockade->execute();
-    blockade->printEffect(cout);
+    cout << *blockade;
 
     cout << "\nTesting Negotiate methods execute(): " << endl;
     negotiate->execute();
-    deploy->printEffect(cout);
+    cout << *negotiate;
 
-    cout << "\nTesting Airlift methods execute(): " << endl;
+    cout << "Testing Airlift methods execute(): " << endl;
     airlift->execute();
-    deploy->printEffect(cout);
+    cout << *airlift;
 
-    // Testing OrdersList
-    cout << "\nAdding all types of Order into an OrdersList" << endl;
-    OrdersList *ordersList = new OrdersList();
-    ordersList->addToLast(deploy);
-    ordersList->addToLast(advance);
-    ordersList->addToLast(bomb);
-    ordersList->addToLast(blockade);
-    ordersList->addToLast(negotiate);
-    ordersList->addToLast(airlift);
-
-    // List after added: [deploy, advance, bomb, blockade, negotiation, airlift]
-    cout << "Expected list: [deploy, advance, bomb, blockade, negotiation, airlift]" << endl;
-    cout << "OrdersList after everything is added:"<< endl
-        << *ordersList << endl;
-
-    // Move Order in index 1 to index 3
-    ordersList->move(1,3);
-    // List after moving: [deploy, bomb, blockade, advance, negotiation, airlift]
-    cout << "Expected list: [deploy, bomb, blockade, advance, negotiation, airlift]" << endl;
-    cout << "OrdersList after Order is moved:" << endl
-        << *ordersList  << endl;
-
-    // Delete Order at index 4
-    ordersList->deleteAt(4);
-    // List after deleting: [deploy, bomb, blockade, advance, airlift]
-    cout << "Expected list: [deploy, bomb, blockade, advance, airlift]" << endl;
-    cout << "OrdersList after Order is deleted:" << endl
-        << *ordersList  << endl;
+//    // Testing OrdersList
+//    cout << "\nAdding all types of Order into an OrdersList" << endl;
+//    OrdersList *ordersList = new OrdersList();
+//    ordersList->addToLast(deploy);
+//    ordersList->addToLast(advance);
+//    ordersList->addToLast(bomb);
+//    ordersList->addToLast(blockade);
+//    ordersList->addToLast(negotiate);
+//    ordersList->addToLast(airlift);
+//
+//    // List after added: [deploy, advance, bomb, blockade, negotiation, airlift]
+//    cout << "Expected list: [deploy, advance, bomb, blockade, negotiation, airlift]" << endl;
+//    cout << "OrdersList after everything is added:"<< endl
+//        << *ordersList << endl;
+//
+//    // Move Order in index 1 to index 3
+//    ordersList->move(1,3);
+//    // List after moving: [deploy, bomb, blockade, advance, negotiation, airlift]
+//    cout << "Expected list: [deploy, bomb, blockade, advance, negotiation, airlift]" << endl;
+//    cout << "OrdersList after Order is moved:" << endl
+//        << *ordersList  << endl;
+//
+//    // Delete Order at index 4
+//    ordersList->deleteAt(4);
+//    // List after deleting: [deploy, bomb, blockade, advance, airlift]
+//    cout << "Expected list: [deploy, bomb, blockade, advance, airlift]" << endl;
+//    cout << "OrdersList after Order is deleted:" << endl
+//        << *ordersList  << endl;
 
     // Delete pointers
 //    delete player1;         player1 = nullptr;
@@ -123,6 +123,6 @@ int main()
 //    delete airlift;         airlift = nullptr;
 //    delete ordersList;      ordersList = nullptr;
 
-    cout << "End of OrdersDriver";
+    cout << "\nEnd of OrdersDriver" << endl;
     return 0;
 }
