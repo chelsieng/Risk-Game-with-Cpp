@@ -61,6 +61,7 @@ private:
     static int counter;
     int *id = new int(0);
     string continentName;
+    int controlValue; // this value represents the number of bonus armies that a player gets when he controls the whole continent
     vector<Territory *> *territoriesVector;
     Graph<int> *territoriesGraph;
 
@@ -83,7 +84,12 @@ public:
 
     string getContinentName() const;
 
-    friend ostream &operator<<(ostream &, const Continent &); //insertion operator
+    friend ostream &operator<<(ostream &, const Continent &);
+
+    int getControlValue() const;
+
+    void setControlValue(int controlValue);
+    //insertion operator
 }; //End of Continent Class
 
 class Map {

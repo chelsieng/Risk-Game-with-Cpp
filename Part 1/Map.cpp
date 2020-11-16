@@ -143,11 +143,10 @@ ostream &operator<<(ostream &output, const Territory &territory) {
             cout << *army;
         }
         output << "The territory is owned by " << territory.owner->getId() << endl;
-    }
-    else if(territory.owner != nullptr){
-        output << "The territory " << territory.getTerritoryName() << " is owned by P" << territory.owner->getId() << endl;
-    }
-    else {
+    } else if (territory.owner != nullptr) {
+        output << "The territory " << territory.getTerritoryName() << " is owned by P" << territory.owner->getId()
+               << endl;
+    } else {
         output << "The Territory " << territory.getTerritoryName() << " is owned by no one" << endl;
     }
     return output;
@@ -292,6 +291,14 @@ int Continent::Continent::getId() const {
 
 string Continent::Continent::getContinentName() const {
     return continentName;
+}
+
+int Continent::getControlValue() const {
+    return controlValue;
+}
+
+void Continent::setControlValue(int controlValue) {
+    Continent::controlValue = controlValue;
 }
 
 ostream &operator<<(ostream &output, const Continent &continent) {
