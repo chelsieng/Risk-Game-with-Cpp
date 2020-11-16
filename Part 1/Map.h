@@ -52,6 +52,7 @@ public:
     string getTerritoryName() const;
     int getNumberOfArmies() const;
     void setOwner(Player *p);
+    Player* getOwner();
 
     friend ostream &operator<<(ostream &, const Territory &); //insertion operator
 }; //end of Territory Class
@@ -107,6 +108,7 @@ public:
     vector<Continent *> *getContinents() const;
 
     vector<Territory *> *getTerritories() const;
+    vector<Territory *> *getNeighbours(Territory *theTerritory);
 
     friend ostream &operator<<(ostream &, const Map &);
 }; //End of Map Class

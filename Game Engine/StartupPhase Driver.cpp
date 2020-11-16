@@ -7,6 +7,7 @@
 #include <cstdlib>
 
 int main() {
+
     //making a deck
     BombCard bomb1;
     ReinforcementCard reinforcement1;
