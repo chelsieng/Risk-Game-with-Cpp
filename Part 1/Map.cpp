@@ -509,6 +509,25 @@ ostream &operator<<(ostream &output, const Map &map) {
         cout << *continent;
     }
     return output;
-} //End of insertion operator
+}
+//End of insertion operator
+
+vector<Territory *> *Map::getNeighbours(Territory *me) {
+        vector<Territory*> *neighbours = new vector<Territory*>;
+    set<int,less<int>>::iterator itr;
+    vector<Territory*>* allTerritories = this->getTerritories();
+    set<int> neighbourIDs = mapGraph->get_neighbours(me->getId());
+    for(itr = neighbourIDs.begin(); itr != neighbourIDs.end(); itr++){
+        int theNeighbourID = *itr;
+        for(int i = 0; i < allTerritories->size(); i++){
+                Territory* tAti = allTerritories->at(i);
+                if(tAti->getId() == theNeighbourID){
+                    neighbours->push_back(tAti);
+                }//end of if (IDs match)
+        }//end of for (check all territories for given ID)
+    }//end of for (go through all IDs)
+    return neighbours;
+}//end of getNeighbours class
+
 
 

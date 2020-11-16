@@ -1,4 +1,7 @@
 //
+// Created by Dominique Cartier on 2020-11-16.
+//
+//
 // Created by Dominique Cartier on 2020-11-10.
 //
 #include <iostream>
@@ -7,7 +10,6 @@
 #include <cstdlib>
 
 int main() {
-
     //making a deck
     BombCard bomb1;
     ReinforcementCard reinforcement1;
@@ -15,34 +17,69 @@ int main() {
     Deck* theDeck = new Deck(&head);
     theDeck->addToDeck(&bomb1);
 
-    //creating random territories to check some stuff out
-    string territoryName1("Dawson");
+ ///Create a map
+    cout << "Making a map to use." << endl;
+
+    string territoryName1 = "Bikini Bottom";
+    string territoryName2 = "Goo Lagoon";
+    string territoryName3 = "Davie's Locker";
+    string territoryName4 = "Texas";
+
+    string continentName1 = "Sea";
+    string continentName2 = "Land";
+
     Territory *territory1 = new Territory(territoryName1);
-    string territoryName2("Abbott");
     Territory *territory2 = new Territory(territoryName2);
-    string territoryName3("Vanier");
     Territory *territory3 = new Territory(territoryName3);
-    string territoryName4("Champlain");
     Territory *territory4 = new Territory(territoryName4);
-    string territoryName5("Concordia");
-    Territory *territory5 = new Territory(territoryName5);
-    string territoryName6("McGill");
-    Territory *territory6 = new Territory(territoryName6);
-    string territoryName7("Texas");
-    Territory *territory7 = new Territory(territoryName7);
-    string territoryName8("Bikini Bottom");
-    Territory *territory8 = new Territory(territoryName8);
+
+    vector<Territory *> *territoriesVector1 = new vector<Territory *>;
+    vector<Territory *> *territoriesVector2 = new vector<Territory *>;
+
+    Graph<int> *mapGraph = new Graph<int>;
+
+    territoriesVector1->push_back(territory1);
+    territoriesVector1->push_back(territory2);
+    territoriesVector2->push_back(territory3);
+    territoriesVector2->push_back(territory4);
+
+    mapGraph->add_vertex(territory1->getId());
+    mapGraph->add_vertex(territory2->getId());
+    mapGraph->add_vertex(territory3->getId());
+    mapGraph->add_vertex(territory4->getId());
+
+    mapGraph->add_edge(territory1->getId(), territory2->getId());
+    mapGraph->add_edge(territory2->getId(), territory3->getId());
+    mapGraph->add_edge(territory3->getId(), territory4->getId());
+
+    Continent *continent1 = new Continent(continentName1, mapGraph, territoriesVector1);
+    Continent *continent2 = new Continent(continentName2, mapGraph, territoriesVector2);
+
+    // Creating vector of continents in order to pass it to the Map constructor
+    vector<Continent *> *continents1 = new vector<Continent *>;
+    continents1->push_back(continent1);
+    continents1->push_back(continent2);
+
+    Map *map1 = new Map(mapGraph, continents1);
+    cout << *map1;
+    cout << endl << "Results:" << endl << "--------" << endl;
+    if (!map1->validate()) {
+        cout << "The map is not valid." << endl << endl;
+    } else {
+        cout << "Map created!." << endl << endl;
+    }
+ ///
 
     //creating everything we need for a new player, including a hand object
     //-> taken directly from player driver
     Hand* player1Hand = new Hand(5, theDeck); // Creating the player's hands
     OrdersList* orderListP1 = new OrdersList(); // Creating the player's list of orders
     vector<Territory*>* territoryListP1 = new vector<Territory*>(); // Creating the player's list of territories
-    //     territoryListP1->push_back(territory1);
+
     vector<Territory*>* territoryListP2 = new vector<Territory*>();
-    //     territoryListP2->push_back(territory2);
+
     vector<Territory*>* territoryListP3 = new vector<Territory*>();
-    //   territoryListP3->push_back(territory3);
+
     vector<Territory*>* territoryListP4 = new vector<Territory*>();
 ///Make first player:
     Player* p1 = new Player(player1Hand, orderListP1, territoryListP1);
@@ -66,16 +103,7 @@ int main() {
     ps1->push_back(p3);
     ps1->push_back(p4);
 
-    ///Create vector of territories
-    vector<Territory*>* ts = new vector<Territory*>();
-    ts->push_back(territory1);
-    ts->push_back(territory2);
-    ts->push_back(territory3);
-    ts->push_back(territory4);
-    ts->push_back(territory5);
-    ts->push_back(territory6);
-    ts->push_back(territory7);
-    ts->push_back(territory8);
+
 
 
     cout << "Here is our list of players:" << endl;
@@ -84,7 +112,7 @@ int main() {
     }
 
     cout << "We will now enter the start up phase function:" << endl;
-    GameEngine::startupPhase(ps1,ts);
+    GameEngine::startupPhase(ps1,map1->getTerritories());
 
     cout << "\nWe have exited the start up phase function. Now, let's look at our list of players again.\n"
          << "They should now be in their assigned turn order, and have territories assigned to them." << endl;
@@ -92,6 +120,23 @@ int main() {
     cout << "\nHere is our list of players now:\n" << endl;
     for(int i = 0; i < ps1->size(); i++){
         cout << *ps1->at(i) << endl;
+    }
+
+    cout << "\nLet's enter the reinforcement phase function" << endl;
+
+    GameEngine::reinforcementPhase(ps1, map1->getContinents());
+
+    cout << "\nHere is our list of players now:\n" << endl;
+    for(int i = 0; i < ps1->size(); i++){
+        cout << *ps1->at(i) << endl;
+    }
+
+    cout << "\n Here are the places that player 2 can attack:" << endl;
+    vector<Territory*>* attackable = p2->toAttack(map1);
+    for(int i = 0; i < attackable->size(); i++){
+        if(attackable->at(i) != NULL){
+            cout << attackable->at(i)->getTerritoryName() << endl;
+        }
     }
 
     //All the deletes that are commented out cause errors when the program terminates, probably cause they result
@@ -121,5 +166,7 @@ int main() {
     delete territoryListP2;
     delete territoryListP3;
     delete territoryListP4;
+    delete map1;
     return 0;
 }//end of main
+

@@ -58,6 +58,7 @@ public:
     void removeArmy();                      // remove given number of armies into the territory
     Player* getOwner() const { return (this->owner); };
     void setOwner(Player *p);
+   
 
     bool isOccupiedBy(Player *p) const; //return true if territory is occupied by player p
 
@@ -125,6 +126,7 @@ public:
     vector<Continent *> *getContinents() const;
 
     vector<Territory *> *getTerritories() const;
+    vector<Territory *> *getNeighbours(Territory *theTerritory);
 
     friend ostream &operator<<(ostream &, const Map &);
 }; //End of Map Class

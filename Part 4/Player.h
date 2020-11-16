@@ -13,6 +13,7 @@ class OrdersList;
 class Territory;
 class Order;
 class Hand;
+class Map;
 
 
 class Player {
@@ -40,6 +41,7 @@ public:
     Hand* getHand();
     OrdersList* getOrdersList();
     vector<Territory*>* getPlayerTerritories();
+    vector<Territory*>* toAttack(Map* theMap);
 
     // assignment operator
     Player& operator = (const Player &player);
