@@ -92,9 +92,47 @@ void GameEngine::startupPhase(vector<Player *>* ps1, vector<Territory*>* ts) {
 //original players vector is assigned version with randomized turn order
     *ps1 = *ps;
     ps = NULL;
-}//end of startup phase function implementation
+}
+
+//end of startup phase function implementation
 
 ////END OF STARTUPPHASE FUNCTION
+
+void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *theContinents) {
+
+    //Give each player a number of armies based on the number of territories they own
+        //(number owned / 3, rounded down)
+
+        for(int i = 0; i < ps1->size(); i++){
+            //Give each player a number of armies based on the number of territories they own
+            //(number owned / 3, rounded down)
+            int toAdd = 0;
+            Player* player = ps1->at(i);
+            int numOfTerritories = player->getPlayerTerritories()->size();
+            toAdd = numOfTerritories/3;
+            player->setReinforcementPool(player->getReinforcementPool()+toAdd);
+            cout << "Since P" << player->getId() << " owns " << numOfTerritories << " territories, they get "
+             << toAdd << " armies added to their reinforcement pool" << endl;
+
+
+     //Assign bonus if player owns entire continent
+        //for each player
+            //for each continent
+                    //for each territory
+        ///So yeah we'll implement that once the control bonus has been added to the map class
+
+     //Make sure each player gets a minimum of 3 armies this turn to deploy
+
+            if(toAdd < 3){
+                int minimum = 3 - toAdd;
+                player->setReinforcementPool(player->getReinforcementPool() + minimum);
+                cout << "P" << player->getId() << " didn't get many armies, so they have been given "
+                << minimum << " more." << endl;
+            }//end of if (they had been given less than 3 until now)
+
+        }//end of for loop (go through process for each player)
+}///end of reinforcementPhase function
+
 
 
 //int main() {

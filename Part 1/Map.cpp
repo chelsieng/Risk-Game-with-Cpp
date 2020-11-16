@@ -143,14 +143,17 @@ ostream &operator<<(ostream &output, const Territory &territory) {
             cout << *army;
         }
         output << "The territory is owned by " << territory.owner->getId() << endl;
-    }
-    else if(territory.owner != nullptr){
-        output << "The territory " << territory.getTerritoryName() << " is owned by P" << territory.owner->getId() << endl;
-    }
-    else {
+    } else if (territory.owner != nullptr) {
+        output << "The territory " << territory.getTerritoryName() << " is owned by P" << territory.owner->getId()
+               << endl;
+    } else {
         output << "The Territory " << territory.getTerritoryName() << " is owned by no one" << endl;
     }
     return output;
+}
+
+bool Territory::isOccupiedBy(Player *p) const {
+    return this->owner->getId() == p->getId();
 }
 
 void Territory::setOwner(Player *p) {
@@ -159,6 +162,14 @@ void Territory::setOwner(Player *p) {
 
 int Territory::getNumberOfArmies() const {
     return armies->size();
+}
+
+void Territory::addArmy() {
+        armies->push_back(new Army(this->owner));
+}
+
+void Territory::removeArmy() {
+    armies->erase(this->armies->begin());      // delete one element
 }
 //End of insertion operator
 
@@ -284,6 +295,17 @@ void Continent::Continent::traverse(const int node, const Graph<int> *graph, vec
     }
 }
 
+bool Continent::isOccupiedBy(Player *p) const {
+    bool occupied = false;
+    for (auto terr: *this->territoriesVector) {
+        if (terr->isOccupiedBy(p)) {
+            occupied = true;
+        }
+        occupied = false;
+    }
+    return occupied;
+}
+
 vector<Territory *> *Continent::Continent::getTerritoriesVector() const {
     return territoriesVector;
 }
@@ -298,6 +320,14 @@ int Continent::Continent::getId() const {
 
 string Continent::Continent::getContinentName() const {
     return continentName;
+}
+
+int Continent::getControlValue() const {
+    return controlValue;
+}
+
+void Continent::setControlValue(int controlValue) {
+    Continent::controlValue = controlValue;
 }
 
 ostream &operator<<(ostream &output, const Continent &continent) {
@@ -459,6 +489,18 @@ bool Map::Map::validate() const {
     return true; //Map is validated
 }
 
+bool Map::areNeighbours(Territory *t1, Territory *t2) const {
+    bool isNeighbour = false;
+    for (int neighbourID : this->mapGraph->get_neighbours(t1->getId())) {
+        if (neighbourID == t2->getId()) {
+            isNeighbour = true;
+        } else {
+            isNeighbour = false;
+        }
+    }
+    return isNeighbour;
+}
+
 vector<Continent *> *Map::Map::getContinents() const {
     return continents;
 }
@@ -482,6 +524,25 @@ ostream &operator<<(ostream &output, const Map &map) {
         cout << *continent;
     }
     return output;
-} //End of insertion operator
+}
+//End of insertion operator
+
+vector<Territory *> *Map::getNeighbours(Territory *me) {
+        vector<Territory*> *neighbours = new vector<Territory*>;
+    set<int,less<int>>::iterator itr;
+    vector<Territory*>* allTerritories = this->getTerritories();
+    set<int> neighbourIDs = mapGraph->get_neighbours(me->getId());
+    for(itr = neighbourIDs.begin(); itr != neighbourIDs.end(); itr++){
+        int theNeighbourID = *itr;
+        for(int i = 0; i < allTerritories->size(); i++){
+                Territory* tAti = allTerritories->at(i);
+                if(tAti->getId() == theNeighbourID){
+                    neighbours->push_back(tAti);
+                }//end of if (IDs match)
+        }//end of for (check all territories for given ID)
+    }//end of for (go through all IDs)
+    return neighbours;
+}//end of getNeighbours class
+
 
 

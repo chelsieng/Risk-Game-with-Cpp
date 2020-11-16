@@ -172,3 +172,28 @@ int Player::getReinforcementPool() const {
 void Player::setReinforcementPool(int i) {
     this->reinforcementPool = i;
 }
+
+///Gives all the territories that a player can attack (and returns a vector of pointers to said territories)
+vector<Territory *> *Player::toAttack(Map* theMap) {
+    vector<Territory *>* attackable = new vector<Territory*>;
+    set<int> *IDs = new set<int>;
+    for(int i = 0; i < this->getPlayerTerritories()->size(); i++){
+        vector<Territory*>* yourNeighbours = theMap->getNeighbours(this->getPlayerTerritories()->at(i));
+        for(int j = 0; j < yourNeighbours->size(); j++) {
+            if (IDs->find(yourNeighbours->at(j)->getId()) == IDs->end()) {
+                IDs->insert(yourNeighbours->at(j)->getId());
+            }//end of if (add neighbours to ID list if they haven't been added)
+        }//end of for (go through all neighbours)
+    }//end of for (go through all the player's owned territories)
+
+    set<int,less<int>>::iterator itr;
+    for(itr = IDs->begin(); itr != IDs->end(); itr++) {
+        int theNeighbourID = *itr;
+        for(int i = 0; i < theMap->getTerritories()->size(); i++){
+            if(theMap->getTerritories()->at(i)->getId() == theNeighbourID && theMap->getTerritories()->at(i)->getOwner() != this){
+                attackable->push_back(theMap->getTerritories()->at(i));
+            }//end of if (valid to attack)
+        }//for each ID, check all territories to see if they have the matching ID and don't belong to the player
+    }//end of for (go through all IDs in list)
+    return attackable;
+}//end of toAttack method

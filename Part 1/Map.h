@@ -49,9 +49,18 @@ public:
     ~Territory(); //Destructor
     Territory &operator=(const Territory &); //Assignment Operator
     int getId() const;
+
     string getTerritoryName() const;
+
     int getNumberOfArmies() const;
+
+    void addArmy();                         // add given number of armies into the territory
+    void removeArmy();                      // remove given number of armies into the territory
+    Player* getOwner() const { return (this->owner); };
     void setOwner(Player *p);
+   
+
+    bool isOccupiedBy(Player *p) const; //return true if territory is occupied by player p
 
     friend ostream &operator<<(ostream &, const Territory &); //insertion operator
 }; //end of Territory Class
@@ -61,6 +70,7 @@ private:
     static int counter;
     int *id = new int(0);
     string continentName;
+    int controlValue; // this value represents the number of bonus armies that a player gets when he controls the whole continent
     vector<Territory *> *territoriesVector;
     Graph<int> *territoriesGraph;
 
@@ -74,6 +84,7 @@ public:
     Continent &operator=(const Continent &); //Assignment Operator
 
     bool isConnected() const; //return true if all territories are connected in continent
+    bool isOccupiedBy(Player *p) const; //return true if continent is controlled by player p
 
     vector<Territory *> *getTerritoriesVector() const;
 
@@ -83,7 +94,12 @@ public:
 
     string getContinentName() const;
 
-    friend ostream &operator<<(ostream &, const Continent &); //insertion operator
+    int getControlValue() const;
+
+    void setControlValue(int controlValue);
+
+    friend ostream &operator<<(ostream &, const Continent &);//insertion operator
+
 }; //End of Continent Class
 
 class Map {
@@ -101,12 +117,16 @@ public:
     ~Map(); //Destructor
     Map &operator=(const Map &); //Assignment Operator
     bool isConnected() const;
+
     bool validate() const; //checking if map is a connected graph, continent is a subgraph
     // and if each territory belongs to one and only one continent
+
+    bool areNeighbours(Territory *t1, Territory *t2) const; //return true if t2 is a neighbour of t1
 
     vector<Continent *> *getContinents() const;
 
     vector<Territory *> *getTerritories() const;
+    vector<Territory *> *getNeighbours(Territory *theTerritory);
 
     friend ostream &operator<<(ostream &, const Map &);
 }; //End of Map Class

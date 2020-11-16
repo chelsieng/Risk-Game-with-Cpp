@@ -73,6 +73,7 @@ Map *MapLoader::loadMap(const string &filePath) {
     // Will be needed to form a graph
     vector<vector<Territory *> *> continentList;
     vector<string> continentName; // Storing the name of the continents read from the file
+    vector<int> controlValueList; // Storing the number of bonus armies a continent provides
     // Pointer to a graph made up of the IDs of the countries
     auto mapGraph = new Graph<int>;
     // Data structure type map to store the the key value pairs of countries and continents
@@ -106,8 +107,9 @@ Map *MapLoader::loadMap(const string &filePath) {
         // Creating a new vector of territories for each continent
         continentList.push_back(new vector<Territory *>());
         string continent_name = parseString(line).at(0);
+        int controlValue = stoi(parseString(line).at(1));
         continentName.push_back(continent_name); // getting continent name
-
+        controlValueList.push_back(controlValue); // getting control value
     }
     // Reading file up to [countries] header
     while (line.find("[countries]") != 0) {
@@ -220,6 +222,10 @@ Map *MapLoader::loadMap(const string &filePath) {
     auto *continentVector = new vector<Continent *>();
     for (int i = 0; i < continentList.size(); i++) {
         continentVector->push_back(new Continent(continentName.at(i), mapGraph, continentList.at(i)));
+    }
+    // Setting control value of all continents
+    for (int i = 0; i < continentVector->size(); i++) {
+        continentVector->at(i)->setControlValue(controlValueList.at(i));
     }
     input.close();
     cout << filePath << " successfully loaded. Map has been created." << endl;
