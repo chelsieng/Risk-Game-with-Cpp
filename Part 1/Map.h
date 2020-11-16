@@ -49,8 +49,11 @@ public:
     ~Territory(); //Destructor
     Territory &operator=(const Territory &); //Assignment Operator
     int getId() const;
+
     string getTerritoryName() const;
+
     int getNumberOfArmies() const;
+
     void setOwner(Player *p);
 
     friend ostream &operator<<(ostream &, const Territory &); //insertion operator
@@ -84,12 +87,12 @@ public:
 
     string getContinentName() const;
 
-    friend ostream &operator<<(ostream &, const Continent &);
-
     int getControlValue() const;
 
     void setControlValue(int controlValue);
-    //insertion operator
+
+    friend ostream &operator<<(ostream &, const Continent &);//insertion operator
+
 }; //End of Continent Class
 
 class Map {
@@ -107,6 +110,7 @@ public:
     ~Map(); //Destructor
     Map &operator=(const Map &); //Assignment Operator
     bool isConnected() const;
+
     bool validate() const; //checking if map is a connected graph, continent is a subgraph
     // and if each territory belongs to one and only one continent
 
