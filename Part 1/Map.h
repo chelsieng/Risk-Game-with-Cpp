@@ -55,7 +55,7 @@ public:
     void removeArmy();                      // remove given number of armies into the territory
     Player* getOwner() const { return (this->owner); };
     void setOwner(Player *p);
-    Player* getOwner();
+   
 
     friend ostream &operator<<(ostream &, const Territory &); //insertion operator
 }; //end of Territory Class
