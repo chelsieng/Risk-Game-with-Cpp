@@ -23,6 +23,7 @@ class GameEngine {
 public:
 
     static void startupPhase(vector<Player *> *, vector<Territory *> *);
+    static void reinforcementPhase(vector<Player *> *, vector<Territory *> *, vector<Continent *>);
 
 }
 ;
