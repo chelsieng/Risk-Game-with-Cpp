@@ -1,6 +1,7 @@
 #include "GameStart.h"
 #include "MapLoader.h"
 #include "Map.h"
+#include "Player.h"
 #include <iostream>
 #include <map>
 #include <string>
@@ -54,8 +55,63 @@ bool GameStart::selectMap(int mapSelection) {
 
 }
 
+vector<Player *> GameStart::createPlayers(int numOfPlayers) {
+    Deck *deck = createDeck(); // creating deck of cards for the game
+    vector<Player *> pList;
+    string key; // "Press any key" feature for later
+    for (int i = 0; i < numOfPlayers; i++) {
+        Hand *hand = new Hand(0, deck); // creating hand for each player
+        vector<Territory *> *territories = nullptr; // creating vector territories for each player
+        auto *ordersList = new OrdersList(); // creating orderList for each player
+        auto *player = new Player(hand, ordersList, territories); // creating amount of players user initiated
+        pList.push_back(player); // storing players in global vector variable players
+    }
+    cout << endl << numOfPlayers << " players have been successfully created. \nLet's have a look at them: " << endl;
+    while (key.empty()) {
+        cout << "Press any key >> "; // Prompt user to press any key to continue
+        cin >> key;
+        cout << endl;
+    }
+    for (auto p: pList) {
+        cout << *p << endl;
+    }
+    return pList;
+}
+
+Deck *GameStart::createDeck() {
+    BombCard *startCard = new BombCard();
+    deckNode *baseOfDeck = new deckNode(startCard);
+    Deck *theDeck = new Deck(baseOfDeck);
+    string key; // "Press any key" feature for later
+    for (int i = 0; i < 50; i++) {
+        int randomNumber = rand();
+        if (randomNumber % 5 == 0)
+            theDeck->addToDeck(new BombCard());
+        else if (randomNumber % 5 == 1)
+            theDeck->addToDeck(new DiplomacyCard());
+        else if (randomNumber % 5 == 2) {
+            //we have to decide how many armies this card gives
+            int numOfArmies = rand() % 3;
+            if (numOfArmies == 0) { numOfArmies = 3; } //avoiding cards that give no armies
+            theDeck->addToDeck(new ReinforcementCard(numOfArmies));
+        } else if (randomNumber % 5 == 3)
+            theDeck->addToDeck(new AirliftCard());
+        else if (randomNumber % 5 == 4)
+            theDeck->addToDeck(new BlockadeCard());
+    }//end of for (putting random cards in Deck)
+    cout << endl << "First let's have a look at your deck" << endl;
+    while (key.empty()) {
+        cout << "Press any key >> "; // Prompt user to press any key to continue
+        cin >> key;
+        cout << endl;
+    }
+    cout << *theDeck;
+    return theDeck;
+}
+
 int main() {
     int mapSelection; // int where user selects map file to be loaded
+    int numOfPlayers; // int where user selects the number of players in the game
     // Displaying welcome message
     cout << "* ------------------------------ * " << endl;
     cout << "| Welcome to Warzone's Risk Game |" << endl;
@@ -88,6 +144,19 @@ int main() {
     }
     // uncomment to see map of game which user selected from
 //    cout << *mapGame;
+    while (numOfPlayers > 5 || numOfPlayers < 2) {
+        // Since numOfPlayers is an int, if user enters otherwise keep prompting
+        if (cin.fail()) {
+            cin.clear(); // clears error flag
+            cin.ignore(); // skips to the next line
+            continue; // Keep prompting user
+        }
+        cout << "II. Choose the number of players in the game (2-5 players): " << endl;
+        cout << ">> ";
+        cin >> numOfPlayers;
+    }
+    players = GameStart::createPlayers(numOfPlayers); // Store players in vector of players
+    //Uncomment to check if players were created
 
     return 0;
 }
