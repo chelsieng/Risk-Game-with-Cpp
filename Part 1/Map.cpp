@@ -161,8 +161,12 @@ int Territory::getNumberOfArmies() const {
     return armies->size();
 }
 
-Player *Territory::getOwner() {
-    return owner;
+void Territory::addArmy() {
+        armies->push_back(new Army(this->owner));
+}
+
+void Territory::removeArmy() {
+    armies->erase(this->armies->begin());      // delete one element
 }
 //End of insertion operator
 
