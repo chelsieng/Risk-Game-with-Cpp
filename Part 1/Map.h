@@ -54,6 +54,9 @@ public:
 
     int getNumberOfArmies() const;
 
+    void addArmy();                         // add given number of armies into the territory
+    void removeArmy();                      // remove given number of armies into the territory
+    Player* getOwner() const { return (this->owner); };
     void setOwner(Player *p);
 
     bool isOccupiedBy(Player *p) const; //return true if territory is occupied by player p
