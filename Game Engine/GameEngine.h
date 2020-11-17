@@ -1,5 +1,3 @@
-#ifndef GAME_ENGINE_H
-#define GAME_ENGINE_H
 #pragma once
 
 #include <iostream>
@@ -11,6 +9,7 @@
 #include "Map.h"
 #include "Orders.h"
 #include "Cards.h"
+#include "GameObservers.h"
 
 
 using namespace std;
@@ -20,7 +19,7 @@ using namespace std;
 // this is the GameEngine class, it will have number of players who will have armies. Also, territories assigned to only and only one player.
 
 
-class GameEngine {
+class GameEngine : public Subject{
 public:
     static Map* selectMap(int); // Function to load selected map file
     static vector<Player *> *createPlayers(int); // Function to create players for the game
@@ -34,8 +33,6 @@ public:
        static void orderExecutionPhase(vector<Player*> *thePlayers);
 
 };
-
-#endif
 
 
 
