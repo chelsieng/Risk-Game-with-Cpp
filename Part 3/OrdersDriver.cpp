@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "Orders.h"
+#include "GameEngine.h"
 
 using namespace std;
 using std::vector;
@@ -9,15 +10,14 @@ using std::vector;
 int main()
 {
     cout << "This is a driver class for the Orders and OrdersList class" << endl;
-
     // Initialize variables
-    ReinforcementCard reinforcement;
-    deckNode head(&reinforcement, NULL);
-    Deck* theDeck = new Deck(&head);
+    BombCard *startCard = new BombCard();
+    deckNode *baseOfDeck = new deckNode(startCard);
+    Deck theDeck(baseOfDeck);
 
-    typedef deckNode* deckNodePtr;
-    Hand *hand1 = new Hand(5, theDeck);
-    Hand *hand2 = new Hand(5, theDeck);
+    Hand *hand1 ;
+    Hand *hand2 ;
+
     vector<Territory *> *territoriesVector1 = new vector<Territory *>;
     vector<Territory *> *territoriesVector2 = new vector<Territory *>;
     Player *player0;

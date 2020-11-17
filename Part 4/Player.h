@@ -24,6 +24,7 @@ private:
     OrdersList*  playerOrdersList;
     vector<Territory*>* playerTerritories;
     int reinforcementPool;
+    bool hasConquered = false;              // Showing whether or this player has conquered a territory in that round
 
 public:
     Player(); // default Constructor
@@ -42,6 +43,8 @@ public:
     OrdersList* getOrdersList();
     vector<Territory*>* getPlayerTerritories();
     vector<Territory*>* toAttack(Map* theMap);
+    void setConquered(bool status) { this->hasConquered = status; };
+    bool getConquered() { return this->hasConquered; };
 
     // assignment operator
     Player& operator = (const Player &player);

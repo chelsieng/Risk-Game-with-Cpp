@@ -99,6 +99,7 @@ void Deploy::execute() {
     if (validate()) {
         isExecuted = true;
         // The selected number of armies is added to the number of armies on that territory
+        numOfArmies = min(numOfArmies, this->player->getReinforcementPool());
         this->player->setReinforcementPool(this->player->getReinforcementPool() - numOfArmies);
         for (int i = 0; i < numOfArmies; i++)
             this->targetTerritory->addArmy();
@@ -205,7 +206,7 @@ void Advance::execute() {
             }
 
             // If all the defender's armies are eliminated
-            if (this->targetTerritory->getNumberOfArmies() == 0) {
+            if(this->targetTerritory->getNumberOfArmies() <=0){
                 // The attacker captures the territory
                 this->targetTerritory->setOwner(this->player);
 
@@ -216,6 +217,13 @@ void Advance::execute() {
 
                     this->sourceTerritory->removeArmy();        // Take one armies unit from source territory
                     this->targetTerritory->addArmy();           // Move taken armies unit to target territory
+                }
+
+                // If this is the player has not conquered a territory in the turn before
+                if(!this->player->getConquered()) {
+                    cout << "Player" << player->getId() << " gets a card for conquering a territory in this turn." << endl;
+                    this->player->setConquered(true);
+//TODO                    draw(this->player->getHand());
                 }
             }
         }
@@ -496,7 +504,7 @@ void Airlift::execute() {
             }
 
             // If all the defender's armies are eliminated
-            if (this->targetTerritory->getNumberOfArmies() == 0) {
+            if(this->targetTerritory->getNumberOfArmies() <= 0){
                 // The attacker captures the territory
                 this->targetTerritory->setOwner(this->player);
 
@@ -507,6 +515,13 @@ void Airlift::execute() {
 
                     this->sourceTerritory->removeArmy();        // Take one armies unit from source territory
                     this->targetTerritory->addArmy();           // Move taken armies unit to target territory
+                }
+
+                // If this is the player has not conquered a territory in the turn before
+                if(!this->player->getConquered()) {
+                    cout << "Player" << player->getId() << " gets a card for conquering a territory in this turn." << endl;
+                    this->player->setConquered(true);
+//TODO                    draw(this->player->getHand());
                 }
             }
         }
