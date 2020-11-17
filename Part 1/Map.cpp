@@ -178,7 +178,8 @@ void Territory::addArmy() {
 }
 
 void Territory::removeArmy() {
-    armies->erase(this->armies->begin());      // delete one element
+    if(this->getNumberOfArmies() > 0)
+        armies->erase(this->armies->begin());      // delete one element
 }
 //End of insertion operator
 

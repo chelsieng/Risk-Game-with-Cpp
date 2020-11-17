@@ -195,23 +195,27 @@ void Advance::execute() {
                 this->targetTerritory->addArmy();           // Move taken armies unit to target territory
             }
         } else {    // If the target territory belongs to another player, an attack is simulated
-            // Until there is no more attacking armies or no more defending armies
-            while (numOfArmies != 0 && this->targetTerritory->getNumberOfArmies() != 0) {
-                // Each attacking army unit involved has 60% chances of killing one defending army
+            int attackingArmies = numOfArmies;
+            int defendingArmies = this->targetTerritory->getNumberOfArmies();
+
+            // Each attacking army unit involved has 60% chances of killing one defending army
+            for(int i = 0; i < attackingArmies; i++)
                 if ((double) rand() / RAND_MAX <= 0.6)
                     this->targetTerritory->removeArmy();
-                // Each defending army unit has 70% chances of killing one attacking army unit
+
+            // Each defending army unit has 70% chances of killing one attacking army unit
+            for(int i = 0; i < defendingArmies; i++)
                 if ((double) rand() / RAND_MAX <= 0.7)
-                    numOfArmies--;
-            }
+                    attackingArmies--;
 
             // If all the defender's armies are eliminated
-            if(this->targetTerritory->getNumberOfArmies() <=0){
+            if(this->targetTerritory->getNumberOfArmies() <= 0){
                 // The attacker captures the territory
                 this->targetTerritory->setOwner(this->player);
+                this->player->getPlayerTerritories()->erase(this->targetTerritory);
 
                 // The attacking army units that survived the battle then occupy the conquered territory.
-                for (int i = 0; i < numOfArmies; i++) {
+                for (int i = 0; i < attackingArmies; i++) {
                     if (sourceTerritory->getNumberOfArmies() == 0)
                         break;          // Stop if there is no more armies unit in source territory
 
@@ -221,7 +225,7 @@ void Advance::execute() {
 
                 // If this is the player has not conquered a territory in the turn before
                 if(!this->player->getConquered()) {
-                    cout << "Player" << player->getId() << " gets a card for conquering a territory in this turn." << endl;
+                    cout << "Player " << player->getId() << " gets a card for conquering a territory in this turn." << endl;
                     this->player->setConquered(true);
 //TODO                    draw(this->player->getHand());
                 }
@@ -493,15 +497,18 @@ void Airlift::execute() {
                 this->targetTerritory->addArmy();           // Move taken armies unit to target territory
             }
         } else {    // If the target territory belongs to another player, an attack is simulated
-            // Until there is no more attacking armies or no more defending armies
-            while (numOfArmies != 0 && this->targetTerritory->getNumberOfArmies() != 0) {
-                // Each attacking army unit involved has 60% chances of killing one defending army
+            int attackingArmies = numOfArmies;
+            int defendingArmies = this->targetTerritory->getNumberOfArmies();
+
+            // Each attacking army unit involved has 60% chances of killing one defending army
+            for(int i = 0; i < attackingArmies; i++)
                 if ((double) rand() / RAND_MAX <= 0.6)
                     this->targetTerritory->removeArmy();
-                // Each defending army unit has 70% chances of killing one attacking army unit
+
+            // Each defending army unit has 70% chances of killing one attacking army unit
+            for(int i = 0; i < defendingArmies; i++)
                 if ((double) rand() / RAND_MAX <= 0.7)
-                    numOfArmies--;
-            }
+                    attackingArmies--;
 
             // If all the defender's armies are eliminated
             if(this->targetTerritory->getNumberOfArmies() <= 0){
@@ -509,7 +516,7 @@ void Airlift::execute() {
                 this->targetTerritory->setOwner(this->player);
 
                 // The attacking army units that survived the battle then occupy the conquered territory.
-                for (int i = 0; i < numOfArmies; i++) {
+                for (int i = 0; i < attackingArmies; i++) {
                     if (sourceTerritory->getNumberOfArmies() == 0)
                         break;          // Stop if there is no more armies unit in source territory
 
@@ -519,7 +526,7 @@ void Airlift::execute() {
 
                 // If this is the player has not conquered a territory in the turn before
                 if(!this->player->getConquered()) {
-                    cout << "Player" << player->getId() << " gets a card for conquering a territory in this turn." << endl;
+                    cout << "Player " << player->getId() << " gets a card for conquering a territory in this turn." << endl;
                     this->player->setConquered(true);
 //TODO                    draw(this->player->getHand());
                 }
@@ -617,7 +624,7 @@ ostream &Negotiate::print(ostream &out) const {
 }
 
 ostream &Negotiate::printEffect(ostream &out) const {
-    out << "Player" << this->player->getId() << " and Player" << this->negotiator->getId();
+    out << "Player " << this->player->getId() << " and Player " << this->negotiator->getId();
     out << " cannot attack each other's territories until the end of the turn.";
     return out;
 }
