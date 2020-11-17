@@ -42,7 +42,7 @@ public:
     OrdersList* getOrdersList();
     vector<Territory*>* getPlayerTerritories();
     vector<Territory*>* AttackAble(Map* theMap);
-    void issueOrder(Map* theMap, vector<Player*>* thePlayers);
+    void issueOrder(Map* theMap, vector<Player*>* thePlayers, int choice);
 
     // assignment operator
     Player& operator = (const Player &player);

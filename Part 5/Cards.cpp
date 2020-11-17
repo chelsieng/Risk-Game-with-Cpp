@@ -148,10 +148,38 @@ void Card::play(Player *p, std::vector<Player *> allPlayers) {
     else if (type->compare("Reinforcement") == 0) {
         cout << "You are playing a card of type: " << *this->getType() << ".\n";
         ReinforcementCard *reinforce = dynamic_cast<ReinforcementCard *>(this);
-        //I think rather than issue a deploy order, this should add armies to ones reinforcement pool?
-        p->setReinforcementPool(p->getReinforcementPool() + reinforce->getNumberOfTroops());
-        cout << reinforce->getNumberOfTroops() << " armies have been added to your reinforcement pool" << endl;
-        //p->issueOrder(new Deploy()); so yeah it doesn't issue a deploy order anymore.
+
+        cout << reinforce->getNumberOfTroops() << " additional armies have been added to your reinforcement pool." << endl;
+
+        int usableArmies = reinforce->getNumberOfTroops();
+        cout << "You have " << usableArmies << " to deploy." << endl;
+        bool deployedAll = false;
+        while(deployedAll == false) {
+            for (int j = 0; j < p->getPlayerTerritories()->size(); j++) {
+                if (usableArmies == 0) {deployedAll = true;}
+                else {
+                    cout << "How many armies will you deploy to " << p->getPlayerTerritories()->at(j)->getTerritoryName() << "?" << endl;
+                    int amount;
+                    bool valid = false;
+                    while(valid == false){
+                        cin >> amount;
+                        if(amount <= usableArmies && amount >= 0){
+                            valid = true;
+                            if(amount > 0) {
+                                p->getPlayerTerritories()->at(j)->addToMockArmies(amount);
+                                p->issueOrder(new Deploy(p, p->getPlayerTerritories()->at(j), amount));
+                                usableArmies = usableArmies - amount;
+                                cout << amount << " armies will be deployed to" << p->getPlayerTerritories()->at(j)->getTerritoryName()
+                                     << "." << endl;
+                            }//end of if (is actually deploying armies
+                        }//end of if (valid amount entered)
+                        else{cout << "Invalid amount! Please try again." << endl;}
+                    }//end of while (choose valid amount of armies to deploy)
+                }//end of else (still has reinforcement in pool)
+                if(usableArmies > 0){cout << "You still have " << usableArmies << " armies left to deploy!" << endl;}
+            }//end of for (go through all territories)
+        }//end of while (deploy all)
+
     } ///END OF REINFORCEMENT STUFF
 
     else if (type->compare("Blockade") == 0) {
@@ -163,8 +191,6 @@ void Card::play(Player *p, std::vector<Player *> allPlayers) {
         while (fromFound == false) {
             cout << "Please type the name of the territory you are blockading." << endl;
             string answer;
-            //   cin >> answer;
-            //cin.ignore();
             getline(cin, answer); //get their response
             for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
                 if (t->getTerritoryName() == answer) {
@@ -225,7 +251,7 @@ void Card::play(Player *p, std::vector<Player *> allPlayers) {
             if (numArmies < 0) {
                 cout << "Invalid number of armies. Please try again." << endl;
             }//end of if (invalid)
-            else if (numArmies > fromTerritory->getNumberOfArmies()) {
+            else if (numArmies > fromTerritory->getMockArmies()) {
                 cout << "This territory does not have that many armies! Please try again." << endl;
             }//end of if (invalid)
             else {
@@ -238,7 +264,9 @@ void Card::play(Player *p, std::vector<Player *> allPlayers) {
 
     cout << "You played a card of type: " << *this->getType() << endl;
 
-}
+}//end of play method
+///////////////////
+
 
 BombCard::BombCard()
         : Card("Bomb") {
@@ -590,6 +618,7 @@ void Hand::playCardAtIndex(int i, Player *p, const std::vector<Player *> &allPla
 
 }
 
+
 void Hand::addToHand(Card *c) {
     cardsInHand.push_back(c);
 }
@@ -672,3 +701,5 @@ ostream &operator<<(ostream &outs, const Hand &printMe) {
     }
     return outs;
 }
+
+

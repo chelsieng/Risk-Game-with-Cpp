@@ -254,12 +254,53 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *
 }///end of reinforcementPhase function
 
 void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
-    for(int i = 0; i < thePlayers->size(); i++){
+    int issueRound = 0;
+    bool notDone = true;
+    while(notDone == true) {
+        if(issueRound != 0){notDone = false;}
+        for (int i = 0; i < thePlayers->size(); i++) {
+            Player *p = thePlayers->at(i);
+            cout << "\nAlright Player " << p->getId() << ", it's your turn to issue an order!" << endl;
+            if (issueRound == 0) {
+                cout << "\nYou must issue any deploy orders before you can do anything else!\n" << endl;
+                p->issueOrder(theMap, thePlayers, 0);
+            }//end of if (deploy round)
+            else {
+                cout << "Would you like to issue another order? Type 1 for yes, and any other number for no." << endl;
+                int ans;
+                cin >> ans;
+                if(ans == 1) {
+                    notDone = true;
+                    cout << "Here are your options. Type in the number corresponding to your choice:" << endl;
+                    cout << "1. Advance armies to defend." << endl;
+                    cout << "2. Advance armies to attack." << endl;
+                 //   cout << "3. Play a card from your hand." << endl;
+                 int response;
+                 bool valid = false;
+                 while(valid == false){
+                     cin >> response;
+                     if(response == 1 || response == 2){
+                         valid = true;
+                         cout << "Got it!" << endl;
+                     }
+                     else{ cout << "Invalid choice! Please try again." << endl;}
+                 }//end of while (get valid choice)
+                      p->issueOrder(theMap,thePlayers, response);
+                }//end of if (issue another order)
+                else{
+                    cout << "Okay! No order will be issued." << endl;
+                }//end of else
+            }//end of else (not first issue round)
+        } //end of for (round robing order issuing for all players)
+        issueRound = issueRound + 1;
+    }//end of while
+    //Reset mock armies for everyone's territories:
+    for (int i = 0; i < thePlayers->size(); i++) {
         Player *p = thePlayers->at(i);
-        cout << "Alright Player " << p->getId() << ", it's your turn to issue orders!" << endl;
-        p->issueOrder(theMap,thePlayers);
-    } //end of for (round robing order issuing for all players)
-
+        for(int j = 0; j < p->getPlayerTerritories()->size(); j++){
+            p->getPlayerTerritories()->at(j)->resetMockArmies();
+        }//end of for (all owned territories)
+    }//end of for (all players)
 }///end of order issuing phase function
 
 
