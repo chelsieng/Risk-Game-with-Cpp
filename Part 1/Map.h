@@ -39,7 +39,7 @@ private:
     Player *owner;
     string territoryName;
     vector<Army *> *armies;
-
+    int mockArmies;
     void copy(const Territory &); //Copying value of territory
 
 public:
@@ -49,6 +49,10 @@ public:
     ~Territory(); //Destructor
     Territory &operator=(const Territory &); //Assignment Operator
     int getId() const;
+    void resetMockArmies();
+    int getMockArmies();
+    void addToMockArmies(int temp);
+    void removeMockArmies(int temp);
 
     string getTerritoryName() const;
 

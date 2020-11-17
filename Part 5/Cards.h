@@ -55,6 +55,8 @@ public:
     void play(Player* p);
     void play(Player* p, std::vector<Player*> allPlayers);
 
+    //this last one is the only one that is actually gonna be used
+
 
 };//end of Card class
 
@@ -172,7 +174,9 @@ public:
 
     void showCardsInHand();
     void playCardAtIndex(int i, Player* p); //this version only creates "default orders"- don't use in game engine
-    void playCardAtIndex(int i, Player* p, const std::vector<Player*>& allPlayers); // -> updated version that takes vector of players
+    void playCardAtIndex(int i, Player* p, const std::vector<Player*>& allPlayers);
+         // -> updated version that takes vector of players
+
     //(in practice, all the players of the game), so we can create proper orders with their non-default constructors
     void addToHand(Card* c);
     Card getCardatIndex(int i) const;
