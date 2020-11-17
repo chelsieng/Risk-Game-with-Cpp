@@ -18,7 +18,8 @@ using namespace std;
 //Map *mapGame; // map graph to share among other compilation unit
 //vector<Player *> *players; // vector storing all players for the game
 // this is the GameEngine class, it will have number of players who will have armies. Also, territories assigned to only and only one player.
-
+static string phase;
+string getPhase(){return phase;}
 
 class GameEngine {
 public:
@@ -27,11 +28,13 @@ public:
     static Deck *createDeck(); //Function to create the deck of cards for the game
     static void startupPhase(vector<Player *> *, vector<Territory *> *);
 
+
  //   static void reinforcementPhase(vector<Player *> *, vector<Continent *> *);
  //   static void orderIssuingPhase(vector<Player*> *thePlayers, Map* theMap);
-      static void reinforcementPhase(vector<Player *> *thePlayers, vector<Continent *> * theContinents);
+       static void reinforcementPhase(vector<Player *> *thePlayers, vector<Continent *> * theContinents);
        static void orderIssuingPhase(vector<Player*> *thePLayers, Map* theMap);
        static void orderExecutionPhase(vector<Player*> *thePlayers);
+       static void mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> * theContinents, Map* theMap);
 
 };
 
