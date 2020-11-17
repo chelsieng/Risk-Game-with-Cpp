@@ -167,20 +167,10 @@ bool Territory::isOccupiedBy(Player *p) const {
 }
 
 void Territory::setOwner(Player *p) {
-    Player *oldOwner = this->owner;
     this->owner = p;
 
     for(int i = 0; i < getNumberOfArmies(); i++)
         armies->at(i)->setOwner(p);
-
-    // Remove territory from player's list of Territory
-    vector<Territory *> *playerTerritory = oldOwner->getPlayerTerritories();
-    for(Territory *t : *playerTerritory) {
-        int i = 0;
-        if (t->getId() == this->getId())
-            oldOwner->getPlayerTerritories()->erase(oldOwner->getPlayerTerritories()->begin()+i);
-        i++;
-    }
 }
 
 int Territory::getNumberOfArmies() const {
