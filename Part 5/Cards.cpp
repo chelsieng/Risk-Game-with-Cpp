@@ -4,62 +4,57 @@
 #include <string>
 #include <iostream>
 #include "Cards.h"
+
 using namespace std;
 
 
 Card::Card()
-        : type(new string("default card")), description(new string("nothing here"))
-{
+        : type(new string("default card")), description(new string("nothing here")) {
 }
 
 Card::Card(string t)
-        : type(new string(t)), description(new string("nothing here yet"))	//originally used &t which created many many
-{}																//errors, not sure why, think it has to do with improper initialization
+        : type(new string(t)),
+          description(new string("nothing here yet"))    //originally used &t which created many many
+{}                                                                //errors, not sure why, think it has to do with improper initialization
 
-Card::Card(const Card& copyMe)
-{
+Card::Card(const Card &copyMe) {
     type = new string(*copyMe.type);
     description = new string(*copyMe.description);
 }
 
-Card::~Card()
-{
+Card::~Card() {
     delete description;
     delete type;
     description = nullptr;
     type = nullptr;
 }
 
-Card& Card::operator=(const Card& rightSide)
-{
+Card &Card::operator=(const Card &rightSide) {
     if (this == &rightSide) {
         return *this;
     }
-    delete type;	//deleting what was already there (if anything) to avoid memory leaks
-    delete description;	//same thing for this
+    delete type;    //deleting what was already there (if anything) to avoid memory leaks
+    delete description;    //same thing for this
     type = new string(*rightSide.type);
     description = new string(*rightSide.description);
     return *this;
 }//end of assignment overload (card)
 
 
-string* Card::getType() const
-{
-    return type;	//returns the pointer
+string *Card::getType() const {
+    return type;    //returns the pointer
 }
 
-void Card::setDescription(string t) const
-{
+void Card::setDescription(string t) const {
     *description = t;
 }
 
-void Card::setType(string t) const
-{
+void Card::setType(string t) const {
     *type = t;
 }
 
-string* Card::getDescription() const {
-    return description;		//returns the pointer
+string *Card::getDescription() const {
+    return description;        //returns the pointer
 }
 
 //Might remove print method now that we have << overload
@@ -67,47 +62,48 @@ void Card::printDescription() const {
     cout << this->getDescription() << endl;
 }
 
-void Card::play(Player* p)
-{
+void Card::play(Player *p) {
     //switch(*type)
     //create different order based on type
 
-    if (type->compare("Bomb") == 0) { p->issueOrder(new Bomb()); } //Note that (type->compare(str)) defaults the equal to false (or 1 rather)
+    if (type->compare("Bomb") == 0) {
+        p->issueOrder(new Bomb());
+    } //Note that (type->compare(str)) defaults the equal to false (or 1 rather)
     else if (type->compare("Diplomacy") == 0) { p->issueOrder(new Negotiate()); }
-    else  if (type->compare("Reinforcement") == 0) { p->issueOrder(new Deploy()); }
-    else  if (type->compare("Airlift") == 0) { p->issueOrder(new Airlift()); }
-    else  if (type->compare("Blockade") == 0) { p->issueOrder(new Blockade()); }
+    else if (type->compare("Reinforcement") == 0) { p->issueOrder(new Deploy()); }
+    else if (type->compare("Airlift") == 0) { p->issueOrder(new Airlift()); }
+    else if (type->compare("Blockade") == 0) { p->issueOrder(new Blockade()); }
     cout << "You played a card of type: " << *this->getType() << endl;
     //return pointer to order created -> hm no I guess not?
 }
 
-void Card::play(Player *p, std::vector<Player*> allPlayers) {
+void Card::play(Player *p, std::vector<Player *> allPlayers) {
 
     if (type->compare("Bomb") == 0) {
         cout << "You are playing a card of type: " << *this->getType() << ".\n";
         bool fromFound = false;
         bool toFound = false;
-        Territory* fromTerritory;
-        Territory* toTerritory;
-        while(fromFound == false) {
+        Territory *fromTerritory;
+        Territory *toTerritory;
+        while (fromFound == false) {
             cout << "Please type the name of the territory you are bombing from." << endl;
             string answer;
-            getline(cin,answer); //get their response
-            for(Territory* t : *p->getPlayerTerritories()){ //see if they actually own this territory
-                if(t->getTerritoryName() == answer){
+            getline(cin, answer); //get their response
+            for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
+                if (t->getTerritoryName() == answer) {
                     cout << "Understood!" << endl;
                     fromTerritory = t;
                     fromFound = true;
                 }
             }//end of for (search player's list of territories)
-            if(fromFound == false)
+            if (fromFound == false)
                 cout << "You do not own a territory by that name! Please try again." << endl;
         }//end of while (establish valid FromTerritory)
-        while(toFound == false) {
+        while (toFound == false) {
             cout << "Please type the name of the territory you would like to bomb." << endl;
             string answer;
-            getline(cin,answer); //get their response
-            for(Player* p : allPlayers) {
+            getline(cin, answer); //get their response
+            for (Player *p : allPlayers) {
                 for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
                     if (t->getTerritoryName() == answer) {
                         cout << "Understood!" << endl;
@@ -115,95 +111,99 @@ void Card::play(Player *p, std::vector<Player*> allPlayers) {
                         toFound = true;
                     }
                 }//end of for (search player's list of territories)
-                if(toFound == true){break;}
+                if (toFound == true) { break; }
             } //end of for (search through all players)
-            if(toFound == false)
+            if (toFound == false)
                 cout << "Nobody owns a territory by that name! Please try again." << endl;
         }//end of while (establish valid ToTerritory)
-        p->issueOrder(new Bomb(p, fromTerritory, toTerritory)); } ///END OF BOMB STUFF
+        p->issueOrder(new Bomb(p, fromTerritory, toTerritory));
+    } ///END OF BOMB STUFF
     else if (type->compare("Diplomacy") == 0) {
         cout << "You are playing a card of type: " << *this->getType() << ".\n";
         bool found = false;
-        Player* toNegotiate;
-        while(found == false) {
-            cout << "Please indicate the number of the player you would like to negotiate with (type '2' for player 2, etc.)."
+        Player *toNegotiate;
+        while (found == false) {
+            cout
+                    << "Please indicate the number of the player you would like to negotiate with (type '2' for player 2, etc.)."
                     << endl;
             int answer;
             cin >> answer;
-            if(answer > allPlayers.size() || answer < 1){
+            if (answer > allPlayers.size() || answer < 1) {
                 cout << "That player does not exist! Please try again." << endl;
             }//end of if (not valid player)
-            else if(answer == p->getId()){
+            else if (answer == p->getId()) {
                 cout << "You can't negotiate with yourself! Please try again." << endl;
             }//end of if (chose themself)
             else {
                 found = true;
-                for(Player* pl : allPlayers){
-                    if(pl->getId() == answer){ toNegotiate = pl;}
+                for (Player *pl : allPlayers) {
+                    if (pl->getId() == answer) { toNegotiate = pl; }
                 }//end of for (set the indicated player as the one to negotiate with)
                 cout << "Understood!" << endl;
             }//end of else (valid player)
         }//end of while (find player)
-        p->issueOrder(new Negotiate(p, toNegotiate)); } ///END OF DIPLOMACY STUFF
+        p->issueOrder(new Negotiate(p, toNegotiate));
+    } ///END OF DIPLOMACY STUFF
 
-    else  if (type->compare("Reinforcement") == 0) {
+    else if (type->compare("Reinforcement") == 0) {
         cout << "You are playing a card of type: " << *this->getType() << ".\n";
-        ReinforcementCard* reinforce = dynamic_cast<ReinforcementCard*>(this);
+        ReinforcementCard *reinforce = dynamic_cast<ReinforcementCard *>(this);
         //I think rather than issue a deploy order, this should add armies to ones reinforcement pool?
         p->setReinforcementPool(p->getReinforcementPool() + reinforce->getNumberOfTroops());
-        cout << reinforce->getNumberOfTroops() << " armies have been added to your reinforcement pool" <<endl;
+        cout << reinforce->getNumberOfTroops() << " armies have been added to your reinforcement pool" << endl;
         //p->issueOrder(new Deploy()); so yeah it doesn't issue a deploy order anymore.
-         } ///END OF REINFORCEMENT STUFF
+    } ///END OF REINFORCEMENT STUFF
 
-    else  if (type->compare("Blockade") == 0) {
+    else if (type->compare("Blockade") == 0) {
         cout << "You are playing a card of type: " << *this->getType() << ".\n";
         bool fromFound = false;
         bool toFound = false;
-        Territory* fromTerritory;
-        Territory* toTerritory;
-        while(fromFound == false) {
+        Territory *fromTerritory;
+        Territory *toTerritory;
+        while (fromFound == false) {
             cout << "Please type the name of the territory you are blockading." << endl;
             string answer;
-         //   cin >> answer;
-         //cin.ignore();
-            getline(cin,answer); //get their response
-            for(Territory* t : *p->getPlayerTerritories()){ //see if they actually own this territory
-                if(t->getTerritoryName() == answer){
+            //   cin >> answer;
+            //cin.ignore();
+            getline(cin, answer); //get their response
+            for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
+                if (t->getTerritoryName() == answer) {
                     cout << "Understood!" << endl;
                     fromTerritory = t;
                     fromFound = true;
                 }
             }//end of for (search player's list of territories)
-            if(fromFound == false)
+            if (fromFound == false)
                 cout << "You do not own a territory by that name! Please try again." << endl;
         }//end of while (establish valid FromTerritory)
-        p->issueOrder(new Blockade(p, fromTerritory)); } ///END OF BLOCKADE STUFF
+        p->issueOrder(new Blockade(p, fromTerritory));
+    } ///END OF BLOCKADE STUFF
 
-    else  if (type->compare("Airlift") == 0) {
+    else if (type->compare("Airlift") == 0) {
         cout << "You are playing a card of type: " << *this->getType() << ".\n";
         bool fromFound = false;
         bool toFound = false;
-        Territory* fromTerritory;
-        Territory* toTerritory;
-        while(fromFound == false) {
+        Territory *fromTerritory;
+        Territory *toTerritory;
+        while (fromFound == false) {
             cout << "Please type the name of the territory you are moving armies from." << endl;
             string answer;
-            getline(cin,answer); //get their response
-            for(Territory* t : *p->getPlayerTerritories()){ //see if they actually own this territory
-                if(t->getTerritoryName() == answer){
+            getline(cin, answer); //get their response
+            for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
+                if (t->getTerritoryName() == answer) {
                     cout << "Understood!" << endl;
                     fromTerritory = t;
                     fromFound = true;
                 }
             }//end of for (search player's list of territories)
-            if(fromFound == false)
+            if (fromFound == false)
                 cout << "You do not own a territory by that name! Please try again." << endl;
         }//end of while (establish valid FromTerritory)
-        while(toFound == false) {
+        while (toFound == false) {
             cout << "Please type the name of the territory you are moving armies to." << endl;
             string answer;
-            getline(cin,answer); //get their response
-            for(Player* p : allPlayers) {
+            getline(cin, answer); //get their response
+            for (Player *p : allPlayers) {
                 for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
                     if (t->getTerritoryName() == answer) {
                         cout << "Understood!" << endl;
@@ -211,77 +211,72 @@ void Card::play(Player *p, std::vector<Player*> allPlayers) {
                         toFound = true;
                     }
                 }//end of for (search player's list of territories)
-                if(toFound == true){break;}
+                if (toFound == true) { break; }
             } //end of for (search through all players)
-            if(toFound == false)
+            if (toFound == false)
                 cout << "Nobody owns a territory by that name! Please try again." << endl;
         }//end of while (establish valid ToTerritory)
         //Get number of armies to move:
         bool finished = false;
         int numArmies = 0;
-        while(finished == false){
+        while (finished == false) {
             cout << "How many armies are you moving?" << endl;
             cin >> numArmies;
-            if(numArmies < 0){
+            if (numArmies < 0) {
                 cout << "Invalid number of armies. Please try again." << endl;
             }//end of if (invalid)
-            else if(numArmies > fromTerritory->getNumberOfArmies()){
+            else if (numArmies > fromTerritory->getNumberOfArmies()) {
                 cout << "This territory does not have that many armies! Please try again." << endl;
             }//end of if (invalid)
-            else{
+            else {
                 finished = true;
                 cout << "Understood!" << endl;
             }//end of else (valid)
         }//end of while (get number of territories)
-        p->issueOrder(new Airlift(p, fromTerritory, toTerritory, numArmies)); } ///END OF AIRLIFT STUFF
+        p->issueOrder(new Airlift(p, fromTerritory, toTerritory, numArmies));
+    } ///END OF AIRLIFT STUFF
 
     cout << "You played a card of type: " << *this->getType() << endl;
 
 }
 
 BombCard::BombCard()
-        : Card("Bomb")
-{
+        : Card("Bomb") {
     setDescription("This is a bomb card. More info will be added later");
 }
 
-BombCard::BombCard(const BombCard& copyMe)	//if parameter is const we're not able to access the getters and setters
-{											//Fortunately for us, Card and BombCard are good friends
+BombCard::BombCard(const BombCard &copyMe)    //if parameter is const we're not able to access the getters and setters
+{                                            //Fortunately for us, Card and BombCard are good friends
     this->setType(*copyMe.getType());
     this->setDescription(*copyMe.getDescription());
 }
 
-BombCard::~BombCard()
-{	// it seems that explicitly deleteing type and description in here results in a double deletion
+BombCard::~BombCard() {    // it seems that explicitly deleteing type and description in here results in a double deletion
     //which most likely implies that the Card destructor gets called automatically
 }
 
-BombCard& BombCard::operator=(const BombCard& rightSide)
-{
+BombCard &BombCard::operator=(const BombCard &rightSide) {
     if (this == &rightSide) {
         return *this;
     }
-    delete this->getType();	//deleting what was already there (if anything) to avoid memory leaks
-    delete this->getDescription();	//same thing for this
+    delete this->getType();    //deleting what was already there (if anything) to avoid memory leaks
+    delete this->getDescription();    //same thing for this
     setType((*rightSide.getType()));
     setDescription(*rightSide.getDescription());
     return *this;
 }//end of assignment overload (BombCard)
 
 DiplomacyCard::DiplomacyCard()
-        : Card("Diplomacy")
-{
+        : Card("Diplomacy") {
     setDescription("This is a diplomacy card. More info will be added later");
 }
 
-DiplomacyCard::DiplomacyCard(const DiplomacyCard& copyMe)
-{
+DiplomacyCard::DiplomacyCard(const DiplomacyCard &copyMe) {
     setType((*copyMe.getType()));
     setDescription((*copyMe.getType()));
 }
 
-DiplomacyCard& DiplomacyCard::operator=(const DiplomacyCard& rightSide)
-{
+DiplomacyCard &DiplomacyCard::operator=(const DiplomacyCard &rightSide) {
     if (this == &rightSide) {
         return *this;
     }
@@ -292,13 +287,11 @@ DiplomacyCard& DiplomacyCard::operator=(const DiplomacyCard& rightSide)
     return *this;
 }
 
-DiplomacyCard::~DiplomacyCard()
-{
+DiplomacyCard::~DiplomacyCard() {
 }
 
 ReinforcementCard::ReinforcementCard()
-        : Card("Reinforcement"), numberOfTroops(1)
-{
+        : Card("Reinforcement"), numberOfTroops(1) {
     string str("This is a reinforcement card. It yields ");
     str.append(to_string(numberOfTroops));
     str.append(" armies. More info will be added later.");
@@ -306,8 +299,7 @@ ReinforcementCard::ReinforcementCard()
 }
 
 ReinforcementCard::ReinforcementCard(int armies)
-        : Card("Reinforcement"), numberOfTroops(armies)
-{
+        : Card("Reinforcement"), numberOfTroops(armies) {
 
     string str("This is a reinforcement card. It yields ");
     str.append(to_string(numberOfTroops));
@@ -315,25 +307,21 @@ ReinforcementCard::ReinforcementCard(int armies)
     setDescription(str);
 }
 
-int ReinforcementCard::getNumberOfTroops() const
-{
+int ReinforcementCard::getNumberOfTroops() const {
     return numberOfTroops;
 }
 
-void ReinforcementCard::setNumberOfTroops(int armies)
-{
+void ReinforcementCard::setNumberOfTroops(int armies) {
     numberOfTroops = armies;
 }
 
-ReinforcementCard::ReinforcementCard(const ReinforcementCard& copyMe)
-{
+ReinforcementCard::ReinforcementCard(const ReinforcementCard &copyMe) {
     setNumberOfTroops(copyMe.getNumberOfTroops());
     setType(*copyMe.getType());
     setDescription(*copyMe.getType());
 }
 
-ReinforcementCard& ReinforcementCard::operator=(const ReinforcementCard& rightSide)
-{
+ReinforcementCard &ReinforcementCard::operator=(const ReinforcementCard &rightSide) {
     if (this == &rightSide) {
         return *this;
     }
@@ -345,24 +333,20 @@ ReinforcementCard& ReinforcementCard::operator=(const ReinforcementCard& rightSi
     return *this;
 }
 
-ReinforcementCard::~ReinforcementCard()
-{
+ReinforcementCard::~ReinforcementCard() {
 }
 
 AirliftCard::AirliftCard()
-        : Card("Airlift")
-{
+        : Card("Airlift") {
     setDescription("This is an airlift card. More info will be added later");
 }
 
-AirliftCard::AirliftCard(const AirliftCard& copyMe)
-{
+AirliftCard::AirliftCard(const AirliftCard &copyMe) {
     setType(*copyMe.getType());
     setDescription(*copyMe.getType());
 }
 
-AirliftCard& AirliftCard::operator=(const AirliftCard& rightSide)
-{
+AirliftCard &AirliftCard::operator=(const AirliftCard &rightSide) {
     if (this == &rightSide) {
         return *this;
     }
@@ -374,24 +358,20 @@ AirliftCard& AirliftCard::operator=(const AirliftCard& rightSide)
 }
 
 
-AirliftCard::~AirliftCard()
-{
+AirliftCard::~AirliftCard() {
 }
 
 BlockadeCard::BlockadeCard()
-        : Card("Blockade")
-{
+        : Card("Blockade") {
     setDescription("This is a blockade card. More info will be added later");
 }
 
-BlockadeCard::BlockadeCard(const BlockadeCard& copyMe)
-{
+BlockadeCard::BlockadeCard(const BlockadeCard &copyMe) {
     setType(*copyMe.getType());
     setDescription(*copyMe.getType());
 }
 
-BlockadeCard& BlockadeCard::operator=(const BlockadeCard& rightSide)
-{
+BlockadeCard &BlockadeCard::operator=(const BlockadeCard &rightSide) {
     if (this == &rightSide) {
         return *this;
     }
@@ -402,30 +382,25 @@ BlockadeCard& BlockadeCard::operator=(const BlockadeCard& rightSide)
     return *this;
 }
 
-BlockadeCard::~BlockadeCard()
-{
+BlockadeCard::~BlockadeCard() {
 }
 
 //Deck and deckNode stuff:
 
-deckNode::deckNode(Card* thedata)
-        : data(thedata), link(nullptr)
-{
+deckNode::deckNode(Card *thedata)
+        : data(thedata), link(nullptr) {
 }
 
-deckNode::deckNode(Card* thedata, deckNode* theLink)
-        : data(thedata), link(theLink)
-{
+deckNode::deckNode(Card *thedata, deckNode *theLink)
+        : data(thedata), link(theLink) {
 }
 
-deckNode::deckNode(const deckNode& copyMe)
-{
+deckNode::deckNode(const deckNode &copyMe) {
     data = new Card(*copyMe.data);
     link = new deckNode(*copyMe.link);
 }
 
-deckNode& deckNode::operator=(const deckNode& rightSide)
-{
+deckNode &deckNode::operator=(const deckNode &rightSide) {
     if (this == &rightSide) {
         return *this; //(recall that "this" is a pointer, so we return what it points to with *)
     }
@@ -436,47 +411,39 @@ deckNode& deckNode::operator=(const deckNode& rightSide)
     return *this;
 }
 
-deckNode::~deckNode()
-{	//filling this in with delete data and delete head caused major issues... Probably deletes things more than once?
+deckNode::~deckNode() {    //filling this in with delete data and delete head caused major issues... Probably deletes things more than once?
     data = nullptr;
     link = nullptr;
 }
 
-deckNode* deckNode::getLink() const
-{
+deckNode *deckNode::getLink() const {
     return link;
 }
 
-Card* deckNode::getData() const
-{
+Card *deckNode::getData() const {
     return data;
 }
 
-void deckNode::setData(Card* theData)
-{
+void deckNode::setData(Card *theData) {
     data = theData;
 }
 
-void deckNode::setLink(deckNode* theLink)
-{
+void deckNode::setLink(deckNode *theLink) {
     link = theLink;
 }
 
 Deck::Deck(deckNodePtr thehead)
-        : head(thehead)
-{
+        : head(thehead) {
 }
 
-Deck::Deck(const Deck& copyMe)
-{
+Deck::Deck(const Deck &copyMe) {
     if (copyMe.head == NULL) {
         head = NULL;
-    }
-    else {
+    } else {
         head = new deckNode(copyMe.head->data, nullptr);
-        deckNode* position = head;
-        deckNode* objHead = copyMe.head;
-        deckNode* current = objHead;
+        deckNode *position = head;
+        deckNode *objHead = copyMe.head;
+        deckNode *current = objHead;
 
         while (current->link != NULL) {
             position->link = new deckNode(current->link->data);
@@ -487,17 +454,15 @@ Deck::Deck(const Deck& copyMe)
 }
 
 
-Deck& Deck::operator=(const Deck& rightSide)
-{
+Deck &Deck::operator=(const Deck &rightSide) {
     if (this == &rightSide) {
         return *this;
-    }
-    else {
+    } else {
         delete head; //(avoiding memory leaks)
         head = new deckNode(rightSide.head->data, nullptr);
-        deckNode* position = head;
-        deckNode* objHead = rightSide.head;
-        deckNode* current = objHead;
+        deckNode *position = head;
+        deckNode *objHead = rightSide.head;
+        deckNode *current = objHead;
 
         while (current->link != NULL) {
             delete position->link; //(again avoiding memory leaks)
@@ -509,15 +474,14 @@ Deck& Deck::operator=(const Deck& rightSide)
     return *this;
 }
 
-deckNode* Deck::getHead() const
-{
+deckNode *Deck::getHead() const {
     return head;
 }
 
 Deck::~Deck() //(Note that destructors get called automatically when an object goes out of scope)
 {
-    deckNode* position = head;
-    deckNode* next = head->link;
+    deckNode *position = head;
+    deckNode *next = head->link;
     while (next != NULL) {
         delete position;
         position = next;
@@ -528,26 +492,22 @@ Deck::~Deck() //(Note that destructors get called automatically when an object g
     next = nullptr;
 }
 
-void Deck::addToDeck(Card* theData)
-{
+void Deck::addToDeck(Card *theData) {
     head = new deckNode(theData, head);
 }
 
-Card* Deck::draw()
-{
+Card *Deck::draw() {
     if (head == NULL) {
         cout << "The deck is empty! Cannot draw a card." << endl;
         return NULL;
-    }
-    else {
-        Card* topOfStack = head->getData();
+    } else {
+        Card *topOfStack = head->getData();
         head = head->getLink();
         return topOfStack;
     }
 }
 
-void Deck::placeOnBottom(Card* theData)
-{
+void Deck::placeOnBottom(Card *theData) {
     if (head == NULL) {
         addToDeck(theData);
     }//end of if (deck empty)
@@ -561,22 +521,19 @@ void Deck::placeOnBottom(Card* theData)
 }
 
 
-
-Hand::Hand()		//again you shouldn't use the default constructor
-        : limit(5), gameDeck(nullptr), cardsInHand()
-{
+Hand::Hand()        //again you shouldn't use the default constructor
+        : limit(5), gameDeck(nullptr), cardsInHand() {
 }
 
 
-Hand::Hand(int l, Deck* d)
-        : limit(l), gameDeck(d), cardsInHand()	//again, note to self, DO NOT USE &(parameter) to try
-{													//to initialize pointer: DOING SO DOES NOT WORK!!!
+Hand::Hand(int l, Deck *d)
+        : limit(l), gameDeck(d), cardsInHand()    //again, note to self, DO NOT USE &(parameter) to try
+{                                                    //to initialize pointer: DOING SO DOES NOT WORK!!!
     //No longer draws cards automatically
 }
 
-Hand::Hand(const Hand& copyMe)
-        : cardsInHand()
-{
+Hand::Hand(const Hand &copyMe)
+        : cardsInHand() {
     int size = copyMe.cardsInHand.size();
     gameDeck = new Deck(*copyMe.gameDeck);
     limit = copyMe.limit;
@@ -585,17 +542,16 @@ Hand::Hand(const Hand& copyMe)
     }
 }
 
-Hand& Hand::operator=(const Hand& rightSide)
-{
+Hand &Hand::operator=(const Hand &rightSide) {
     if (this == &rightSide) {
         return *this;
-    }
-    else {
+    } else {
         cardsInHand.clear();
         delete gameDeck;
         limit = rightSide.limit;
 
-        gameDeck = new Deck(*rightSide.gameDeck); //creates a new Deck (I think), which is not useful, but required for true deep copy
+        gameDeck = new Deck(
+                *rightSide.gameDeck); //creates a new Deck (I think), which is not useful, but required for true deep copy
         int rightSize = rightSide.cardsInHand.size();
         for (int i = 0; i < rightSize; i++) {
             cardsInHand.push_back(rightSide.cardsInHand.at(i));
@@ -604,14 +560,12 @@ Hand& Hand::operator=(const Hand& rightSide)
     return *this;
 }
 
-Hand::~Hand()
-{
+Hand::~Hand() {
     delete gameDeck; //careful, this can cause deleting the same thing more than once (error) if we also call delete on the game deck
     gameDeck = nullptr;
 }
 
-void Hand::showCardsInHand()
-{
+void Hand::showCardsInHand() {
     int size = cardsInHand.size();
     for (int i = 0; i < size; i++) {
         cout << i << ": " << *cardsInHand.at(i)->getDescription() << endl;
@@ -619,8 +573,7 @@ void Hand::showCardsInHand()
 }
 
 
-
-void Hand::playCardAtIndex(int i, Player* p) //"default" version, don't use in game engine
+void Hand::playCardAtIndex(int i, Player *p) //"default" version, don't use in game engine
 {
     Card cardToPlay = *cardsInHand.at(i);
     cardsInHand.at(i)->play(p);
@@ -629,8 +582,7 @@ void Hand::playCardAtIndex(int i, Player* p) //"default" version, don't use in g
 
 }
 
-void Hand::playCardAtIndex(int i, Player* p, const std::vector<Player*>& allPlayers)
-{
+void Hand::playCardAtIndex(int i, Player *p, const std::vector<Player *> &allPlayers) {
     Card cardToPlay = *cardsInHand.at(i);
     cardsInHand.at(i)->play(p, allPlayers);                         //uses new version of play() method
     gameDeck->placeOnBottom(cardsInHand.at(i));
@@ -638,24 +590,20 @@ void Hand::playCardAtIndex(int i, Player* p, const std::vector<Player*>& allPlay
 
 }
 
-void Hand::addToHand(Card* c)
-{
+void Hand::addToHand(Card *c) {
     cardsInHand.push_back(c);
 }
 
-Card Hand::getCardatIndex(int i) const
-{
+Card Hand::getCardatIndex(int i) const {
     return *cardsInHand.at(i);
 }
 
-int Hand::getSize() const
-{
+int Hand::getSize() const {
     return cardsInHand.size();
 }
 
 //STREAM OPERATOR OVERLOADS
-ostream& operator<<(ostream& outs, const Card& printMe)
-{
+ostream &operator<<(ostream &outs, const Card &printMe) {
     outs << *printMe.getDescription() << endl;
     return outs;
 }
@@ -663,67 +611,64 @@ ostream& operator<<(ostream& outs, const Card& printMe)
 
 //Since we have the above, overloading the << operator for the specific card types is a bit useless, but the assignment demands it :b
 
-ostream& operator<<(ostream& outs, const BombCard& printMe)
-{
+ostream &operator<<(ostream &outs, const BombCard &printMe) {
     outs << *printMe.getDescription() << endl;
     return outs;
 }
 
-ostream& operator<<(ostream& outs, const DiplomacyCard& printMe)
-{
+ostream &operator<<(ostream &outs, const DiplomacyCard &printMe) {
     outs << *printMe.getDescription() << endl;
     return outs;
 }
 
-ostream& operator<<(ostream& outs, const ReinforcementCard& printMe)
-{
+ostream &operator<<(ostream &outs, const ReinforcementCard &printMe) {
     outs << *printMe.getDescription() << endl;
     return outs;
 }
 
-ostream& operator<<(ostream& outs, const BlockadeCard& printMe)
-{
+ostream &operator<<(ostream &outs, const BlockadeCard &printMe) {
     outs << *printMe.getDescription() << endl;
     return outs;
 }
 
-ostream& operator<<(ostream& outs, const AirliftCard& printMe)
-{
+ostream &operator<<(ostream &outs, const AirliftCard &printMe) {
     outs << *printMe.getDescription() << endl;
     return outs;
 }
 
-ostream& operator<<(ostream& outs, const deckNode& printMe)
-{
+ostream &operator<<(ostream &outs, const deckNode &printMe) {
     outs << "\nA deck node that contains the following card: \n" << *printMe.getData() << endl;
     return outs;
 }
 
-ostream& operator<<(ostream& outs, const Deck& printMe)
-{
+ostream &operator<<(ostream &outs, const Deck &printMe) {
     outs << "Here are all the cards currently in this deck:\n" << endl;
     if (printMe.getHead() == NULL) {
         outs << "The deck is empty!" << endl;
-    }
-    else {
-        deckNode* objHead = printMe.getHead();
-        deckNode* current = objHead;
-
+    } else {
+        deckNode *objHead = printMe.getHead();
+        deckNode *current = objHead;
+        int i =1;
         while (current != NULL) {
-            outs << *current->getData() ;
+            outs << i <<". " << *current->getData();
             current = current->getLink(); //removed the endl that was here before cause there was no need for all the spaces
+            i++;
         }
     }
     return outs;
 
 }
 
-ostream& operator<<(ostream& outs, const Hand& printMe)
-{
-    outs << "These are the cards currently in your hand:\n" << endl;
+ostream &operator<<(ostream &outs, const Hand &printMe) {
+
     int size = printMe.getSize();
-    for (int i = 0; i < size; i++) {
-        outs << printMe.getCardatIndex(i); //removed "endl" to have less unnecessary spacing
+    if (size == 0) {
+        outs << "You have an empty hand." << endl;
+    } else {
+        outs << "These are the cards currently in your hand:\n" << endl;
+        for (int i = 0; i < size; i++) {
+            outs << printMe.getCardatIndex(i); //removed "endl" to have less unnecessary spacing
+        }
     }
     return outs;
 }

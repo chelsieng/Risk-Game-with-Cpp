@@ -142,16 +142,18 @@ string Territory::getTerritoryName() const {
 ostream &operator<<(ostream &output, const Territory &territory) {
     if (!territory.armies->empty()) {
         output << "Territory " << territory.getId() << ", " << territory.getTerritoryName() << ":" << endl;
-        output << "Army(ies) on territory " << territory.getId() << " :" << endl;
+        output << "Army(ies) on territory " << territory.getTerritoryName() << ":" << endl;
         for (Army *army : *territory.armies) {
             cout << *army;
         }
         output << "The territory is owned by " << territory.owner->getId() << endl;
     } else if (territory.owner != nullptr) {
-        output << "The territory " << territory.getTerritoryName() << " is owned by P" << territory.owner->getId()
+        output << "Territory " << territory.getId() << ", " << territory.getTerritoryName() << " is owned by P"
+               << territory.owner->getId()
                << endl;
     } else {
-        output << "The Territory " << territory.getTerritoryName() << " is owned by no one" << endl;
+        output << "Territory " << territory.getId() << ", " << territory.getTerritoryName() << " is owned by no one"
+               << endl;
     }
     return output;
 }
@@ -169,7 +171,7 @@ int Territory::getNumberOfArmies() const {
 }
 
 void Territory::addArmy() {
-        armies->push_back(new Army(this->owner));
+    armies->push_back(new Army(this->owner));
 }
 
 void Territory::removeArmy() {
@@ -239,9 +241,15 @@ Continent::Continent(const Continent &continent) {
 
 Continent::~Continent() {
     *id = --counter;
-    delete territoriesGraph;
-    territoriesGraph = nullptr;
-    territoriesVector->clear();
+    if (&this->territoriesGraph != &territoriesGraph) {
+        if (territoriesGraph != nullptr) {
+            delete territoriesGraph;
+            territoriesGraph = nullptr;
+        }
+    }
+    for (auto terr : *territoriesVector) {
+        delete terr;
+    }
     delete territoriesVector;
     territoriesVector = nullptr;
 } //End of destructor
@@ -347,7 +355,7 @@ void Continent::setControlValue(int controlValue) {
 ostream &operator<<(ostream &output, const Continent &continent) {
     auto *territories = new vector<Territory *>;
     *territories = *continent.getTerritoriesVector();
-    output << "Here is Continent " << continent.getId() << ", " << continent.getContinentName()
+    output << endl << "Here is Continent " << continent.getId() << ", " << continent.getContinentName()
            << " and its territories: " << endl;
     for (Territory *territory: *territories) {
         output << "Territory " << territory->getId() << ", " << territory->getTerritoryName() << endl;
@@ -391,10 +399,19 @@ Map::Map(const Map &map) {
 } //End of Copy Constructor
 
 Map::~Map() {
+    for (auto cont : *continents) {
+        delete cont;
+    }
     delete continents;
     continents = nullptr;
-    delete mapGraph;
-    mapGraph = nullptr;
+    if (&this->mapGraph != &mapGraph) {
+        if (mapGraph != nullptr) {
+            delete mapGraph;
+            mapGraph = nullptr;
+        }
+    }
+//    delete mapGraph;
+//    mapGraph = nullptr;
 }//End of destructor
 
 Map &Map::operator=(const Map &map) {
@@ -533,17 +550,17 @@ ostream &operator<<(ostream &output, const Map &map) {
 //End of insertion operator
 
 vector<Territory *> *Map::getNeighbours(Territory *me) {
-        vector<Territory*> *neighbours = new vector<Territory*>;
-    set<int,less<int>>::iterator itr;
-    vector<Territory*>* allTerritories = this->getTerritories();
+    vector<Territory *> *neighbours = new vector<Territory *>;
+    set<int, less<int>>::iterator itr;
+    vector<Territory *> *allTerritories = this->getTerritories();
     set<int> neighbourIDs = mapGraph->get_neighbours(me->getId());
-    for(itr = neighbourIDs.begin(); itr != neighbourIDs.end(); itr++){
+    for (itr = neighbourIDs.begin(); itr != neighbourIDs.end(); itr++) {
         int theNeighbourID = *itr;
-        for(int i = 0; i < allTerritories->size(); i++){
-                Territory* tAti = allTerritories->at(i);
-                if(tAti->getId() == theNeighbourID){
-                    neighbours->push_back(tAti);
-                }//end of if (IDs match)
+        for (int i = 0; i < allTerritories->size(); i++) {
+            Territory *tAti = allTerritories->at(i);
+            if (tAti->getId() == theNeighbourID) {
+                neighbours->push_back(tAti);
+            }//end of if (IDs match)
         }//end of for (check all territories for given ID)
     }//end of for (go through all IDs)
     return neighbours;
