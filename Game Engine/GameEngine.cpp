@@ -114,17 +114,24 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *
             cout << "Since P" << player->getId() << " owns " << numOfTerritories << " territories, they get "
              << toAdd << " armies added to their reinforcement pool" << endl;
 
-
-     //Assign bonus if player owns entire continent
-        //for each player
-            //for each continent
-                    //for each territory
-        ///So yeah we'll implement that once the control bonus has been added to the map class
+            int toAdd2 = 0;
+            for(int j = 0; j < theContinents->size(); j++){
+                    if(theContinents->at(j)->isOccupiedBy(player)){
+                        int bonus = theContinents->at(i)->getControlValue();
+                        toAdd2 = toAdd2 + bonus;
+                        cout << "Since P" << player->getId() << " owns the continent " << theContinents->at(j)->getContinentName()
+                        << ", they get a bonus of " << bonus << "armies" << endl;
+                        player->setReinforcementPool(player->getReinforcementPool()+bonus);
+                    }//end of if (they get a bonus)
+            }//end of for (go through all continents)
+            if(toAdd2 == 0){
+                cout << "P" << player->getId() << " doesn't own any continents, so they won't receive any bonus for that." << endl;
+            }
 
      //Make sure each player gets a minimum of 3 armies this turn to deploy
-
-            if(toAdd < 3){
-                int minimum = 3 - toAdd;
+            int totalAdded = toAdd + toAdd2;
+            if(totalAdded < 3){
+                int minimum = 3 - totalAdded;
                 player->setReinforcementPool(player->getReinforcementPool() + minimum);
                 cout << "P" << player->getId() << " didn't get many armies, so they have been given "
                 << minimum << " more." << endl;
@@ -132,6 +139,16 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *
 
         }//end of for loop (go through process for each player)
 }///end of reinforcementPhase function
+
+void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
+    for(int i = 0; i < thePlayers->size(); i++){
+        Player *p = thePlayers->at(i);
+        cout << "Alright Player " << p->getId() << ", it's your turn to issue orders!" << endl;
+        p->issueOrder(theMap,thePlayers);
+    } //end of for (round robing order issuing for all players)
+
+}///end of order issuing phase function
+
 
 
 

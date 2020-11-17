@@ -24,6 +24,7 @@ public:
 
     static void startupPhase(vector<Player *> *, vector<Territory *> *);
     static void reinforcementPhase(vector<Player *> *, vector<Continent *> *);
+    static void orderIssuingPhase(vector<Player*> *thePlayers, Map* theMap);
 
 }
 ;

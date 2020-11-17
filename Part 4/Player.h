@@ -33,15 +33,16 @@ public:
 
     // Methods
     void issueOrder(Order* orderToIssue);
-    vector<Territory*>* toDefend(vector<Territory*>* listToDefend);
-    vector<Territory*>* toAttack(vector<Territory*>* listToAttack);
+    vector<Territory*>* toDefend(Map* theMap);
+    vector<Territory*>* toAttack(Map* theMap);
     int getId() const;
     int getReinforcementPool() const;
     void setReinforcementPool(int i);
     Hand* getHand();
     OrdersList* getOrdersList();
     vector<Territory*>* getPlayerTerritories();
-    vector<Territory*>* toAttack(Map* theMap);
+    vector<Territory*>* AttackAble(Map* theMap);
+    void issueOrder(Map* theMap, vector<Player*>* thePlayers);
 
     // assignment operator
     Player& operator = (const Player &player);

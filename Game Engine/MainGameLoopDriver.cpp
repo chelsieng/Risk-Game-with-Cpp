@@ -126,18 +126,15 @@ int main() {
 
     GameEngine::reinforcementPhase(ps1, map1->getContinents());
 
+    cout << "\nTime to enter the order issuing phase!" << endl;
+
+    GameEngine::orderIssuingPhase(ps1, map1);
+
     cout << "\nHere is our list of players now:\n" << endl;
     for(int i = 0; i < ps1->size(); i++){
         cout << *ps1->at(i) << endl;
     }
 
-    cout << "\n Here are the places that player 2 can attack:" << endl;
-    vector<Territory*>* attackable = p2->toAttack(map1);
-    for(int i = 0; i < attackable->size(); i++){
-        if(attackable->at(i) != NULL){
-            cout << attackable->at(i)->getTerritoryName() << endl;
-        }
-    }
 
     //All the deletes that are commented out cause errors when the program terminates, probably cause they result
     //in deleting things that have already been deleted... Though actually I'm not entirely sure.
@@ -157,10 +154,10 @@ int main() {
     //   delete p2;
     //   delete p3;
     //   delete p4;
-    delete orderListP1;
-    delete orderListP2;
-    delete orderListP3;
-    delete orderListP4;
+  //  delete orderListP1;
+  //  delete orderListP2;
+  //  delete orderListP3;
+  //  delete orderListP4;
     delete theDeck;
     delete territoryListP1;
     delete territoryListP2;
