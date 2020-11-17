@@ -331,10 +331,13 @@ void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
 void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> *theContinents, Map *theMap) {
     bool won = false;
     while(won == false){
+        phase = "Reinforcement Phase";
         GameEngine::reinforcementPhase(thePlayers, theContinents);
+        phase = "Order Issuing Phase";
         GameEngine::orderIssuingPhase(thePlayers, theMap);
+        phase = "Order Execution Phase";
         GameEngine::orderExecutionPhase(thePlayers);
-
+        phase = "Current Standings";
         ///check if somebody has won:
         bool all = true;
         Player *winner;

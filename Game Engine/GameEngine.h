@@ -21,11 +21,14 @@ using namespace std;
 
 
 class GameEngine {
+private:
+    static string phase;
 public:
     static Map* selectMap(int); // Function to load selected map file
     static vector<Player *> *createPlayers(int); // Function to create players for the game
     static Deck *createDeck(); //Function to create the deck of cards for the game
     static void startupPhase(vector<Player *> *, vector<Territory *> *);
+    string getPhase(){return phase;}
 
  //   static void reinforcementPhase(vector<Player *> *, vector<Continent *> *);
  //   static void orderIssuingPhase(vector<Player*> *thePlayers, Map* theMap);
