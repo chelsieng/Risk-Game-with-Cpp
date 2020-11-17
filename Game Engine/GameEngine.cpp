@@ -317,8 +317,11 @@ void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
             else{
                 notDone = true;
                 cout << "Executing P" << thePlayers->at(i)->getId() << "'s next order." << endl;
-                Order* toExecute = thePlayers->at(i)->getOrdersList()->highestPriority();
+                int indexOfHighest = thePlayers->at(i)->getOrdersList()->highestPriority();
+                Order* toExecute = thePlayers->at(i)->getOrdersList()->getAt(indexOfHighest);
                 toExecute->execute();
+                cout << *toExecute << endl;
+                thePlayers->at(i)->getOrdersList()->deleteAt(indexOfHighest);
             }//end of else (player still has orders)
         }//end of for (go through all players)
     }//end of while
