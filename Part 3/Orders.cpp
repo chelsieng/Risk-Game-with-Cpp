@@ -758,23 +758,22 @@ ostream &operator<<(ostream &out, const OrdersList &ordersList) {
     return out;
 }
 
-Order *OrdersList::highestPriority() {
+int OrdersList::highestPriority() {
     int indexOfHighest = 0;
     int numberToBeat = 0;
     if(this->listOrders.size() == 0){
         cout << "No orders in list!" << endl;
-    return nullptr;}
+    return -1;}
     else{
         numberToBeat = this->listOrders.at(0)->getPriority();
         for(int i = 1; i < this->listOrders.size(); i++){
-            if(this->listOrders.at(i)->getPriority() > numberToBeat){
+            if(this->listOrders.at(i)->getPriority() < numberToBeat){
                 numberToBeat = this->listOrders.at(i)->getPriority();
                 indexOfHighest = i;
             }//end of if (found something of higher priority)
         }//end of for (go through all orders in list)
-        Order *returnMe = this->listOrders.at(indexOfHighest);
-        this->listOrders.erase(this->listOrders.begin() + indexOfHighest);
-        return returnMe;
+
+        return indexOfHighest;
     }//end of else (list not empty)
 }
 

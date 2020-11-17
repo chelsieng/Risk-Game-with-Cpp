@@ -209,8 +209,9 @@ public:
     void addToLast(Order *order);               // Adding Order to the last of the list
     Order* deleteAt(int index);                 // Deleting and return Order at the given index
     void move(int indexFrom, int indexTo);      // Moving Order with given index
-    Order* highestPriority();                     //returns order in list that is of highest priority
+    int highestPriority();                     //returns order in list that is of highest priority
     int getSize();                              //returns number of orders in list
+    Order* getAt(int i){return this->listOrders.at(i);}
     // Overloading operators
     OrdersList& operator=(OrdersList const& o);
     friend ostream& operator<<(ostream& out, const OrdersList &ordersList);

@@ -8,6 +8,7 @@
 
 // Function returns true if user selected a valid map file with valid map graph
 Map* GameEngine::selectMap(int mapSelection) {
+    phase = "Map Selection";
     string key; // "Press any key" feature for later
     // Map data structure where key = user select int and value = map files from ../Map Files/ directory
     map<int, string> map = {
@@ -53,6 +54,7 @@ Map* GameEngine::selectMap(int mapSelection) {
 }
 
 vector<Player *> *GameEngine::createPlayers(int numOfPlayers) {
+    phase = "Player and Deck Creation";
     Deck *deck = createDeck(); // creating deck of cards for the game
     auto *pList = new vector<Player *>;
     string key; // "Press any key" feature for later
@@ -107,7 +109,7 @@ Deck *GameEngine::createDeck() {
 }
 
 void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
-    cout << "here." << endl;
+    phase = "Startup Phase";
     //create shallow copy of players vector that will be assigned back to the original later.
     vector<Player *> psv(*ps1);
     vector<Player *> *ps = new vector<Player *>(psv);
@@ -210,7 +212,7 @@ void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
 ////END OF STARTUPPHASE FUNCTION
 
 void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *theContinents) {
-
+    phase = "Reinforcement Phase";
     //Give each player a number of armies based on the number of territories they own
     //(number owned / 3, rounded down)
 
@@ -254,6 +256,7 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *
 }///end of reinforcementPhase function
 
 void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
+    phase = "Order Issuing Phase";
     int issueRound = 0;
     bool notDone = true;
     while(notDone == true) {
@@ -307,6 +310,7 @@ void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
 }///end of order issuing phase function
 
 void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
+        phase = "Order Execution Phase";
     cout << "Time to execute everyone's orders!" << endl;
     bool notDone = true;
     while(notDone == true){
@@ -317,18 +321,56 @@ void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
             else{
                 notDone = true;
                 cout << "Executing P" << thePlayers->at(i)->getId() << "'s next order." << endl;
-                Order* toExecute = thePlayers->at(i)->getOrdersList()->highestPriority();
+                int indexOfHighest = thePlayers->at(i)->getOrdersList()->highestPriority();
+                Order* toExecute = thePlayers->at(i)->getOrdersList()->getAt(indexOfHighest);
                 toExecute->execute();
+                cout << *toExecute << endl;
+                thePlayers->at(i)->getOrdersList()->deleteAt(indexOfHighest);
             }//end of else (player still has orders)
         }//end of for (go through all players)
     }//end of while
 
 }///end of order execution phase
 
+void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> *theContinents, Map *theMap) {
+    bool won = false;
+    while(won == false){
+
+        GameEngine::reinforcementPhase(thePlayers, theContinents);
+
+        GameEngine::orderIssuingPhase(thePlayers, theMap);
+
+        GameEngine::orderExecutionPhase(thePlayers);
+
+        ///check if somebody has won:
+        bool all = true;
+        Player *winner;
+        for(int i = 0; i < thePlayers->size(); i++){
+            all = true;
+            Player* current = thePlayers->at(i);
+            for(int j = 0;  j < theContinents->size(); j++){
+                if(!(theContinents->at(j)->isOccupiedBy(current))){all = false;}
+            }//end of for (check all continents)
+            if(all == true){winner = current;
+            won = true;
+            cout << "\nCongratulations P" << winner->getId() << ", you've won the game!" << endl;
+            }//end of if(current player has won)
+        }//end of for (check for all players)
+        if(won == false){
+            cout << "Let's see everyone's current standings:" << endl;
+            for(int k = 0; k < thePlayers->size(); k++){
+                cout << *thePlayers->at(k) << endl;
+            }//end of for (print all player statuses
+        }
+    }//end of while
+
+}///END OF MAIN GAME LOOP
 
 
 
-/*
+
+
+
 int main() {
 
 
@@ -390,6 +432,7 @@ int main() {
         cout << endl;
     }
     GameEngine::startupPhase(players, mapGame->getTerritories());
+    GameEngine::mainGameLoop(players, mapGame->getContinents(), mapGame);
     return 0;
 }
-*/
+
