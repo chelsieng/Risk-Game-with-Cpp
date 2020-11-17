@@ -232,7 +232,7 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *
                         int bonus = theContinents->at(i)->getControlValue();
                         toAdd2 = toAdd2 + bonus;
                         cout << "Since P" << player->getId() << " owns the continent " << theContinents->at(j)->getContinentName()
-                        << ", they get a bonus of " << bonus << "armies" << endl;
+                        << ", they get a bonus of " << bonus << " armies" << endl;
                         player->setReinforcementPool(player->getReinforcementPool()+bonus);
                     }//end of if (they get a bonus)
             }//end of for (go through all continents)

@@ -55,6 +55,9 @@ int main() {
     Continent *continent1 = new Continent(continentName1, mapGraph, territoriesVector1);
     Continent *continent2 = new Continent(continentName2, mapGraph, territoriesVector2);
 
+    continent2->setControlValue(4);
+    continent1->setControlValue(3);
+
     // Creating vector of continents in order to pass it to the Map constructor
     vector<Continent *> *continents1 = new vector<Continent *>;
     continents1->push_back(continent1);

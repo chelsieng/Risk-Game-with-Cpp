@@ -318,12 +318,11 @@ void Continent::Continent::traverse(const int node, const Graph<int> *graph, vec
 }
 
 bool Continent::isOccupiedBy(Player *p) const {
-    bool occupied = false;
+    bool occupied = true;
     for (auto terr: *this->territoriesVector) {
-        if (terr->isOccupiedBy(p)) {
-            occupied = true;
+        if (!(terr->isOccupiedBy(p))) {
+            occupied = false;
         }
-        occupied = false;
     }
     return occupied;
 }
