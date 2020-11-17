@@ -8,6 +8,7 @@
 
 // Function returns true if user selected a valid map file with valid map graph
 Map* GameEngine::selectMap(int mapSelection) {
+    phase = "Map Selection";
     string key; // "Press any key" feature for later
     // Map data structure where key = user select int and value = map files from ../Map Files/ directory
     map<int, string> map = {
@@ -53,6 +54,7 @@ Map* GameEngine::selectMap(int mapSelection) {
 }
 
 vector<Player *> *GameEngine::createPlayers(int numOfPlayers) {
+    phase = "Player and Deck Creation";
     Deck *deck = createDeck(); // creating deck of cards for the game
     auto *pList = new vector<Player *>;
     string key; // "Press any key" feature for later
@@ -107,7 +109,7 @@ Deck *GameEngine::createDeck() {
 }
 
 void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
-    cout << "here." << endl;
+    phase = "Startup Phase";
     //create shallow copy of players vector that will be assigned back to the original later.
     vector<Player *> psv(*ps1);
     vector<Player *> *ps = new vector<Player *>(psv);
@@ -210,7 +212,7 @@ void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
 ////END OF STARTUPPHASE FUNCTION
 
 void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *theContinents) {
-
+    phase = "Reinforcement Phase";
     //Give each player a number of armies based on the number of territories they own
     //(number owned / 3, rounded down)
 
@@ -254,6 +256,7 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *
 }///end of reinforcementPhase function
 
 void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
+    phase = "Order Issuing Phase";
     int issueRound = 0;
     bool notDone = true;
     while(notDone == true) {
@@ -307,6 +310,7 @@ void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
 }///end of order issuing phase function
 
 void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
+        phase = "Order Execution Phase";
     cout << "Time to execute everyone's orders!" << endl;
     bool notDone = true;
     while(notDone == true){
@@ -331,13 +335,13 @@ void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
 void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> *theContinents, Map *theMap) {
     bool won = false;
     while(won == false){
-        phase = "Reinforcement Phase";
+
         GameEngine::reinforcementPhase(thePlayers, theContinents);
-        phase = "Order Issuing Phase";
+
         GameEngine::orderIssuingPhase(thePlayers, theMap);
-        phase = "Order Execution Phase";
+
         GameEngine::orderExecutionPhase(thePlayers);
-        phase = "Current Standings";
+
         ///check if somebody has won:
         bool all = true;
         Player *winner;
