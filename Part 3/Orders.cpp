@@ -14,6 +14,7 @@ Order::Order() {
     this->player = nullptr;
     this->isExecuted = false;
     this->setType(("Default Order"));
+
 }
 
 // Parameterized constructor
@@ -28,6 +29,7 @@ Order::Order(const Order &order) {
     this->player = (order.player);
     this->isExecuted = order.isExecuted;
     this->setType(order.orderType);
+    this->priority = order.priority;
 }
 
 // Destructor
@@ -50,12 +52,16 @@ Order &Order::operator=(const Order &order) {
     delete this->player;
     this->player = new Player(*order.player);
     this->isExecuted = order.isExecuted;
-
+    this->priority = order.priority;
     return *this;
 }
 
 ostream &operator<<(ostream &out, const Order &order) {
     return order.print(out);
+}
+
+int Order::getPriority() {
+    return this->priority;
 }
 
 
@@ -67,6 +73,7 @@ Deploy::Deploy() : Order() {
     this->targetTerritory = nullptr;
     this->numOfArmies = 0;
     this->setType(("Deploy"));
+    this->priority = 1;
 }
 
 // Parameterized constructor
@@ -74,6 +81,7 @@ Deploy::Deploy(Player *player, Territory *targetTerritory, int numOfArmies) : Or
     this->targetTerritory = (targetTerritory);
     this->numOfArmies = numOfArmies;
     this->setType(("Deploy"));
+    this->priority = 1;
 }
 
 // Copy constructor
@@ -81,6 +89,7 @@ Deploy::Deploy(const Deploy &deploy) : Order(deploy) {
     this->targetTerritory = (deploy.targetTerritory);
     this->numOfArmies = deploy.numOfArmies;
     this->setType(deploy.orderType);
+    this->priority = deploy.priority;
 }
 
 // Destructor
@@ -129,6 +138,7 @@ Deploy &Deploy::operator=(const Deploy &deploy) {
     delete this->targetTerritory;
     this->targetTerritory = new Territory(*deploy.targetTerritory);
     this->numOfArmies = deploy.numOfArmies;
+    this->priority = deploy.priority;
 
     return *this;
 }
@@ -147,6 +157,7 @@ Advance::Advance() : Order() {
     this->targetTerritory = nullptr;
     this->numOfArmies = 0;
     this->setType(("Advance"));
+    this->priority = 4;
 }
 
 // Parameterized constructor
@@ -156,6 +167,7 @@ Advance::Advance(Player *player, Territory *sourceTerritory, Territory *targetTe
     this->targetTerritory = (targetTerritory);
     this->numOfArmies = numOfArmies;
     this->setType(("Advance"));
+    this->priority = 4;
 }
 
 // Copy constructor
@@ -164,6 +176,7 @@ Advance::Advance(const Advance &advance) : Order(advance) {
     this->targetTerritory = (advance.targetTerritory);
     this->numOfArmies = advance.numOfArmies;
     this->setType(advance.orderType);
+    this->priority = 4;
 }
 
 // Destructor
@@ -249,6 +262,7 @@ Advance &Advance::operator=(const Advance &advance) {
     delete this->targetTerritory;
     this->targetTerritory = (advance.targetTerritory);
     this->numOfArmies = advance.numOfArmies;
+    this->priority = 4;
 
     return *this;
 }
@@ -266,6 +280,7 @@ Bomb::Bomb() : Order() {
     this->sourceTerritory = nullptr;
     this->targetTerritory = nullptr;
     this->setType(("Bomb"));
+    this->priority = 4;
 }
 
 // Parameterized constructor
@@ -273,6 +288,7 @@ Bomb::Bomb(Player *player, Territory *sourceTerritory, Territory *targetTerritor
     this->sourceTerritory = (sourceTerritory);
     this->targetTerritory = (targetTerritory);
     this->setType(("Bomb"));
+    this->priority = 4;
 }
 
 // Copy constructor
@@ -280,6 +296,7 @@ Bomb::Bomb(const Bomb &bomb) : Order(bomb) {
     this->sourceTerritory = (bomb.sourceTerritory);
     this->targetTerritory = (bomb.targetTerritory);
     this->setType(bomb.orderType);
+    this->priority = 4;
 }
 
 // Destructor
@@ -335,7 +352,7 @@ Bomb &Bomb::operator=(const Bomb &bomb) {
     this->sourceTerritory = (bomb.sourceTerritory);
     delete this->targetTerritory;
     this->targetTerritory = (bomb.targetTerritory);
-
+    this->priority = 4;
     return *this;
 }
 
@@ -351,12 +368,14 @@ ostream &operator<<(ostream &out, const Bomb &bomb) {
 Blockade::Blockade() : Order() {
     this->targetTerritory = nullptr;
     this->setType(("Blockade"));
+    this->priority = 3;
 }
 
 // Parameterized constructor
 Blockade::Blockade(Player *player, Territory *targetTerritory) : Order(player) {
     this->targetTerritory = (targetTerritory);
     this->setType(("Blockade"));
+    this->priority = 3;
 }
 
 // Copy constructor
@@ -364,6 +383,7 @@ Blockade::Blockade(const Blockade &blockade) : Order(blockade) {
     this->targetTerritory = (blockade.targetTerritory);
     this->isExecuted = blockade.isExecuted;
     this->setType(blockade.orderType);
+    this->priority = 3;
 }
 
 // Destructor
@@ -416,6 +436,7 @@ Blockade &Blockade::operator=(const Blockade &blockade) {
     delete this->targetTerritory;
     this->targetTerritory = (blockade.targetTerritory);
     this->isExecuted = blockade.isExecuted;
+    this->priority = 3;
 
     return *this;
 }
@@ -434,6 +455,7 @@ Airlift::Airlift() : Order() {
     this->targetTerritory = nullptr;
     this->numOfArmies = 0;
     this->setType(("Airlift"));
+    this->priority = 2;
 }
 
 // Parameterized constructor
@@ -443,6 +465,7 @@ Airlift::Airlift(Player *player, Territory *sourceTerritory, Territory *targetTe
     this->targetTerritory = (targetTerritory);
     this->numOfArmies = numOfArmies;
     this->setType(("Airlift"));
+    this->priority = 2;
 }
 
 // Copy constructor
@@ -451,6 +474,7 @@ Airlift::Airlift(const Airlift &airlift) : Order(airlift) {
     this->targetTerritory = (airlift.targetTerritory);
     this->numOfArmies = airlift.numOfArmies;
     this->setType(airlift.orderType);
+    this->priority = 2;
 }
 
 // Destructor
@@ -553,12 +577,14 @@ ostream &operator<<(ostream &out, const Airlift &airlift) {
 Negotiate::Negotiate() : Order() {
     this->negotiator = nullptr;
     this->setType(("Negotiate"));
+    this->priority = 4;
 }
 
 // Parameterized constructor
 Negotiate::Negotiate(Player *player, Player *negotiator) : Order(player) {
     this->negotiator = (negotiator);
     this->setType(("Negotiate"));
+    this->priority = 4;
 }
 
 // Copy constructor
@@ -566,6 +592,7 @@ Negotiate::Negotiate(const Negotiate &negotiate) : Order(negotiate) {
     this->negotiator = (negotiate.negotiator);
     this->isExecuted = negotiate.isExecuted;
     this->setType(negotiate.orderType);
+    this->priority = 4;
 }
 
 // Destructor
@@ -613,6 +640,7 @@ Negotiate &Negotiate::operator=(const Negotiate &negotiate) {
     delete this->negotiator;
     this->negotiator = (negotiate.negotiator);
     this->isExecuted = negotiate.isExecuted;
+    this->priority = 4;
 
     return *this;
 }
@@ -717,3 +745,30 @@ ostream &operator<<(ostream &out, const OrdersList &ordersList) {
 
     return out;
 }
+
+Order *OrdersList::highestPriority() {
+    int indexOfHighest = 0;
+    int numberToBeat = 0;
+    if(this->listOrders.size() == 0){
+        cout << "No orders in list!" << endl;
+    return nullptr;}
+    else{
+        numberToBeat = this->listOrders.at(0)->getPriority();
+        for(int i = 1; i < this->listOrders.size(); i++){
+            if(this->listOrders.at(i)->getPriority() > numberToBeat){
+                numberToBeat = this->listOrders.at(i)->getPriority();
+                indexOfHighest = i;
+            }//end of if (found something of higher priority)
+        }//end of for (go through all orders in list)
+        Order *returnMe = this->listOrders.at(indexOfHighest);
+        this->listOrders.erase(this->listOrders.begin() + indexOfHighest);
+        return returnMe;
+    }//end of else (list not empty)
+}
+
+int OrdersList::getSize() {
+    return this->listOrders.size();
+}
+//end of highest priority method
+
+

@@ -306,6 +306,26 @@ void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
     }//end of for (all players)
 }///end of order issuing phase function
 
+void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
+    cout << "Time to execute everyone's orders!" << endl;
+    bool notDone = true;
+    while(notDone == true){
+        for(int i = 0; i < thePlayers->size(); i++){
+            if(thePlayers->at(i)->getOrdersList()->getSize() == 0){
+                notDone = false;
+            }//end of if (player has no more orders)
+            else{
+                notDone = true;
+                cout << "Executing P" << thePlayers->at(i)->getId() << "'s next order." << endl;
+                Order* toExecute = thePlayers->at(i)->getOrdersList()->highestPriority();
+                toExecute->execute();
+            }//end of else (player still has orders)
+        }//end of for (go through all players)
+    }//end of while
+
+}///end of order execution phase
+
+
 
 
 /*

@@ -140,6 +140,9 @@ int main() {
         cout << *ps1->at(i) << endl;
     }
 
+    cout << "\nNow let's enter the order execution phase!" << endl;
+    GameEngine::orderExecutionPhase(ps1);
+
 
     //All the deletes that are commented out cause errors when the program terminates, probably cause they result
     //in deleting things that have already been deleted... Though actually I'm not entirely sure.

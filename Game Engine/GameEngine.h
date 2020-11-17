@@ -31,6 +31,7 @@ public:
  //   static void orderIssuingPhase(vector<Player*> *thePlayers, Map* theMap);
       static void reinforcementPhase(vector<Player *> *thePlayers, vector<Continent *> * theContinents);
        static void orderIssuingPhase(vector<Player*> *thePLayers, Map* theMap);
+       static void orderExecutionPhase(vector<Player*> *thePlayers);
 
 };
 
