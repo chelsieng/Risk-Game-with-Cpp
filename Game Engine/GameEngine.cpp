@@ -7,7 +7,7 @@
 #include "MapLoader.h"
 
 // Function returns true if user selected a valid map file with valid map graph
-bool GameEngine::selectMap(int mapSelection) {
+Map* GameEngine::selectMap(int mapSelection) {
     string key; // "Press any key" feature for later
     // Map data structure where key = user select int and value = map files from ../Map Files/ directory
     map<int, string> map = {
@@ -22,14 +22,14 @@ bool GameEngine::selectMap(int mapSelection) {
     // Returns false if user enters integer which is out of bound
     if (map.count(mapSelection) < 1 || map.count(mapSelection) > 7) {
         cout << "Please try again." << endl << endl;
-        return false;
+        return nullptr;
     }
     auto *m = new MapLoader(map[mapSelection]); //Loading selected map files
     // Returns false if map file fails to load (ie invalid map file)
     if (m->getMap() == nullptr) {
         cout << "Please try again." << endl << endl;
         delete m; // handling memory
-        return false;
+        return nullptr;
     }
     // Map file successfully loaded
     cout << "Great! Now let's have a look at your map: " << endl;
@@ -41,13 +41,13 @@ bool GameEngine::selectMap(int mapSelection) {
             cout << endl;
         }
         cout << *m->getMap() << endl; // Display info of map
-        mapGame = m->getMap(); // Assign valid map to global variable mapGame
-        return true;
+   //     *mapGame = *m->getMap(); // Assign valid map to global variable mapGame
+        return m->getMap();
     } // else return false if map graph is invalid
     else {
         cout << "Please try again." << endl << endl;
         delete m; // handling memory
-        return false;
+        return nullptr;
     }
 
 }
@@ -107,6 +107,7 @@ Deck *GameEngine::createDeck() {
 }
 
 void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
+    cout << "here." << endl;
     //create shallow copy of players vector that will be assigned back to the original later.
     vector<Player *> psv(*ps1);
     vector<Player *> *ps = new vector<Player *>(psv);
@@ -171,7 +172,7 @@ void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
 
     cout << "\nLets see the list of territories once again:\n" << endl;
 
-    for (auto p: *players) {
+    for (auto p: *ps1) {
         cout << "P" << p->getId() << " owns the following territories: " << endl;
         for (auto terr : *p->getPlayerTerritories()) {
             cout << *terr;
@@ -194,7 +195,7 @@ void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
             ps1->at(i)->setReinforcementPool(25);
     }//end of for
     cout << "Number of armies in reinforcement pool: " << endl;
-    for (auto p: *players) {
+    for (auto p: *ps1) {
         cout << "P" << p->getId() << ": " << p->getReinforcementPool() << endl;
     }
 
@@ -225,27 +226,114 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *
              << toAdd << " armies added to their reinforcement pool" << endl;
 
 
-        //Assign bonus if player owns entire continent
-        //for each player
-        //for each continent
-        //for each territory
-        ///So yeah we'll implement that once the control bonus has been added to the map class
+            int toAdd2 = 0;
+            for(int j = 0; j < theContinents->size(); j++){
+                    if(theContinents->at(j)->isOccupiedBy(player)){
+                        int bonus = theContinents->at(i)->getControlValue();
+                        toAdd2 = toAdd2 + bonus;
+                        cout << "Since P" << player->getId() << " owns the continent " << theContinents->at(j)->getContinentName()
+                        << ", they get a bonus of " << bonus << " armies" << endl;
+                        player->setReinforcementPool(player->getReinforcementPool()+bonus);
+                    }//end of if (they get a bonus)
+            }//end of for (go through all continents)
+            if(toAdd2 == 0){
+                cout << "P" << player->getId() << " doesn't own any continents, so they won't receive any bonus for that." << endl;
+            }
 
-        //Make sure each player gets a minimum of 3 armies this turn to deploy
+     //Make sure each player gets a minimum of 3 armies this turn to deploy
+            int totalAdded = toAdd + toAdd2;
+            if(totalAdded < 3){
+                int minimum = 3 - totalAdded;
+                player->setReinforcementPool(player->getReinforcementPool() + minimum);
+                cout << "P" << player->getId() << " didn't get many armies, so they have been given "
+                << minimum << " more." << endl;
+            }//end of if (they had been given less than 3 until now)
 
-        if (toAdd < 3) {
-            int minimum = 3 - toAdd;
-            player->setReinforcementPool(player->getReinforcementPool() + minimum);
-            cout << "P" << player->getId() << " didn't get many armies, so they have been given "
-                 << minimum << " more." << endl;
-        }//end of if (they had been given less than 3 until now)
 
     }//end of for loop (go through process for each player)
 }///end of reinforcementPhase function
 
+void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
+    int issueRound = 0;
+    bool notDone = true;
+    while(notDone == true) {
+        if(issueRound != 0){notDone = false;}
+        for (int i = 0; i < thePlayers->size(); i++) {
+            Player *p = thePlayers->at(i);
+            cout << "\nAlright Player " << p->getId() << ", it's your turn to issue an order!" << endl;
+            if (issueRound == 0) {
+                cout << "\nYou must issue any deploy orders before you can do anything else!\n" << endl;
+                p->issueOrder(theMap, thePlayers, 0);
+            }//end of if (deploy round)
+            else {
+                cout << "Would you like to issue another order? Type 1 for yes, and any other number for no." << endl;
+                int ans;
+                cin >> ans;
+                if(ans == 1) {
+                    notDone = true;
+                    cout << "Here are your options. Type in the number corresponding to your choice:" << endl;
+                    cout << "1. Advance armies to defend." << endl;
+                    cout << "2. Advance armies to attack." << endl;
+                    cout << "3. Play a card from your hand." << endl;
+                 int response;
+                 bool valid = false;
+                 while(valid == false){
+                     cin >> response;
+                     if(response == 1 || response == 2 || (response == 3 && p->getHand()->getSize() > 0)){
+                         valid = true;
+                         cout << "Got it!" << endl;
+                     }
+                     else if(response == 3 && p->getHand()->getSize() < 1){
+                         cout << "You don't! have any cards in hand! Try something else." << endl;
+                     }
+                     else{ cout << "Invalid choice! Please try again." << endl;}
+                 }//end of while (get valid choice)
+                      p->issueOrder(theMap,thePlayers, response);
+                }//end of if (issue another order)
+                else{
+                    cout << "Okay! No order will be issued." << endl;
+                }//end of else
+            }//end of else (not first issue round)
+        } //end of for (round robing order issuing for all players)
+        issueRound = issueRound + 1;
+    }//end of while
+    //Reset mock armies for everyone's territories:
+    for (int i = 0; i < thePlayers->size(); i++) {
+        Player *p = thePlayers->at(i);
+        for(int j = 0; j < p->getPlayerTerritories()->size(); j++){
+            p->getPlayerTerritories()->at(j)->resetMockArmies();
+        }//end of for (all owned territories)
+    }//end of for (all players)
+}///end of order issuing phase function
+
+void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
+    cout << "Time to execute everyone's orders!" << endl;
+    bool notDone = true;
+    while(notDone == true){
+        for(int i = 0; i < thePlayers->size(); i++){
+            if(thePlayers->at(i)->getOrdersList()->getSize() == 0){
+                notDone = false;
+            }//end of if (player has no more orders)
+            else{
+                notDone = true;
+                cout << "Executing P" << thePlayers->at(i)->getId() << "'s next order." << endl;
+                Order* toExecute = thePlayers->at(i)->getOrdersList()->highestPriority();
+                toExecute->execute();
+            }//end of else (player still has orders)
+        }//end of for (go through all players)
+    }//end of while
+
+}///end of order execution phase
 
 
+
+
+/*
 int main() {
+
+
+    Map *mapGame = nullptr;
+
     int mapSelection; // int where user selects map file to be loaded
     int numOfPlayers; // int where user selects the number of players in the game
     string key; // Press any key feature for later
@@ -275,12 +363,13 @@ int main() {
         cout << ">> ";
         cin >> mapSelection; // user enter selection
         // If user selects valid map file which creates valid map graph, map selection done
-        if (GameEngine::selectMap(mapSelection)) {
+        mapGame = GameEngine::selectMap(mapSelection);
+        if (mapGame != nullptr ) {
             break;
         }
     }
     // uncomment to see map of game which user selected from
-//    cout << *mapGame;
+    cout << *mapGame;
     while (numOfPlayers > 5 || numOfPlayers < 2) {
         // Since numOfPlayers is an int, if user enters otherwise keep prompting
         if (cin.fail()) {
@@ -292,6 +381,7 @@ int main() {
         cout << ">> ";
         cin >> numOfPlayers;
     }
+    vector<Player*>* players = new vector<Player*>;
     players = GameEngine::createPlayers(numOfPlayers); // Store players in vector of players
     cout << "- You are now entering the Start Up Phase -" << endl;
     while (key.empty()) {
@@ -302,3 +392,4 @@ int main() {
     GameEngine::startupPhase(players, mapGame->getTerritories());
     return 0;
 }
+*/

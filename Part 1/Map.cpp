@@ -64,6 +64,7 @@ Territory::Territory(string name) {
     owner = nullptr;
     territoryName = name;
     armies = new vector<Army *>;
+    this->resetMockArmies();
 }
 
 // Constructor for the territory that players start on
@@ -78,6 +79,7 @@ Territory::Territory(Player *player, string name) {
         Army *army = new Army(player);
         armies->push_back(army);
     }
+    this->resetMockArmies();
 }
 
 void Territory::copy(const Territory &territory) {
@@ -91,6 +93,7 @@ void Territory::copy(const Territory &territory) {
         Army *army = new Army(territory.owner);
         armies->push_back(army);
     }
+    this->resetMockArmies();
 }
 
 // Copy Constructor for territory
@@ -105,6 +108,7 @@ Territory::Territory(const Territory &territory) {
         Army *army = new Army(territory.owner);
         armies->push_back(army);
     }
+    this->resetMockArmies();
 } //End of copy constructor
 
 Territory::~Territory() {
@@ -180,6 +184,22 @@ void Territory::addArmy() {
 void Territory::removeArmy() {
     if(this->getNumberOfArmies() > 0)
         armies->erase(this->armies->begin());      // delete one element
+}
+
+void Territory::resetMockArmies() {
+    mockArmies = this->getNumberOfArmies();
+}
+
+int Territory::getMockArmies() {
+    return mockArmies;
+}
+
+void Territory::addToMockArmies(int temp) {
+    this->mockArmies = this->getMockArmies() + temp;
+}
+
+void Territory::removeMockArmies(int temp) {
+    this->mockArmies = this->getMockArmies() - temp;
 }
 //End of insertion operator
 
@@ -306,12 +326,11 @@ void Continent::Continent::traverse(const int node, const Graph<int> *graph, vec
 }
 
 bool Continent::isOccupiedBy(Player *p) const {
-    bool occupied = false;
+    bool occupied = true;
     for (auto terr: *this->territoriesVector) {
-        if (terr->isOccupiedBy(p)) {
-            occupied = true;
+        if (!(terr->isOccupiedBy(p))) {
+            occupied = false;
         }
-        occupied = false;
     }
     return occupied;
 }

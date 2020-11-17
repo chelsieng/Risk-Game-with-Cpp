@@ -55,6 +55,9 @@ int main() {
     Continent *continent1 = new Continent(continentName1, mapGraph, territoriesVector1);
     Continent *continent2 = new Continent(continentName2, mapGraph, territoriesVector2);
 
+    continent2->setControlValue(4);
+    continent1->setControlValue(3);
+
     // Creating vector of continents in order to pass it to the Map constructor
     vector<Continent *> *continents1 = new vector<Continent *>;
     continents1->push_back(continent1);
@@ -100,10 +103,12 @@ int main() {
     vector<Player*>* ps1 = new vector<Player*>();
     ps1->push_back(p1);
     ps1->push_back(p2);
-    ps1->push_back(p3);
-    ps1->push_back(p4);
+ //   ps1->push_back(p3);
+ //   ps1->push_back(p4);
 
-
+ //We'll start each player off with a card in hand:
+    p1->getHand()->addToHand(theDeck->draw());
+    p2->getHand()->addToHand(theDeck->draw());
 
 
     cout << "Here is our list of players:" << endl;
@@ -126,18 +131,18 @@ int main() {
 
     GameEngine::reinforcementPhase(ps1, map1->getContinents());
 
+    cout << "\nTime to enter the order issuing phase!" << endl;
+
+    GameEngine::orderIssuingPhase(ps1, map1);
+
     cout << "\nHere is our list of players now:\n" << endl;
     for(int i = 0; i < ps1->size(); i++){
         cout << *ps1->at(i) << endl;
     }
 
-    cout << "\n Here are the places that player 2 can attack:" << endl;
-    vector<Territory*>* attackable = p2->toAttack(map1);
-    for(int i = 0; i < attackable->size(); i++){
-        if(attackable->at(i) != NULL){
-            cout << attackable->at(i)->getTerritoryName() << endl;
-        }
-    }
+    cout << "\nNow let's enter the order execution phase!" << endl;
+    GameEngine::orderExecutionPhase(ps1);
+
 
     //All the deletes that are commented out cause errors when the program terminates, probably cause they result
     //in deleting things that have already been deleted... Though actually I'm not entirely sure.
@@ -157,16 +162,16 @@ int main() {
     //   delete p2;
     //   delete p3;
     //   delete p4;
-    delete orderListP1;
-    delete orderListP2;
-    delete orderListP3;
-    delete orderListP4;
+  //  delete orderListP1;
+  //  delete orderListP2;
+  //  delete orderListP3;
+  //  delete orderListP4;
     delete theDeck;
     delete territoryListP1;
     delete territoryListP2;
     delete territoryListP3;
     delete territoryListP4;
-    delete map1;
+ //   delete map1;
     return 0;
 }//end of main
 

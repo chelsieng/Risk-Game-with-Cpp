@@ -43,6 +43,7 @@ protected:
     bool isExecuted;            // Indicate whether order as been executed
     string orderType;           // The type of order
     Player *player;             // Player who is making the order
+    int priority;               //Priority level
 public:
     // Constructors and destructor
     // Order constructors cannot be used since it is an abstract class
@@ -55,6 +56,7 @@ public:
     void setType(string type)   { this->orderType = move(type); };
     // Methods
     virtual bool validate();
+    int getPriority();
     // pure virtual methods
     virtual void execute() = 0;
     virtual ostream& printEffect(ostream& out) const = 0;
@@ -211,6 +213,8 @@ public:
     void addToLast(Order *order);               // Adding Order to the last of the list
     Order* deleteAt(int index);                 // Deleting and return Order at the given index
     void move(int indexFrom, int indexTo);      // Moving Order with given index
+    Order* highestPriority();                     //returns order in list that is of highest priority
+    int getSize();                              //returns number of orders in list
     // Overloading operators
     OrdersList& operator=(OrdersList const& o);
     friend ostream& operator<<(ostream& out, const OrdersList &ordersList);
