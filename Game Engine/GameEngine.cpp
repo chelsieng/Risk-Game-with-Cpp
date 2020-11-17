@@ -328,10 +328,42 @@ void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
 
 }///end of order execution phase
 
+void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> *theContinents, Map *theMap) {
+    bool won = false;
+    while(won == false){
+        GameEngine::reinforcementPhase(thePlayers, theContinents);
+        GameEngine::orderIssuingPhase(thePlayers, theMap);
+        GameEngine::orderExecutionPhase(thePlayers);
+
+        ///check if somebody has won:
+        bool all = true;
+        Player *winner;
+        for(int i = 0; i < thePlayers->size(); i++){
+            all = true;
+            Player* current = thePlayers->at(i);
+            for(int j = 0;  j < theContinents->size(); j++){
+                if(!(theContinents->at(j)->isOccupiedBy(current))){all = false;}
+            }//end of for (check all continents)
+            if(all == true){winner = current;
+            won = true;
+            cout << "\nCongratulations P" << winner->getId() << ", you've won the game!" << endl;
+            }//end of if(current player has won)
+        }//end of for (check for all players)
+        if(won == false){
+            cout << "Let's see everyone's current standings:" << endl;
+            for(int k = 0; k < thePlayers->size(); k++){
+                cout << *thePlayers->at(k) << endl;
+            }//end of for (print all player statuses
+        }
+    }//end of while
+
+}///END OF MAIN GAME LOOP
 
 
 
-/*
+
+
+
 int main() {
 
 
@@ -393,6 +425,7 @@ int main() {
         cout << endl;
     }
     GameEngine::startupPhase(players, mapGame->getTerritories());
+    GameEngine::mainGameLoop(players, mapGame->getContinents(), mapGame);
     return 0;
 }
-*/
+
