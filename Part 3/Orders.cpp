@@ -99,7 +99,7 @@ Deploy::~Deploy()
 bool Deploy::validate()
 {
     // Deploy order is valid if the target territory belongs to the player that issued the order
-    return (this->player->getId() == this->targetTerritory->getOwner()->getId());
+    return (Order::validate() && this->player->getId() == this->targetTerritory->getOwner()->getId());
 }
 
 void Deploy::execute()
@@ -188,7 +188,7 @@ Advance::~Advance()
 bool Advance::validate()
 {
     // Advance order is valid only if the source territory belongs to the player that issued the order
-    return (this->player->getId() == this->sourceTerritory->getOwner()->getId());
+    return (Order::validate() && this->player->getId() == this->sourceTerritory->getOwner()->getId());
 }
 
 void Advance::execute()
@@ -310,8 +310,9 @@ bool Bomb::validate()
     // Bomb order is valid if
     // the source territory belongs to the player that issued the order, and
     // the target territory does not belongs to the player that issued the order
-    return (this->player->getId() == this->sourceTerritory->getOwner()->getId()
-            && this->player->getId() != this->targetTerritory->getOwner()->getId());
+    return (Order::validate() &&
+            this->player->getId() == this->sourceTerritory->getOwner()->getId() &&
+            this->player->getId() != this->targetTerritory->getOwner()->getId());
 }
 
 void Bomb::execute()
@@ -397,7 +398,7 @@ Blockade::~Blockade()
 bool Blockade::validate()
 {
     // Blockade order is valid only if the target territory belongs to the player that issued the order
-    return (this->player->getId() == this->targetTerritory->getOwner()->getId());
+    return (Order::validate() && this->player->getId() == this->targetTerritory->getOwner()->getId());
 }
 
 void Blockade::execute()
@@ -406,8 +407,10 @@ void Blockade::execute()
     {
         isExecuted = true;
         // The ownership of the territory is transferred to the Neutral player
-        // TODO
-//        this->targetTerritory->setOwner(new Player());
+        // TODO assign to actual neutral player
+        Player* neutralPlayer = new Player();
+        this->targetTerritory->setOwner(neutralPlayer);
+
         // The number of armies on the territory is doubled
         int doubleArmies = this->targetTerritory->getNumberOfArmies();
         for(int i = 0; i < doubleArmies; i++)
@@ -490,7 +493,7 @@ Airlift::~Airlift()
 bool Airlift::validate()
 {
     // Airlift order is valid only if the source territory belongs to the player that issued the order
-    return (this->player->getId() == this->sourceTerritory->getOwner()->getId());
+    return (Order::validate() && this->player->getId() == this->sourceTerritory->getOwner()->getId());
 }
 
 void Airlift::execute()
@@ -607,7 +610,7 @@ Negotiate::~Negotiate()
 bool Negotiate::validate()
 {
     // Negotiate order is valid only if the target player is not the player issuing the order
-    return (this->player->getId() != this->negotiator->getId());
+    return (Order::validate() && this->player->getId() != this->negotiator->getId());
 }
 
 void Negotiate::execute()

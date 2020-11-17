@@ -8,40 +8,73 @@ using std::vector;
 
 int main()
 {
-    cout << "\nThis is a driver class for the Orders and OrdersList class" << endl;
+    cout << "This is a driver class for the Orders and OrdersList class" << endl;
 
     // Initialize variables
-    Player *player1 = new Player();
-    Player *player2 = new Player();
-    Player *player3 = new Player();
-    Player *player4 = new Player();
-    Player *player5 = new Player();
-    Player *player6 = new Player();
+    ReinforcementCard reinforcement;
+    deckNode head(&reinforcement, NULL);
+    Deck* theDeck = new Deck(&head);
 
-    string *name1 = new string("North Korea");
-    string *name2 = new string("USA");
-    string *name3 = new string("China");
-    string *name4 = new string("Canada");
-    string *name5 = new string("Russia");
-    string *name6 = new string("Britain");
+    typedef deckNode* deckNodePtr;
+    Hand *hand1 = new Hand(5, theDeck);
+    Hand *hand2 = new Hand(5, theDeck);
+    vector<Territory *> *territoriesVector1 = new vector<Territory *>;
+    vector<Territory *> *territoriesVector2 = new vector<Territory *>;
+    Player *player0;
+    Player *player1 = new Player(hand1, new OrdersList(), territoriesVector1);
+    Player *player2 = new Player(hand2, new OrdersList(), territoriesVector2);
 
-    Territory *territory1 = new Territory(player1, *name1);
-    Territory *territory2 = new Territory(player2, *name2);
-    Territory *territory3 = new Territory(player3, *name3);
-    Territory *territory4 = new Territory(player4, *name4);
-    Territory *territory5 = new Territory(player5, *name5);
-    Territory *territory6 = new Territory(player6, *name6);
+    // Creating a mini map
+    string *territoryName1 = new string("Canada");
+    string *territoryName2 = new string("America");
+    string *territoryName3 = new string("Mexico");
+    string *territoryName4 = new string("China");
+    string *territoryName5 = new string("Russia");
+    string *territoryName6 = new string("North Korea");
 
-    int numOfArmies = 5;
+    Territory *canada = new Territory(player1, *territoryName1);
+    Territory *america = new Territory(player1, *territoryName2);
+    Territory *mexico = new Territory(player1, *territoryName3);
+    Territory *china = new Territory(player2, *territoryName4);
+    Territory *russia = new Territory(player2, *territoryName5);
+    Territory *northKorea = new Territory(player2, *territoryName6);
 
-    // Testing each order subclass
-    // Create an object of each type of Order
-    Order *deploy = new Deploy(player1, territory1, numOfArmies);
-    Order *advance = new Advance(player1, territory1, territory2, numOfArmies);
-    Order *blockade = new Blockade(player4, territory4);
-    Order *bomb = new Bomb(player3, territory3, territory4);
-    Order *airlift = new Airlift(player5, territory5, territory6, numOfArmies);
-    Order *negotiate = new Negotiate(player5, player6);
+    Graph<int> *theWorld = new Graph<int>;
+
+    territoriesVector1->push_back(canada);
+    territoriesVector1->push_back(america);
+    territoriesVector1->push_back(mexico);
+    territoriesVector2->push_back(china);
+    territoriesVector2->push_back(russia);
+    territoriesVector2->push_back(northKorea);
+
+    Continent *northAmerica = new Continent("North America", theWorld, territoriesVector1);
+    Continent *asia = new Continent("Asia", theWorld, territoriesVector2);
+
+    theWorld->add_vertex(canada->getId());
+    theWorld->add_vertex(america->getId());
+    theWorld->add_vertex(mexico->getId());
+    theWorld->add_vertex(china->getId());
+    theWorld->add_vertex(russia->getId());
+    theWorld->add_vertex(northKorea->getId());
+
+    // In North America, America is connected to Canada and Mexico
+    theWorld->add_edge(america->getId(), canada->getId());
+    theWorld->add_edge(america->getId(), mexico->getId());
+    // In Asia, China is connected to Russia and North Korea
+    theWorld->add_edge(russia->getId(), china->getId());
+    theWorld->add_edge(china->getId(), northKorea->getId());
+    // America and Russia are connected
+    theWorld->add_edge(america->getId(), russia->getId());
+
+    // Testing each order
+
+    Order *deploy = new Deploy(player1, canada, 5);
+    Order *advance = new Advance(player1, canada, america, 8);
+    Order *blockade = new Blockade(player2, china);
+    Order *bomb = new Bomb(player2, northKorea, america);
+    Order *airlift = new Airlift(player1, america, china, 5);
+    Order *negotiate = new Negotiate(player1, player2);
 
     cout << "\nTesting Deploy methods execute(): " << endl;
     deploy->execute();
@@ -96,19 +129,16 @@ int main()
 //    cout << "OrdersList after Order is deleted:" << endl
 //        << *ordersList  << endl;
 
+
     // Delete pointers
 //    delete player1;         player1 = nullptr;
 //    delete player2;         player2 = nullptr;
-//    delete player3;         player3 = nullptr;
-//    delete player4;         player4 = nullptr;
-//    delete player5;         player5 = nullptr;
-//    delete player6;         player6 = nullptr;
-    delete name1;           name1 = nullptr;
-    delete name2;           name2 = nullptr;
-    delete name3;           name3 = nullptr;
-    delete name4;           name4 = nullptr;
-    delete name5;           name5 = nullptr;
-    delete name6;           name6 = nullptr;
+    delete territoryName1;    territoryName1 = nullptr;
+    delete territoryName2;    territoryName2 = nullptr;
+    delete territoryName3;    territoryName3 = nullptr;
+    delete territoryName4;    territoryName4 = nullptr;
+    delete territoryName5;    territoryName5 = nullptr;
+    delete territoryName6;    territoryName6 = nullptr;
 //    delete territory1;      territory1 = nullptr;
 //    delete territory2;      territory2 = nullptr;
 //    delete territory3;      territory3 = nullptr;

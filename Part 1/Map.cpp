@@ -47,6 +47,10 @@ int Army::Army::getId() const {
     return *id;
 }
 
+void Army::setOwner(Player *p) {
+    this->owner = p;
+}
+
 ostream &operator<<(ostream &output, const Army &army) {
     output << "Army " << *army.id << " is owned by player " << army.owner->getId() << endl;
     return output;
@@ -158,6 +162,9 @@ bool Territory::isOccupiedBy(Player *p) const {
 
 void Territory::setOwner(Player *p) {
     this->owner = p;
+
+    for(int i = 0; i < getNumberOfArmies(); i++)
+        armies->at(i)->setOwner(p);
 }
 
 int Territory::getNumberOfArmies() const {
