@@ -222,14 +222,16 @@ void Advance::execute() {
 
             // If all the defender's armies are eliminated
             if(this->targetTerritory->getNumberOfArmies() <= 0){
-                cout << "Player " << this->player->getId() << " captures the territory. ";
+                cout << "The ownership of " << this->targetTerritory->getTerritoryName()
+                    << " is transferred from Player " << this->targetTerritory->getOwner()->getId()
+                    << " to Player " << this->player->getId() << ". ";
                 // Remove the territory from the defender's vector of territory
                 this->targetTerritory->getOwner()->removeTerritory(this->targetTerritory);
                 // The attacker captures the territory
                 this->targetTerritory->setOwner(this->player);
                 this->player->addTerritory(this->targetTerritory);
 
-                cout << "There are " << numOfArmies << " armies remain. ";
+                cout << "There are " << numOfArmies << " attacking armies remain. ";
                 // The attacking army units that survived the battle then occupy the conquered territory.
                 for (int i = 0; i < numOfArmies; i++) {
                     if (sourceTerritory->getNumberOfArmies() == 0)
@@ -512,6 +514,7 @@ void Airlift::execute() {
                 this->targetTerritory->addArmy();           // Move taken armies unit to target territory
             }
         } else {    // If the target territory belongs to another player, an attack is simulated
+            cout << this->sourceTerritory->getTerritoryName() << " attacks " << this->targetTerritory->getTerritoryName() << ". ";
             // Until there is no more attacking armies or no more defending armies
             while (numOfArmies > 0 && this->targetTerritory->getNumberOfArmies() > 0) {
                 // Each attacking army unit involved has 60% chances of killing one defending army
@@ -524,14 +527,16 @@ void Airlift::execute() {
 
             // If all the defender's armies are eliminated
             if(this->targetTerritory->getNumberOfArmies() <= 0){
-                cout << "Player " << this->player->getId() << " captures the territory. ";
+                cout << "The ownership of " << this->targetTerritory->getTerritoryName()
+                     << " is transferred from Player " << this->targetTerritory->getOwner()->getId()
+                     << " to Player " << this->player->getId() << ". ";
                 // Remove the territory from the defender's vector of territory
                 this->targetTerritory->getOwner()->removeTerritory(this->targetTerritory);
                 // The attacker captures the territory
                 this->targetTerritory->setOwner(this->player);
                 this->player->addTerritory(this->targetTerritory);
 
-                cout << "There are " << numOfArmies << " armies remain. ";
+                cout << "There are " << numOfArmies << " attacking armies remain. ";
                 // The attacking army units that survived the battle then occupy the conquered territory.
                 for (int i = 0; i < numOfArmies; i++) {
                     if (sourceTerritory->getNumberOfArmies() == 0)
@@ -543,7 +548,7 @@ void Airlift::execute() {
 
                 // If this is the player has not conquered a territory in the turn before
                 if(!this->player->getConquered()) {
-                    cout << "Player " << player->getId() << " gets a card for conquering a territory in this turn.";
+                    cout << "Player " << player->getId() << " gets a card for conquering a territory in this turn. ";
                     this->player->setConquered(true);
 //TODO                    draw(this->player->getHand());
                 }
