@@ -274,14 +274,17 @@ void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
                     cout << "Here are your options. Type in the number corresponding to your choice:" << endl;
                     cout << "1. Advance armies to defend." << endl;
                     cout << "2. Advance armies to attack." << endl;
-                 //   cout << "3. Play a card from your hand." << endl;
+                    cout << "3. Play a card from your hand." << endl;
                  int response;
                  bool valid = false;
                  while(valid == false){
                      cin >> response;
-                     if(response == 1 || response == 2){
+                     if(response == 1 || response == 2 || (response == 3 && p->getHand()->getSize() > 0)){
                          valid = true;
                          cout << "Got it!" << endl;
+                     }
+                     else if(response == 3 && p->getHand()->getSize() < 1){
+                         cout << "You don't! have any cards in hand! Try something else." << endl;
                      }
                      else{ cout << "Invalid choice! Please try again." << endl;}
                  }//end of while (get valid choice)

@@ -106,7 +106,9 @@ int main() {
  //   ps1->push_back(p3);
  //   ps1->push_back(p4);
 
-
+ //We'll start each player off with a card in hand:
+    p1->getHand()->addToHand(theDeck->draw());
+    p2->getHand()->addToHand(theDeck->draw());
 
 
     cout << "Here is our list of players:" << endl;

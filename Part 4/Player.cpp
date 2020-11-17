@@ -198,14 +198,18 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
         if(choice == 0) {///DEPLOY:
             ///Chose what to defend:
             vector<Territory *> *defendList = this->toDefend(theMap);
+            while(defendList->size() == 0){
+                cout << "You must chose territories to deploy your troop to!" << endl;
+                defendList = this->toDefend(theMap);
+            }//end of while
             if (defendList != NULL && defendList->size() > 0) {
-                cout << "\nYou chose to defend these territories:" << endl;
+                cout << "\nGreat! You chose to defend these territories:" << endl;
                 for (int i = 0; i < defendList->size(); i++) {
                     cout << defendList->at(i)->getTerritoryName() << endl;
                 }//end of for (print the list)
 
                 ///Issue deploy orders:
-                cout << "Now it is time to deploy armies on the territories you are defending."
+                cout << "\nNow it is time to deploy armies on the territories you are defending."
                      << "\nYou will get the chance to defend by advancing after this step." << endl;
                 int usableArmies = this->getReinforcementPool();
                 cout << "You have " << usableArmies << " to deploy." << endl;
@@ -214,7 +218,7 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                     for (int j = 0; j < defendList->size(); j++) {
                         if (usableArmies == 0) { deployedAll = true; }
                         else {
-                            cout << "How many armies will you deploy to " << defendList->at(j)->getTerritoryName()
+                            cout << "\nHow many armies will you deploy to " << defendList->at(j)->getTerritoryName()
                                  << "?" << endl;
                             int amount;
                             bool valid = false;
@@ -235,7 +239,7 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                             }//end of while (choose valid amount of armies to deploy)
                         }//end of else (still has reinforcement in pool)
                         if (usableArmies > 0) {
-                            cout << "You still have " << usableArmies << " armies left to deploy!" << endl;
+                            cout << "\nYou still have " << usableArmies << " armies left to deploy!" << endl;
                         }
                     }//end of for (go through all territories)
                 }
@@ -257,7 +261,7 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                    cout <<   "For each territory selected earlier, you must chose if you would like to advance troops."
                         << endl;
                    for (int i = 0; i < defendList->size(); i++) {
-                       cout << "Will you advance troops to " << defendList->at(i)->getTerritoryName() << "? Type 1 if yes, and any other number if no." << endl;
+                       cout << "\nWill you advance troops to " << defendList->at(i)->getTerritoryName() << "? Type 1 if yes, and any other number if no." << endl;
                        int advanceResponse;
                        cin >> advanceResponse;
                        if(advanceResponse == 1) {
@@ -270,7 +274,7 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                            }//end of for (get neighbours of territory to be defended that defending player owns)
                            if(neighboursYouOwn->size() > 0) {
                                cout << "\nYou chose to defend " << defendList->at(i)->getTerritoryName() << "." << endl;
-                               cout << "Here are you neighbouring territories that you can advance armies from." << endl;
+                               cout << "Here are your neighbouring territories that you can advance armies from." << endl;
                                for (int k = 0; k < neighboursYouOwn->size(); k++) {
                                    cout << k << ": " << neighboursYouOwn->at(k)->getTerritoryName() << endl;
                                }//end of for (show neighbors)
@@ -288,7 +292,7 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                                    else {
                                        chosen = true;
                                        chosenOne = neighboursYouOwn->at(ans);
-                                       cout << "Great! You will advance from " << neighboursYouOwn->at(ans)->getTerritoryName()
+                                       cout << "\nGreat! You will advance from " << neighboursYouOwn->at(ans)->getTerritoryName()
                                             << endl;
                                    }
                                }//end of while (chose proper number)
@@ -311,7 +315,7 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                                }//end of while (chose valid number of territories to move)
                                chosenOne->removeMockArmies(number);
                                this->issueOrder(new Advance(this, chosenOne, defendList->at(i), number));
-                               cout << "Advance order issued!" << endl;
+                               cout << "\nAdvance order issued!" << endl;
                            }//end of if (player actually has neighbours from which to advance)
                            else{cout << "You don't have any territories neighbouring this one! Cannot issue advance order." << endl;}
                        }//end of if (player chose to advance armies)
@@ -319,7 +323,7 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                    cout << "\nfinished making defensive advance orders!" << endl;
                }//end of if (list of things to defend is not empty)
                else{
-                   cout << "You chose not to defend any territories!" << endl;
+                   cout << "\nYou chose not to defend any territories!" << endl;
                }
            }//finished defending through advance
     if(choice == 2) {///attack by advancing
@@ -336,7 +340,7 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
         ///Issue Advance attack orders:
         if (whatWasChosen != NULL && whatWasChosen->size() > 0) {
             cout
-                    << "\nTime to attack! For each territory selected earlier, you must chose which territory you will attack from."
+                    << "\nTime to attack! For each territory selected, you must chose which territory you will attack from."
                     << endl;
             for (int i = 0; i < whatWasChosen->size(); i++) {
                 vector<Territory *> *theNeighbours = theMap->getNeighbours(whatWasChosen->at(i));
@@ -347,7 +351,7 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                     }//end of if (valid option)
                 }//end of for (get neighbours of territory to be attacked that attacking player owns)
                 cout << "\nYou chose to attack " << whatWasChosen->at(i)->getTerritoryName() << "." << endl;
-                cout << "Here are you neighbouring territories that you can advance from." << endl;
+                cout << "\nHere are your neighbouring territories that you can advance from." << endl;
                 for (int k = 0; k < neighboursYouOwn->size(); k++) {
                     cout << k << ": " << neighboursYouOwn->at(k)->getTerritoryName() << endl;
                 }//end of for (show neighbors)
@@ -372,7 +376,7 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                 int availableArmies = chosenOne->getMockArmies();
                 cout << chosenOne->getTerritoryName() << " has " << availableArmies << " armies available to advance."
                      << endl;
-                cout << "Please chose how many you would like to advance." << endl;
+                cout << "\nPlease chose how many you would like to advance." << endl;
                 int number;
                 bool done = false;
                 while (done == false) {
@@ -387,11 +391,30 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                 }//end of while (chose valid number of territories to move)
                 chosenOne->removeMockArmies(number);
                 this->issueOrder(new Advance(this, chosenOne, whatWasChosen->at(i), number));
-                cout << "Advance order issued!" << endl;
+                cout << "\nAdvance order issued!" << endl;
             }//end of for (go through all territories in the attack list)
         }//end of if (player had territories to attack)
         //ALL ATTACK ADVANCE ORDERS HAVE BEEN ISSUED
     }//end of attack by advancing
+    ////Play cards in hand:
+    if(choice == 3){
+        cout << "\nYou've chosen to play a card from you hand! Here are the cards currently in your hand:" << endl;
+        for(int i = 0; i < this->getHand()->getSize(); i++){
+            cout << i << ": " << this->getHand()->getCardatIndex(i) << endl;
+        }//end of for (show cards)
+        cout << "\nPlease type in the number in the list above of the card you would like to play." << endl;
+        int ans;
+        bool valid = false;
+        while(valid == false) {
+            cin >> ans;
+            cout << endl;
+            if(ans < this->getHand()->getSize() && ans >= 0){valid = true;}
+            else{
+                cout << "\nInvalid answer! Please try again." << endl;
+            }
+        }//end of while (get valid answer)
+        this->getHand()->playCardAtIndex(ans, this, *thePlayers);
+    }//end of playing card in hand
 
 }///End of issue order method
 
@@ -427,7 +450,6 @@ vector<Territory*>* Player::toDefend(Map* theMap) {
             cout << "Added " << this->getPlayerTerritories()->at(ans)->getTerritoryName() << " to your list." << endl;
         }//end of else (valid option chosen)
     }//end of while
-    cout << "Great! You have chosen which territories you would like to defend." << endl;
 
     // Returning territories to defend
     return listToDefend;

@@ -88,6 +88,7 @@ void Card::play(Player *p, std::vector<Player *> allPlayers) {
         while (fromFound == false) {
             cout << "Please type the name of the territory you are bombing from." << endl;
             string answer;
+            std::cin >> std::ws; // so we don't read whitespace
             getline(cin, answer); //get their response
             for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
                 if (t->getTerritoryName() == answer) {
@@ -102,6 +103,7 @@ void Card::play(Player *p, std::vector<Player *> allPlayers) {
         while (toFound == false) {
             cout << "Please type the name of the territory you would like to bomb." << endl;
             string answer;
+            std::cin >> std::ws; // so we don't read whitespace
             getline(cin, answer); //get their response
             for (Player *p : allPlayers) {
                 for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
@@ -214,6 +216,7 @@ void Card::play(Player *p, std::vector<Player *> allPlayers) {
         while (fromFound == false) {
             cout << "Please type the name of the territory you are moving armies from." << endl;
             string answer;
+            std::cin >> std::ws; // so we don't read whitespace
             getline(cin, answer); //get their response
             for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
                 if (t->getTerritoryName() == answer) {
