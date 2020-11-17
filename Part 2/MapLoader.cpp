@@ -44,7 +44,6 @@ MapLoader &MapLoader::operator=(const MapLoader &mapLoader) {
 
 // Destructor
 MapLoader::~MapLoader() {
-    filePath = nullptr;
     delete resultMap;
     resultMap = nullptr;
 }
