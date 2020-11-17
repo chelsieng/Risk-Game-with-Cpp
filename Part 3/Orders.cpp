@@ -43,6 +43,17 @@ bool Order::validate() {
     return (!isExecuted);       // Execute only if Order hasn't been executed before
 }
 
+ostream &Order::print(ostream &out) const {
+    out << this->orderType;
+    if (this->isExecuted) {
+        out << " order has been executed. ";
+        printEffect(out);
+    } else {
+        out << " order has not been executed. ";
+    }
+    return out << endl;
+}
+
 // Overloading operator
 Order &Order::operator=(const Order &order) {
     if (this == &order)
@@ -112,17 +123,11 @@ void Deploy::execute() {
         this->player->setReinforcementPool(this->player->getReinforcementPool() - numOfArmies);
         for (int i = 0; i < numOfArmies; i++)
             this->targetTerritory->addArmy();
+    } else {
+        cout << "Order is invalid. ";
     }
-}
-
-ostream &Deploy::print(ostream &out) const {
-    out << this->orderType;
-    if (this->isExecuted) {
-        out << " order has been executed. ";
-        printEffect(out);
-    } else
-        out << " order has not been executed. ";
-    return out << endl;
+    // Print effect of order after it is executed
+    cout << *this;
 }
 
 ostream &Deploy::printEffect(ostream &out) const {
@@ -225,7 +230,6 @@ void Advance::execute() {
             if(this->targetTerritory->getNumberOfArmies() <= 0){
                 // The attacker captures the territory
                 this->targetTerritory->setOwner(this->player);
-                this->player->getPlayerTerritories()->erase(this->targetTerritory);
 
                 // The attacking army units that survived the battle then occupy the conquered territory.
                 for (int i = 0; i < attackingArmies; i++) {
@@ -244,17 +248,11 @@ void Advance::execute() {
                 }
             }
         }
+    } else {
+        cout << "Order is invalid. ";
     }
-}
-
-ostream &Advance::print(ostream &out) const {
-    out << this->orderType;
-    if (this->isExecuted) {
-        out << " order has been executed. ";
-        this->printEffect(out);
-    } else
-        out << " order has not been executed.";
-    return out << endl;
+    // Print effect of order after it is executed
+    cout << *this;
 }
 
 ostream &Advance::printEffect(ostream &out) const {
@@ -336,17 +334,11 @@ void Bomb::execute() {
         int halfArmies = ceil(this->targetTerritory->getNumberOfArmies() / 2.0);
         for (int i = 0; i < halfArmies; i++)
             this->targetTerritory->removeArmy();
+    } else {
+        cout << "Order is invalid. ";
     }
-}
-
-ostream &Bomb::print(ostream &out) const {
-    out << this->orderType;
-    if (this->isExecuted) {
-        out << " order has been executed. ";
-        this->printEffect(out);
-    } else
-        out << " order has not been executed.";
-    return out << endl;
+    // Print effect of order after it is executed
+    cout << *this;
 }
 
 ostream &Bomb::printEffect(ostream &out) const {
@@ -423,17 +415,11 @@ void Blockade::execute() {
         int doubleArmies = this->targetTerritory->getNumberOfArmies();
         for (int i = 0; i < doubleArmies; i++)
             this->targetTerritory->addArmy();
+    } else {
+        cout << "Order is invalid. ";
     }
-}
-
-ostream &Blockade::print(ostream &out) const {
-    out << this->orderType;
-    if (this->isExecuted) {
-        out << " order has been executed. ";
-        this->printEffect(out);
-    } else
-        out << " order has not been executed.";
-    return out << endl;
+    // Print effect of order after it is executed
+    cout << *this;
 }
 
 ostream &Blockade::printEffect(ostream &out) const {
@@ -556,17 +542,11 @@ void Airlift::execute() {
                 }
             }
         }
+    } else {
+        cout << "Order is invalid. ";
     }
-}
-
-ostream &Airlift::print(ostream &out) const {
-    out << this->orderType;
-    if (this->isExecuted) {
-        out << " order has been executed. ";
-        this->printEffect(out);
-    } else
-        out << " order has not been executed.";
-    return out << endl;
+    // Print effect of order after it is executed
+    cout << *this;
 }
 
 ostream &Airlift::printEffect(ostream &out) const {
@@ -637,17 +617,11 @@ void Negotiate::execute() {
         isExecuted = true;
         // The target player and the player issuing the order cannot attack each others’ territories for the remainder of the turn
         // TODO
+    } else {
+        cout << "Order is invalid. ";
     }
-}
-
-ostream &Negotiate::print(ostream &out) const {
-    out << this->orderType;
-    if (this->isExecuted) {
-        out << " order has been executed. ";
-        this->printEffect(out);
-    } else
-        out << " order has not been executed.";
-    return out << endl;
+    // Print effect of order after it is executed
+    cout << *this;
 }
 
 ostream &Negotiate::printEffect(ostream &out) const {

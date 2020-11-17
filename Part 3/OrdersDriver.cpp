@@ -87,43 +87,41 @@ int main()
     // Checking validate() function
     cout << "\nChecking the validity of each order" << endl;
     cout << "Cases where orders are invalid:" << endl;
-    cout << "Player deploy to territory owned by different player: deploy->validate() == ";
+    cout << "Player deploy to territory owned by different player:" << endl;
     deploy = new Deploy(player1, china, 5);
-    cout << deploy->validate() << endl;
+    deploy->execute();
 
-    cout << "Player advance a territory that is owned by different player: advance->validate() == ";
+    cout << "\nPlayer advance a territory that is owned by different player:" << endl;
     advance = new Advance(player2, canada, america, 5);
-    cout << advance->validate() << endl;
+    advance->execute();
 
-    cout << "Player blockade a territory that is owned by different player: blockade->validate() == ";
+    cout << "\nPlayer blockade a territory that is owned by different player:" << endl;
     blockade = new Blockade(player1, china);
-    cout << blockade->validate() << endl;
+    blockade->execute();
 
-    cout << "Player bomb a territory that they own: bomb->validate() == ";
+    cout << "\nPlayer bomb a territory that they own:" << endl;
     bomb = new Bomb(player2, northKorea, china);
-    cout << bomb->validate() << endl;
+    bomb->execute();
 
-    cout << "Player airlift from a territory that is owned by different player: bomb->validate() == ";
+    cout << "\nPlayer airlift from a territory that is owned by different player:" << endl;
     airlift = new Airlift(player1, northKorea, china, 5);
-    cout << bomb->validate() << endl;
+    bomb->execute();
 
-    cout << "Player negotiate with themselves: negotiate->validate() == ";
+    cout << "\nPlayer negotiate with themselves:" << endl;
     negotiate = new Negotiate(player1, player1);
-    cout << negotiate->validate() << endl;
+    negotiate->execute();
 
 
-    cout << "\nExecuting orders correctly:" << endl;
+    cout << "\n\nExecuting orders correctly:" << endl;
     cout << "Deploy order:" << endl;
     deploy = new Deploy(player1, america, 5);
     deploy->execute();
-    cout << *deploy;
     cout << "Player 1 enforcement pool after deploy: " << player1->getReinforcementPool() << endl;
     cout << "Number of armies in America after deploy: " << america->getNumberOfArmies() << endl;
 
     cout << "\nAdvance to a territory that is owned by player that issued the order:" << endl;
     advance = new Advance(player2, russia, china, 2);
     advance->execute();
-    cout << *advance;
     cout << "Number of armies in Russia after advance: " << russia->getNumberOfArmies() << endl;
     cout << "Number of armies in China after advance: " << china->getNumberOfArmies() << endl;
 
@@ -133,7 +131,6 @@ int main()
     oldOwner = russia->getOwner()->getId();
     advance->execute();
     newOwner = russia->getOwner()->getId();
-    cout << *advance;
     cout << "Before, Russia is owned by player " << oldOwner;
     cout << ". After, Russia is owned by player " << newOwner << "." << endl;
     cout << "Number of armies in Russia after advance: " << russia->getNumberOfArmies() << endl;
@@ -142,7 +139,6 @@ int main()
     airlift = new Airlift(player1, mexico, canada, 4);
     cout << "Number of armies in Canada before airlift: " << canada->getNumberOfArmies() << endl;
     airlift->execute();
-    cout << *airlift;
     cout << "Number of armies in Canada after airlift: " << canada->getNumberOfArmies() << endl;
 
     cout << "\nAirlift to a territory that is owned by a different player:" << endl;
@@ -151,7 +147,6 @@ int main()
     cout << "Number of armies in America before airlift: " << america->getNumberOfArmies() << endl;
     airlift->execute();
     newOwner = america->getOwner()->getId();
-    cout << *airlift;
     cout << "Before, America is owned by player " << oldOwner;
     cout << ". After, America is owned by player " << newOwner << "." << endl;
     cout << "Number of armies in America after airlift: " << america->getNumberOfArmies() << endl;
@@ -159,7 +154,6 @@ int main()
     cout << "\nBlockade the territory that is owned by the played that isused the order:" << endl;
     blockade = new Blockade(player2, china);
     blockade->execute();
-    cout << *blockade;
     cout << "Comparing old owner and the current owner of the blockade territory: ";
     cout << (player2->getId() == china->getOwner()->getId()) << endl;
 
@@ -167,13 +161,11 @@ int main()
     bomb = new Bomb(player2, america, canada);
     cout << "Number of armies in Canada before bomb: " << canada->getNumberOfArmies() << endl;
     bomb->execute();
-    cout << *bomb;
     cout << "Number of armies in Canada after bomb: " << canada->getNumberOfArmies() << endl;
 
     cout << "\nPerform negotiate order:" << endl;
     negotiate = new Negotiate(player1, player2);
     negotiate->execute();
-    cout << *negotiate;
 
     // Delete pointers
 //    delete player1;         player1 = nullptr;

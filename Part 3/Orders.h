@@ -57,10 +57,10 @@ public:
     // Methods
     virtual bool validate();
     int getPriority();
+    virtual ostream& print(ostream& out) const;
     // pure virtual methods
     virtual void execute() = 0;
     virtual ostream& printEffect(ostream& out) const = 0;
-    virtual ostream& print(ostream& out) const = 0;
     // Overloading operators
     Order& operator=(Order const& o);
     friend ostream& operator<<(ostream& out, const Order& order);
@@ -82,7 +82,6 @@ public:
     bool validate();
     void execute();
     ostream& printEffect(ostream& out) const;
-    ostream& print(ostream& out) const;
     // Overloading operators
     Deploy& operator=(Deploy const& o);
     friend ostream& operator<<(ostream& out, const Deploy& deploy);
@@ -105,7 +104,6 @@ public:
     bool validate();
     void execute();
     ostream& printEffect(ostream& out) const;
-    ostream& print(ostream& out) const;
     // Overloading operators
     Advance& operator=(Advance const& o);
     friend ostream& operator<<(ostream& out, const Advance& advance);
@@ -127,7 +125,6 @@ public:
     bool validate();
     void execute();
     ostream& printEffect(ostream& out) const;
-    ostream& print(ostream& out) const;
     // Overloading operators
     Bomb& operator=(Bomb const& o);
     friend ostream& operator<<(ostream& out, const Bomb& bomb);
@@ -148,7 +145,6 @@ public:
     bool validate();
     void execute();
     ostream& printEffect(ostream& out) const;
-    ostream& print(ostream& out) const;
     // Overloading operators
     Blockade& operator=(Blockade const& o);
     friend ostream& operator<<(ostream& out, const Blockade& blockade);
@@ -171,7 +167,6 @@ public:
     bool validate();
     void execute();
     ostream& printEffect(ostream& out) const;
-    ostream& print(ostream& out) const;
     // Overloading operators
     Airlift& operator=(Airlift const& o);
     friend ostream& operator<<(ostream& out, const Airlift& airlift);
@@ -192,7 +187,6 @@ public:
     bool validate();
     void execute();
     ostream& printEffect(ostream& out) const;
-    ostream& print(ostream& out) const;
     // Overloading operators
     Negotiate& operator=(Negotiate const& o);
     friend ostream& operator<<(ostream& out, const Negotiate& negotiate);
