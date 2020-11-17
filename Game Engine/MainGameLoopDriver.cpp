@@ -100,8 +100,8 @@ int main() {
     vector<Player*>* ps1 = new vector<Player*>();
     ps1->push_back(p1);
     ps1->push_back(p2);
-    ps1->push_back(p3);
-    ps1->push_back(p4);
+ //   ps1->push_back(p3);
+ //   ps1->push_back(p4);
 
 
 
@@ -163,7 +163,7 @@ int main() {
     delete territoryListP2;
     delete territoryListP3;
     delete territoryListP4;
-    delete map1;
+ //   delete map1;
     return 0;
 }//end of main
 

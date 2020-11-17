@@ -7,7 +7,7 @@
 #include "MapLoader.h"
 
 // Function returns true if user selected a valid map file with valid map graph
-bool GameEngine::selectMap(int mapSelection) {
+Map* GameEngine::selectMap(int mapSelection) {
     string key; // "Press any key" feature for later
     // Map data structure where key = user select int and value = map files from ../Map Files/ directory
     map<int, string> map = {
@@ -22,14 +22,14 @@ bool GameEngine::selectMap(int mapSelection) {
     // Returns false if user enters integer which is out of bound
     if (map.count(mapSelection) < 1 || map.count(mapSelection) > 7) {
         cout << "Please try again." << endl << endl;
-        return false;
+        return nullptr;
     }
     auto *m = new MapLoader(map[mapSelection]); //Loading selected map files
     // Returns false if map file fails to load (ie invalid map file)
     if (m->getMap() == nullptr) {
         cout << "Please try again." << endl << endl;
         delete m; // handling memory
-        return false;
+        return nullptr;
     }
     // Map file successfully loaded
     cout << "Great! Now let's have a look at your map: " << endl;
@@ -41,13 +41,13 @@ bool GameEngine::selectMap(int mapSelection) {
             cout << endl;
         }
         cout << *m->getMap() << endl; // Display info of map
-        mapGame = m->getMap(); // Assign valid map to global variable mapGame
-        return true;
+   //     *mapGame = *m->getMap(); // Assign valid map to global variable mapGame
+        return m->getMap();
     } // else return false if map graph is invalid
     else {
         cout << "Please try again." << endl << endl;
         delete m; // handling memory
-        return false;
+        return nullptr;
     }
 
 }
@@ -107,6 +107,7 @@ Deck *GameEngine::createDeck() {
 }
 
 void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
+    cout << "here." << endl;
     //create shallow copy of players vector that will be assigned back to the original later.
     vector<Player *> psv(*ps1);
     vector<Player *> *ps = new vector<Player *>(psv);
@@ -171,7 +172,7 @@ void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
 
     cout << "\nLets see the list of territories once again:\n" << endl;
 
-    for (auto p: *players) {
+    for (auto p: *ps1) {
         cout << "P" << p->getId() << " owns the following territories: " << endl;
         for (auto terr : *p->getPlayerTerritories()) {
             cout << *terr;
@@ -194,7 +195,7 @@ void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
             ps1->at(i)->setReinforcementPool(25);
     }//end of for
     cout << "Number of armies in reinforcement pool: " << endl;
-    for (auto p: *players) {
+    for (auto p: *ps1) {
         cout << "P" << p->getId() << ": " << p->getReinforcementPool() << endl;
     }
 
@@ -263,8 +264,12 @@ void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
 
 
 
-
+/*
 int main() {
+
+
+    Map *mapGame = nullptr;
+
     int mapSelection; // int where user selects map file to be loaded
     int numOfPlayers; // int where user selects the number of players in the game
     string key; // Press any key feature for later
@@ -294,12 +299,13 @@ int main() {
         cout << ">> ";
         cin >> mapSelection; // user enter selection
         // If user selects valid map file which creates valid map graph, map selection done
-        if (GameEngine::selectMap(mapSelection)) {
+        mapGame = GameEngine::selectMap(mapSelection);
+        if (mapGame != nullptr ) {
             break;
         }
     }
     // uncomment to see map of game which user selected from
-//    cout << *mapGame;
+    cout << *mapGame;
     while (numOfPlayers > 5 || numOfPlayers < 2) {
         // Since numOfPlayers is an int, if user enters otherwise keep prompting
         if (cin.fail()) {
@@ -311,6 +317,7 @@ int main() {
         cout << ">> ";
         cin >> numOfPlayers;
     }
+    vector<Player*>* players = new vector<Player*>;
     players = GameEngine::createPlayers(numOfPlayers); // Store players in vector of players
     cout << "- You are now entering the Start Up Phase -" << endl;
     while (key.empty()) {
@@ -321,3 +328,4 @@ int main() {
     GameEngine::startupPhase(players, mapGame->getTerritories());
     return 0;
 }
+*/
