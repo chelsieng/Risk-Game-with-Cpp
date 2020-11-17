@@ -10,14 +10,12 @@ int main()
 {
     cout << "This is a driver class for the Orders and OrdersList class" << endl;
     // Initialize variables
-    int oldOwner, newOwner;
-    BombCard *startCard = new BombCard();
-    deckNode *baseOfDeck = new deckNode(startCard);
-    Deck theDeck(baseOfDeck);
-
-    Hand *hand1 ;
-    Hand *hand2 ;
-
+    int oldOwner, newOwner;         // To store ID of players for comparison
+//    BombCard *startCard = new BombCard();
+//    deckNode *baseOfDeck = new deckNode(startCard);
+//    Deck theDeck(baseOfDeck);
+    Hand *hand1;
+    Hand *hand2;
 
     vector<Territory *> *player1Territory = new vector<Territory *>;
     vector<Territory *> *player2Territory = new vector<Territory *>;
@@ -76,6 +74,14 @@ int main()
     // America and Russia are connected
     theWorld->add_edge(america->getId(), russia->getId());
 
+    // Assigning territories to players
+    player1Territory->push_back(canada);
+    player1Territory->push_back(america);
+    player1Territory->push_back(mexico);
+    player2Territory->push_back(china);
+    player2Territory->push_back(russia);
+    player2Territory->push_back(northKorea);
+
     // Testing orders
     Order *deploy;
     Order *advance;
@@ -88,7 +94,7 @@ int main()
     cout << "\nChecking the validity of each order" << endl;
     cout << "Cases where orders are invalid:" << endl;
     cout << "Player deploy to territory owned by different player:" << endl;
-    deploy = new Deploy(player1, china, 5);
+    deploy = new Deploy(player1, china, 7);
     deploy->execute();
 
     cout << "\nPlayer advance a territory that is owned by different player:" << endl;

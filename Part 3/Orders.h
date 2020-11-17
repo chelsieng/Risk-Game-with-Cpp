@@ -135,6 +135,7 @@ class Blockade : public Order
 {
 private:
     Territory *targetTerritory;         // Territory to block
+    static Player *neutralPlayer;       // The neutral player for blockade order
 public:
     // Constructors and destructor
     Blockade();
@@ -144,6 +145,7 @@ public:
     // Methods
     bool validate();
     void execute();
+    static Player* getNeutralPlayer() { return neutralPlayer; };
     ostream& printEffect(ostream& out) const;
     // Overloading operators
     Blockade& operator=(Blockade const& o);
@@ -154,8 +156,8 @@ public:
 class Airlift : public Order
 {
 private:
-    Territory *sourceTerritory;          // Starting territory
-    Territory *targetTerritory;            // Advancing territory
+    Territory *sourceTerritory;         // Starting territory
+    Territory *targetTerritory;         // Advancing territory
     int numOfArmies;                    // Number of armies to advance
 public:
     // Constructors and destructor
@@ -213,4 +215,3 @@ public:
     OrdersList& operator=(OrdersList const& o);
     friend ostream& operator<<(ostream& out, const OrdersList &ordersList);
 };
-
