@@ -52,16 +52,16 @@ bool GameEngine::selectMap(int mapSelection) {
 
 }
 
-vector<Player *> GameEngine::createPlayers(int numOfPlayers) {
+vector<Player *> *GameEngine::createPlayers(int numOfPlayers) {
     Deck *deck = createDeck(); // creating deck of cards for the game
-    vector<Player *> pList;
+    auto *pList = new vector<Player *>;
     string key; // "Press any key" feature for later
     for (int i = 0; i < numOfPlayers; i++) {
         Hand *hand = new Hand(0, deck); // creating hand for each player
-        vector<Territory *> *territories = nullptr; // creating vector territories for each player
+        auto *territories = new vector<Territory *>; // creating vector territories for each player
         auto *ordersList = new OrdersList(); // creating orderList for each player
         auto *player = new Player(hand, ordersList, territories); // creating amount of players user initiated
-        pList.push_back(player); // storing players in global vector variable players
+        pList->push_back(player); // storing players in global vector variable players
     }
     cout << endl << numOfPlayers << " players have been successfully created. \nLet's have a look at them: " << endl;
     while (key.empty()) {
@@ -69,7 +69,7 @@ vector<Player *> GameEngine::createPlayers(int numOfPlayers) {
         cin >> key;
         cout << endl;
     }
-    for (auto p: pList) {
+    for (auto p: *pList) {
         cout << *p << endl;
     }
     return pList;
@@ -80,7 +80,7 @@ Deck *GameEngine::createDeck() {
     auto *baseOfDeck = new deckNode(startCard);
     Deck *theDeck = new Deck(baseOfDeck);
     string key; // "Press any key" feature for later
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 49; i++) {
         int randomNumber = rand();
         if (randomNumber % 5 == 0)
             theDeck->addToDeck(new BombCard());
@@ -137,7 +137,7 @@ void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
     vector<Territory *> tsCopyValue(*ts);
     vector<Territory *> *tsCopy = &tsCopyValue;
 
-    cout << "\nHere are the territories that need to be assigned" << endl;
+    cout << "\nHere are the territories that need to be assigned: " << endl;
 
     for (int i = 0; i < ts->size(); i++) {
         cout << *ts->at(i) << endl;
@@ -171,13 +171,17 @@ void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
 
     cout << "\nLets see the list of territories once again:\n" << endl;
 
-    for (int i = 0; i < ts->size(); i++) {
-        cout << *ts->at(i) << endl;
+    for (auto p: *players) {
+        cout << "P" << p->getId() << " owns the following territories: " << endl;
+        for (auto terr : *p->getPlayerTerritories()) {
+            cout << *terr;
+        }
+        cout << endl;
     }
 ////All territories have been assigned randomly. We will now give everyone armies based on the number of players
     // Assign armies
 
-    cout << "\nAll players have had armies added to their reinforcement pool." << endl;
+    cout << "\nAll players have had armies added to their reinforcement pool." << endl << endl;
     for (int i = 0; i < ps1->size(); i++) {
 
         if (ps1->size() == 2)
@@ -189,6 +193,10 @@ void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
         else if (ps1->size() == 5)
             ps1->at(i)->setReinforcementPool(25);
     }//end of for
+    cout << "Number of armies in reinforcement pool: " << endl;
+    for (auto p: *players) {
+        cout << "P" << p->getId() << ": " << p->getReinforcementPool() << endl;
+    }
 
 ////Almost done!
 //original players vector is assigned version with randomized turn order
@@ -240,6 +248,7 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *
 int main() {
     int mapSelection; // int where user selects map file to be loaded
     int numOfPlayers; // int where user selects the number of players in the game
+    string key; // Press any key feature for later
     // Displaying welcome message
     cout << "* ------------------------------ * " << endl;
     cout << "| Welcome to Warzone's Risk Game |" << endl;
@@ -284,6 +293,12 @@ int main() {
         cin >> numOfPlayers;
     }
     players = GameEngine::createPlayers(numOfPlayers); // Store players in vector of players
-
+    cout << "- You are now entering the Start Up Phase -" << endl;
+    while (key.empty()) {
+        cout << "Press any key >> "; // Prompt user to press any key to continue
+        cin >> key;
+        cout << endl;
+    }
+    GameEngine::startupPhase(players, mapGame->getTerritories());
     return 0;
 }

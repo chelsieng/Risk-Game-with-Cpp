@@ -153,7 +153,7 @@ std::ostream &operator<<(ostream &out, const Player &player) {
     out << "PLAYER " << player.getId() << " HAND: " << endl;
     out << *player.playerHand << endl;
     out << "PLAYER " << player.getId() << " TERRITORIES: " << endl;
-    if (player.playerTerritories == nullptr) {
+    if (player.playerTerritories->empty()) {
         out << "Territories will be assigned later." << endl <<endl;
     } else {
         for (auto terr : *player.playerTerritories) {

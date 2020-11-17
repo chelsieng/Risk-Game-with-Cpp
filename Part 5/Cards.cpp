@@ -648,10 +648,11 @@ ostream &operator<<(ostream &outs, const Deck &printMe) {
     } else {
         deckNode *objHead = printMe.getHead();
         deckNode *current = objHead;
-
+        int i =1;
         while (current != NULL) {
-            outs << *current->getData();
+            outs << i <<". " << *current->getData();
             current = current->getLink(); //removed the endl that was here before cause there was no need for all the spaces
+            i++;
         }
     }
     return outs;
