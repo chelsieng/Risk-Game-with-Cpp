@@ -181,7 +181,7 @@ void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
 ////All territories have been assigned randomly. We will now give everyone armies based on the number of players
     // Assign armies
 
-    cout << "\nAll players have had armies added to their reinforcement pool." << endl;
+    cout << "\nAll players have had armies added to their reinforcement pool." << endl << endl;
     for (int i = 0; i < ps1->size(); i++) {
 
         if (ps1->size() == 2)
@@ -193,6 +193,10 @@ void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
         else if (ps1->size() == 5)
             ps1->at(i)->setReinforcementPool(25);
     }//end of for
+    cout << "Number of armies in reinforcement pool: " << endl;
+    for (auto p: *players) {
+        cout << "P" << p->getId() << ": " << p->getReinforcementPool() << endl;
+    }
 
 ////Almost done!
 //original players vector is assigned version with randomized turn order
