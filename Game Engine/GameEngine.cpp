@@ -257,6 +257,15 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *
 
 void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
     phase = "Order Issuing Phase";
+    //Reset mock armies for everyone's territories: (moved this to the start of the turn -> bug fix)
+    //NEW: Set conquered to false for each player
+    for (int i = 0; i < thePlayers->size(); i++) {
+        Player *p = thePlayers->at(i);
+        p->setConquered(false);
+        for(int j = 0; j < p->getPlayerTerritories()->size(); j++){
+            p->getPlayerTerritories()->at(j)->resetMockArmies();
+        }//end of for (all owned territories)
+    }//end of for (all players)
     int issueRound = 0;
     bool notDone = true;
     while(notDone == true) {
@@ -300,13 +309,7 @@ void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
         } //end of for (round robing order issuing for all players)
         issueRound = issueRound + 1;
     }//end of while
-    //Reset mock armies for everyone's territories:
-    for (int i = 0; i < thePlayers->size(); i++) {
-        Player *p = thePlayers->at(i);
-        for(int j = 0; j < p->getPlayerTerritories()->size(); j++){
-            p->getPlayerTerritories()->at(j)->resetMockArmies();
-        }//end of for (all owned territories)
-    }//end of for (all players)
+
 }///end of order issuing phase function
 
 void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
