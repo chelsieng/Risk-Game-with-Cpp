@@ -94,7 +94,7 @@ int main()
     cout << "\nChecking the validity of each order" << endl;
     cout << "Cases where orders are invalid:" << endl;
     cout << "Player deploy to territory owned by different player:" << endl;
-    deploy = new Deploy(player1, china, 7);
+    deploy = new Deploy(player1, china, 5);
     deploy->execute();
 
     cout << "\nPlayer advance a territory that is owned by different player:" << endl;
@@ -120,7 +120,7 @@ int main()
 
     cout << "\n\nExecuting orders correctly:" << endl;
     cout << "Deploy order:" << endl;
-    deploy = new Deploy(player1, america, 5);
+    deploy = new Deploy(player1, america, 7);
     deploy->execute();
     cout << "Player 1 enforcement pool after deploy: " << player1->getReinforcementPool() << endl;
     cout << "Number of armies in America after deploy: " << america->getNumberOfArmies() << endl;
@@ -131,7 +131,7 @@ int main()
     cout << "Number of armies in Russia after advance: " << russia->getNumberOfArmies() << endl;
     cout << "Number of armies in China after advance: " << china->getNumberOfArmies() << endl;
 
-    cout << "\nAdvance to a territory that is owned by a different order:" << endl;
+    cout << "\nAdvance to a territory that is owned by a different player:" << endl;
     advance = new Advance(player1, america, russia, 9);
     cout << "Number of armies in Russia before advance: " << russia->getNumberOfArmies() << endl;
     oldOwner = russia->getOwner()->getId();

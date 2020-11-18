@@ -201,6 +201,7 @@ void Advance::execute() {
         cout << this->orderType << " order has been executed. ";
         // If the target territory belongs to the player that issued the order
         if (this->player->getId() == this->targetTerritory->getOwner()->getId()) {
+            cout << "Advance to defend. ";
             // The army units are moved from the source to the target territory
             for (int i = 0; i < numOfArmies; i++) {
                 if (sourceTerritory->getNumberOfArmies() == 0)
@@ -210,6 +211,8 @@ void Advance::execute() {
                 this->targetTerritory->addArmy();           // Move taken armies unit to target territory
             }
         } else {    // If the target territory belongs to another player, an attack is simulated
+            cout << this->sourceTerritory->getTerritoryName() << " attacks " << this->targetTerritory->getTerritoryName()
+                 << " with " << numOfArmies << " armies. ";
             // Until there is no more attacking armies or no more defending armies
             while (numOfArmies > 0 && this->targetTerritory->getNumberOfArmies() > 0) {
                 // Each attacking army unit involved has 60% chances of killing one defending army
@@ -223,8 +226,8 @@ void Advance::execute() {
             // If all the defender's armies are eliminated
             if(this->targetTerritory->getNumberOfArmies() <= 0){
                 cout << "The ownership of " << this->targetTerritory->getTerritoryName()
-                    << " is transferred from Player " << this->targetTerritory->getOwner()->getId()
-                    << " to Player " << this->player->getId() << ". ";
+                     << " is transferred from Player " << this->targetTerritory->getOwner()->getId()
+                     << " to Player " << this->player->getId() << ". ";
                 // Remove the territory from the defender's vector of territory
                 this->targetTerritory->getOwner()->removeTerritory(this->targetTerritory);
                 // The attacker captures the territory
@@ -247,6 +250,9 @@ void Advance::execute() {
                     this->player->setConquered(true);
 //TODO                    draw(this->player->getHand());
                 }
+            } else {
+                cout << "All attacking armies are eliminated. " << this->targetTerritory->getTerritoryName()
+                     << " has " << this->targetTerritory->getNumberOfArmies() << " armies remain. ";
             }
         }
     } else {
@@ -399,7 +405,8 @@ Blockade::~Blockade() {
     targetTerritory = nullptr;
 }
 
-Player* Blockade::neutralPlayer = new Player(nullptr, nullptr, nullptr);        // declare static variable
+// Declare neutralPlayer static variable to store blockade territories
+Player* Blockade::neutralPlayer = new Player(nullptr, nullptr, new vector<Territory *>);
 
 // Methods
 bool Blockade::validate() {
@@ -411,10 +418,11 @@ void Blockade::execute() {
     if (validate()) {
         isExecuted = true;
         cout << this->orderType << " order has been executed. ";
-        // Remove the territory from the owner's vector of territory
+        // Remove the territory from the defender's vector of territory
         this->targetTerritory->getOwner()->removeTerritory(this->targetTerritory);
-        // The ownership of the territory is transferred to the Neutral player
-        this->targetTerritory->setOwner(this->neutralPlayer);
+        // The attacker captures the territory
+        this->targetTerritory->setOwner(Blockade::neutralPlayer);
+        Blockade::neutralPlayer->addTerritory(this->targetTerritory);
 
         // The number of armies on the territory is doubled
         int doubleArmies = this->targetTerritory->getNumberOfArmies();
@@ -505,6 +513,7 @@ void Airlift::execute() {
         cout << this->orderType << " order has been executed. ";
         // If the target territory belongs to the player that issued the order
         if (this->player->getId() == this->targetTerritory->getOwner()->getId()) {
+            cout << "Airlift to defend. ";
             // The army units are moved from the source to the target territory
             for (int i = 0; i < numOfArmies; i++) {
                 if (sourceTerritory->getNumberOfArmies() == 0)
@@ -514,7 +523,8 @@ void Airlift::execute() {
                 this->targetTerritory->addArmy();           // Move taken armies unit to target territory
             }
         } else {    // If the target territory belongs to another player, an attack is simulated
-            cout << this->sourceTerritory->getTerritoryName() << " attacks " << this->targetTerritory->getTerritoryName() << ". ";
+            cout << this->sourceTerritory->getTerritoryName() << " attacks " << this->targetTerritory->getTerritoryName()
+                 << " with " << numOfArmies << " armies. ";
             // Until there is no more attacking armies or no more defending armies
             while (numOfArmies > 0 && this->targetTerritory->getNumberOfArmies() > 0) {
                 // Each attacking army unit involved has 60% chances of killing one defending army
@@ -526,7 +536,7 @@ void Airlift::execute() {
             }
 
             // If all the defender's armies are eliminated
-            if(this->targetTerritory->getNumberOfArmies() <= 0){
+            if(this->targetTerritory->getNumberOfArmies() <= 0) {
                 cout << "The ownership of " << this->targetTerritory->getTerritoryName()
                      << " is transferred from Player " << this->targetTerritory->getOwner()->getId()
                      << " to Player " << this->player->getId() << ". ";
@@ -552,6 +562,9 @@ void Airlift::execute() {
                     this->player->setConquered(true);
 //TODO                    draw(this->player->getHand());
                 }
+            } else {
+                cout << "All attacking armies are eliminated. " << this->targetTerritory->getTerritoryName()
+                     << " has " << this->targetTerritory->getNumberOfArmies() << " armies remain. ";
             }
         }
     } else {

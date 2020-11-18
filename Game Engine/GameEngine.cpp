@@ -370,7 +370,7 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
 
 
 
-/*
+
 int main() {
 
 
@@ -435,4 +435,4 @@ int main() {
     GameEngine::mainGameLoop(players, mapGame->getContinents(), mapGame);
     return 0;
 }
-*/
+

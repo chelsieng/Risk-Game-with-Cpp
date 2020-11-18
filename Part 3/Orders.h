@@ -28,6 +28,7 @@ class Territory;
  *
  * Blockade:    double the number of armies on one of the current player’s territories and make it a neutral territory
  *              *The blockade order can only be created by playing the blockade card*
+ *              To get access to the neutral player, use Blockade::getNeutralPlayer
  *
  * Airlift:     move some armies from one of the current player’s territories to any another territory
  *              *The airlift order can only be created by playing the airlift card*
