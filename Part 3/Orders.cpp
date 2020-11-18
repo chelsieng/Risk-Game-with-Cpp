@@ -250,10 +250,11 @@ void Advance::execute() {
                 if(!this->player->getConquered()) {
                     cout << "Player " << player->getId() << " gets a card for conquering a territory in this turn. ";
                     this->player->setConquered(true);
-                    Card* newCard = this->player->getHand()->getDeck()->draw();
-                    this->player->getHand()->addToHand(newCard);
-                    if(newCard != NULL)
-                        cout << *newCard->getDescription();
+                    // TODO
+//                    Card* newCard = this->player->getHand()->getDeck()->draw();
+//                    this->player->getHand()->addToHand(newCard);
+//                    if(newCard != NULL)
+//                        cout << *newCard->getDescription();
                 }
             } else {
                 cout << "All attacking armies are eliminated. " << this->targetTerritory->getTerritoryName()
@@ -567,10 +568,11 @@ void Airlift::execute() {
                 if(!this->player->getConquered()) {
                     cout << "Player " << player->getId() << " gets a card for conquering a territory in this turn. ";
                     this->player->setConquered(true);
-                    Card* newCard = this->player->getHand()->getDeck()->draw();
-                    this->player->getHand()->addToHand(newCard);
-                    if(newCard != NULL)
-                        cout << *newCard->getDescription();
+                    // TODO
+//                    Card* newCard = this->player->getHand()->getDeck()->draw();
+//                    this->player->getHand()->addToHand(newCard);
+//                    if(newCard != NULL)
+//                        cout << *newCard->getDescription();
                 }
             } else {
                 cout << "All attacking armies are eliminated. " << this->targetTerritory->getTerritoryName()
