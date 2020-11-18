@@ -5,7 +5,7 @@
 
 using namespace std;
 
-int Player::counter = 0;
+int Player::counter = -1;
 
 // default constructor
 Player::Player() :

@@ -261,7 +261,6 @@ void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
     //NEW: Set conquered to false for each player
     for (int i = 0; i < thePlayers->size(); i++) {
         Player *p = thePlayers->at(i);
-        p->setConquered(false);
         for(int j = 0; j < p->getPlayerTerritories()->size(); j++){
             p->getPlayerTerritories()->at(j)->resetMockArmies();
         }//end of for (all owned territories)
@@ -338,7 +337,9 @@ void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
 void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> *theContinents, Map *theMap) {
     bool won = false;
     while(won == false){
-
+        for(int i = 0; i < thePlayers->size(); i++){
+            thePlayers->at(i)->setConquered(false);
+        }//end of for (set hasConquered to false for each player at start of round)
         GameEngine::reinforcementPhase(thePlayers, theContinents);
 
         GameEngine::orderIssuingPhase(thePlayers, theMap);
