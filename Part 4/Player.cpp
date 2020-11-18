@@ -427,7 +427,7 @@ vector<Territory*>* Player::toDefend(Map* theMap) {
         cout << i << ": " << this->getPlayerTerritories()->at(i)->getTerritoryName() << endl;
     }//end of for (print all options)
     cout  << "\nType the corresponding numbers in the above list of the territories you would like to defend, in order of priority."
-          << "\nEnter a negative number when you are finished. Input answers one at a time." << endl;
+          << "\nENTER A NEGATIVE NUMBER IF YOU ARE FINISHED. Input answers one at a time." << endl;
     bool done = false;
     while (done == false) {
         int ans = -1;
@@ -467,7 +467,7 @@ std::vector<Territory*>* Player::toAttack(Map* theMap) {
         }//end of for (show all attackable territories)
         cout
                 << "\nType the corresponding numbers in the above list of the territories you would like to attack, in order of priority."
-                << "\nEnter a negative number when you are finished. Input answers one at a time." << endl;
+                << "\nENTER A NEGATIVE NUMBER IF YOU ARE FINISHED. Input answers one at a time." << endl;
         bool done = false;
         while (done == false) {
             int ans = -1;
@@ -497,4 +497,16 @@ std::vector<Territory*>* Player::toAttack(Map* theMap) {
     }
     // Returning territories to attack
     return chosen;
-}///end of toAttack method
+}
+///end of toAttack method
+
+void Player::removeTerritory(Territory *t) {
+    // Remove territory from player's list of Territory
+    int i = 0;
+    for(Territory *c : *this->getPlayerTerritories()) {
+        if (t->getId() == c->getId())
+            this->getPlayerTerritories()->erase(this->getPlayerTerritories()->begin()+i);
+        i++;
+    }
+}
+///end of removeTerritory

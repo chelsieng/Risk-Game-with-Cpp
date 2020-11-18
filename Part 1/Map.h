@@ -28,6 +28,7 @@ public:
     Army &operator=(const Army &); //Assignment Operator
 
     int getId() const;
+    void setOwner(Player *p);
 
     friend ostream &operator<<(ostream &, const Army &);
 }; //end of Army class

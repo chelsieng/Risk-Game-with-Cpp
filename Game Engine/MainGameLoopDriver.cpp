@@ -119,30 +119,32 @@ int main() {
     cout << "We will now enter the start up phase function:" << endl;
     GameEngine::startupPhase(ps1,map1->getTerritories());
 
-    cout << "\nWe have exited the start up phase function. Now, let's look at our list of players again.\n"
-         << "They should now be in their assigned turn order, and have territories assigned to them." << endl;
+//    cout << "\nWe have exited the start up phase function. Now, let's look at our list of players again.\n"
+//         << "They should now be in their assigned turn order, and have territories assigned to them." << endl;
 
-    cout << "\nHere is our list of players now:\n" << endl;
-    for(int i = 0; i < ps1->size(); i++){
-        cout << *ps1->at(i) << endl;
-    }
+//    cout << "\nHere is our list of players now:\n" << endl;
+//    for(int i = 0; i < ps1->size(); i++){
+//        cout << *ps1->at(i) << endl;
+//    }
 
-    cout << "\nLet's enter the reinforcement phase function" << endl;
+  //  cout << "\nLet's enter the reinforcement phase function" << endl;
 
-    GameEngine::reinforcementPhase(ps1, map1->getContinents());
+//    GameEngine::reinforcementPhase(ps1, map1->getContinents());
 
-    cout << "\nTime to enter the order issuing phase!" << endl;
+//    cout << "\nTime to enter the order issuing phase!" << endl;
 
-    GameEngine::orderIssuingPhase(ps1, map1);
+  //  GameEngine::orderIssuingPhase(ps1, map1);
 
-    cout << "\nHere is our list of players now:\n" << endl;
-    for(int i = 0; i < ps1->size(); i++){
-        cout << *ps1->at(i) << endl;
-    }
+ //   cout << "\nHere is our list of players now:\n" << endl;
+ //   for(int i = 0; i < ps1->size(); i++){
+ //       cout << *ps1->at(i) << endl;
+ //   }
 
-    cout << "\nNow let's enter the order execution phase!" << endl;
-    GameEngine::orderExecutionPhase(ps1);
 
+ //   cout << "\nNow let's enter the order execution phase!" << endl;
+ //   GameEngine::orderExecutionPhase(ps1);
+ cout << "Time for the main game loop!" << endl;
+    GameEngine::mainGameLoop(ps1, map1->getContinents(), map1);
 
     //All the deletes that are commented out cause errors when the program terminates, probably cause they result
     //in deleting things that have already been deleted... Though actually I'm not entirely sure.

@@ -43,6 +43,12 @@ bool Order::validate() {
     return (!isExecuted);       // Execute only if Order hasn't been executed before
 }
 
+ostream &Order::print(ostream &out) const {
+    if (this->isExecuted)
+        printEffect(out);
+    return out << endl;
+}
+
 // Overloading operator
 Order &Order::operator=(const Order &order) {
     if (this == &order)
@@ -101,31 +107,27 @@ Deploy::~Deploy() {
 // Methods
 bool Deploy::validate() {
     // Deploy order is valid if the target territory belongs to the player that issued the order
-    return (this->player->getId() == this->targetTerritory->getOwner()->getId());
+    return (Order::validate() && this->player->getId() == this->targetTerritory->getOwner()->getId());
 }
 
 void Deploy::execute() {
     if (validate()) {
         isExecuted = true;
+        cout << this->orderType << " order has been executed. ";
         // The selected number of armies is added to the number of armies on that territory
+        numOfArmies = min(numOfArmies, this->player->getReinforcementPool());
         this->player->setReinforcementPool(this->player->getReinforcementPool() - numOfArmies);
         for (int i = 0; i < numOfArmies; i++)
             this->targetTerritory->addArmy();
+    } else {
+        cout << this->orderType << " order is invalid. Order has not been executed.";
     }
-}
-
-ostream &Deploy::print(ostream &out) const {
-    out << this->orderType;
-    if (this->isExecuted) {
-        out << " order has been executed. ";
-        printEffect(out);
-    } else
-        out << " order has not been executed. ";
-    return out << endl;
+    // Print effect of order after it is executed
+    cout << *this;
 }
 
 ostream &Deploy::printEffect(ostream &out) const {
-    out << "Deploy " << this->numOfArmies << " armies units to " << this->targetTerritory->getTerritoryName();
+    out << "Player " << this->player->getId() << " deploy " << this->numOfArmies << " armies units to " << this->targetTerritory->getTerritoryName();
     return out;
 }
 
@@ -190,14 +192,16 @@ Advance::~Advance() {
 // Methods
 bool Advance::validate() {
     // Advance order is valid only if the source territory belongs to the player that issued the order
-    return (this->player->getId() == this->sourceTerritory->getOwner()->getId());
+    return (Order::validate() && this->player->getId() == this->sourceTerritory->getOwner()->getId());
 }
 
 void Advance::execute() {
     if (validate()) {
         isExecuted = true;
+        cout << this->orderType << " order has been executed. ";
         // If the target territory belongs to the player that issued the order
         if (this->player->getId() == this->targetTerritory->getOwner()->getId()) {
+            cout << "Advance to defend. ";
             // The army units are moved from the source to the target territory
             for (int i = 0; i < numOfArmies; i++) {
                 if (sourceTerritory->getNumberOfArmies() == 0)
@@ -207,8 +211,10 @@ void Advance::execute() {
                 this->targetTerritory->addArmy();           // Move taken armies unit to target territory
             }
         } else {    // If the target territory belongs to another player, an attack is simulated
+            cout << this->sourceTerritory->getTerritoryName() << " attacks " << this->targetTerritory->getTerritoryName()
+                 << " with " << numOfArmies << " armies. ";
             // Until there is no more attacking armies or no more defending armies
-            while (numOfArmies != 0 && this->targetTerritory->getNumberOfArmies() != 0) {
+            while (numOfArmies > 0 && this->targetTerritory->getNumberOfArmies() > 0) {
                 // Each attacking army unit involved has 60% chances of killing one defending army
                 if ((double) rand() / RAND_MAX <= 0.6)
                     this->targetTerritory->removeArmy();
@@ -218,10 +224,17 @@ void Advance::execute() {
             }
 
             // If all the defender's armies are eliminated
-            if (this->targetTerritory->getNumberOfArmies() == 0) {
+            if(this->targetTerritory->getNumberOfArmies() <= 0){
+                cout << "The ownership of " << this->targetTerritory->getTerritoryName()
+                     << " is transferred from Player " << this->targetTerritory->getOwner()->getId()
+                     << " to Player " << this->player->getId() << ". ";
+                // Remove the territory from the defender's vector of territory
+                this->targetTerritory->getOwner()->removeTerritory(this->targetTerritory);
                 // The attacker captures the territory
                 this->targetTerritory->setOwner(this->player);
+                this->player->addTerritory(this->targetTerritory);
 
+                cout << "There are " << numOfArmies << " attacking armies remain. ";
                 // The attacking army units that survived the battle then occupy the conquered territory.
                 for (int i = 0; i < numOfArmies; i++) {
                     if (sourceTerritory->getNumberOfArmies() == 0)
@@ -230,24 +243,28 @@ void Advance::execute() {
                     this->sourceTerritory->removeArmy();        // Take one armies unit from source territory
                     this->targetTerritory->addArmy();           // Move taken armies unit to target territory
                 }
+
+                // If this is the player has not conquered a territory in the turn before
+                if(!this->player->getConquered()) {
+                    cout << "Player " << player->getId() << " gets a card for conquering a territory in this turn. ";
+                    this->player->setConquered(true);
+//TODO                    draw(this->player->getHand());
+                }
+            } else {
+                cout << "All attacking armies are eliminated. " << this->targetTerritory->getTerritoryName()
+                     << " has " << this->targetTerritory->getNumberOfArmies() << " armies remain. ";
             }
         }
+    } else {
+        cout << this->orderType << " order is invalid. Order has not been executed.";
     }
-}
-
-ostream &Advance::print(ostream &out) const {
-    out << this->orderType;
-    if (this->isExecuted) {
-        out << " order has been executed. ";
-        this->printEffect(out);
-    } else
-        out << " order has not been executed.";
-    return out << endl;
+    // Print effect of order after it is executed
+    cout << *this;
 }
 
 ostream &Advance::printEffect(ostream &out) const {
-    out << "Advance " << this->numOfArmies << " armies units from " << this->sourceTerritory->getTerritoryName()
-        << " to " << this->targetTerritory->getTerritoryName();
+    out << "Player " << this->player->getId() << " advance " << this->numOfArmies << " armies units from "
+        << this->sourceTerritory->getTerritoryName() << " to " << this->targetTerritory->getTerritoryName();
     return out;
 }
 
@@ -312,32 +329,28 @@ bool Bomb::validate() {
     // Bomb order is valid if
     // the source territory belongs to the player that issued the order, and
     // the target territory does not belongs to the player that issued the order
-    return (this->player->getId() == this->sourceTerritory->getOwner()->getId()
-            && this->player->getId() != this->targetTerritory->getOwner()->getId());
+    return (Order::validate() &&
+            this->player->getId() == this->sourceTerritory->getOwner()->getId() &&
+            this->player->getId() != this->targetTerritory->getOwner()->getId());
 }
 
 void Bomb::execute() {
     if (validate()) {
         isExecuted = true;
+        cout << this->orderType << " order has been executed. ";
         // Remove half of the armies from target territory
         int halfArmies = ceil(this->targetTerritory->getNumberOfArmies() / 2.0);
         for (int i = 0; i < halfArmies; i++)
             this->targetTerritory->removeArmy();
+    } else {
+        cout << this->orderType << " order is invalid. Order has not been executed.";
     }
-}
-
-ostream &Bomb::print(ostream &out) const {
-    out << this->orderType;
-    if (this->isExecuted) {
-        out << " order has been executed. ";
-        this->printEffect(out);
-    } else
-        out << " order has not been executed.";
-    return out << endl;
+    // Print effect of order after it is executed
+    cout << *this;
 }
 
 ostream &Bomb::printEffect(ostream &out) const {
-    out << this->sourceTerritory->getTerritoryName() << " bomb " << this->targetTerritory->getTerritoryName();
+    out <<  "Player " << this->player->getId() << " bomb " << this->targetTerritory->getTerritoryName();
     out << ". The number of armies in " << this->targetTerritory->getTerritoryName() << " is halved.";
     return out;
 }
@@ -392,38 +405,40 @@ Blockade::~Blockade() {
     targetTerritory = nullptr;
 }
 
+// Declare neutralPlayer static variable to store blockade territories
+Player* Blockade::neutralPlayer = new Player(nullptr, nullptr, new vector<Territory *>);
+
 // Methods
 bool Blockade::validate() {
     // Blockade order is valid only if the target territory belongs to the player that issued the order
-    return (this->player->getId() == this->targetTerritory->getOwner()->getId());
+    return (Order::validate() && this->player->getId() == this->targetTerritory->getOwner()->getId());
 }
 
 void Blockade::execute() {
     if (validate()) {
         isExecuted = true;
-        // The ownership of the territory is transferred to the Neutral player
-        // TODO
-//        this->targetTerritory->setOwner(new Player());
+        cout << this->orderType << " order has been executed. ";
+        // Remove the territory from the defender's vector of territory
+        this->targetTerritory->getOwner()->removeTerritory(this->targetTerritory);
+        // The attacker captures the territory
+        this->targetTerritory->setOwner(Blockade::neutralPlayer);
+        Blockade::neutralPlayer->addTerritory(this->targetTerritory);
+
         // The number of armies on the territory is doubled
         int doubleArmies = this->targetTerritory->getNumberOfArmies();
         for (int i = 0; i < doubleArmies; i++)
             this->targetTerritory->addArmy();
+    } else {
+        cout << this->orderType << " order is invalid. Order has not been executed.";
     }
-}
-
-ostream &Blockade::print(ostream &out) const {
-    out << this->orderType;
-    if (this->isExecuted) {
-        out << " order has been executed. ";
-        this->printEffect(out);
-    } else
-        out << " order has not been executed.";
-    return out << endl;
+    // Print effect of order after it is executed
+    cout << *this;
 }
 
 ostream &Blockade::printEffect(ostream &out) const {
-    out << this->targetTerritory->getTerritoryName()
-        << " now belongs to the Neutral player. The number of armies is doubled.";
+    out << "Player " << this->player->getId() << " blockade " << this->targetTerritory->getTerritoryName()
+        << ". Territory now belongs to the Neutral player. The number of armies is doubled to "
+        << this->targetTerritory->getNumberOfArmies() << ". ";
     return out;
 }
 
@@ -489,14 +504,16 @@ Airlift::~Airlift() {
 // Methods
 bool Airlift::validate() {
     // Airlift order is valid only if the source territory belongs to the player that issued the order
-    return (this->player->getId() == this->sourceTerritory->getOwner()->getId());
+    return (Order::validate() && this->player->getId() == this->sourceTerritory->getOwner()->getId());
 }
 
 void Airlift::execute() {
     if (validate()) {
         isExecuted = true;
+        cout << this->orderType << " order has been executed. ";
         // If the target territory belongs to the player that issued the order
         if (this->player->getId() == this->targetTerritory->getOwner()->getId()) {
+            cout << "Airlift to defend. ";
             // The army units are moved from the source to the target territory
             for (int i = 0; i < numOfArmies; i++) {
                 if (sourceTerritory->getNumberOfArmies() == 0)
@@ -506,8 +523,10 @@ void Airlift::execute() {
                 this->targetTerritory->addArmy();           // Move taken armies unit to target territory
             }
         } else {    // If the target territory belongs to another player, an attack is simulated
+            cout << this->sourceTerritory->getTerritoryName() << " attacks " << this->targetTerritory->getTerritoryName()
+                 << " with " << numOfArmies << " armies. ";
             // Until there is no more attacking armies or no more defending armies
-            while (numOfArmies != 0 && this->targetTerritory->getNumberOfArmies() != 0) {
+            while (numOfArmies > 0 && this->targetTerritory->getNumberOfArmies() > 0) {
                 // Each attacking army unit involved has 60% chances of killing one defending army
                 if ((double) rand() / RAND_MAX <= 0.6)
                     this->targetTerritory->removeArmy();
@@ -517,10 +536,17 @@ void Airlift::execute() {
             }
 
             // If all the defender's armies are eliminated
-            if (this->targetTerritory->getNumberOfArmies() == 0) {
+            if(this->targetTerritory->getNumberOfArmies() <= 0) {
+                cout << "The ownership of " << this->targetTerritory->getTerritoryName()
+                     << " is transferred from Player " << this->targetTerritory->getOwner()->getId()
+                     << " to Player " << this->player->getId() << ". ";
+                // Remove the territory from the defender's vector of territory
+                this->targetTerritory->getOwner()->removeTerritory(this->targetTerritory);
                 // The attacker captures the territory
                 this->targetTerritory->setOwner(this->player);
+                this->player->addTerritory(this->targetTerritory);
 
+                cout << "There are " << numOfArmies << " attacking armies remain. ";
                 // The attacking army units that survived the battle then occupy the conquered territory.
                 for (int i = 0; i < numOfArmies; i++) {
                     if (sourceTerritory->getNumberOfArmies() == 0)
@@ -529,24 +555,28 @@ void Airlift::execute() {
                     this->sourceTerritory->removeArmy();        // Take one armies unit from source territory
                     this->targetTerritory->addArmy();           // Move taken armies unit to target territory
                 }
+
+                // If this is the player has not conquered a territory in the turn before
+                if(!this->player->getConquered()) {
+                    cout << "Player " << player->getId() << " gets a card for conquering a territory in this turn. ";
+                    this->player->setConquered(true);
+//TODO                    draw(this->player->getHand());
+                }
+            } else {
+                cout << "All attacking armies are eliminated. " << this->targetTerritory->getTerritoryName()
+                     << " has " << this->targetTerritory->getNumberOfArmies() << " armies remain. ";
             }
         }
+    } else {
+        cout << this->orderType << " order is invalid. Order has not been executed.";
     }
-}
-
-ostream &Airlift::print(ostream &out) const {
-    out << this->orderType;
-    if (this->isExecuted) {
-        out << " order has been executed. ";
-        this->printEffect(out);
-    } else
-        out << " order has not been executed.";
-    return out << endl;
+    // Print effect of order after it is executed
+    cout << *this;
 }
 
 ostream &Airlift::printEffect(ostream &out) const {
-    out << "Airlift " << this->numOfArmies << " armies from " << this->sourceTerritory->getTerritoryName() << " to "
-        << this->targetTerritory->getTerritoryName();
+    out << "Player " << this->player->getId() << " airlift " << this->numOfArmies << " armies from "
+        << this->sourceTerritory->getTerritoryName() << " to " << this->targetTerritory->getTerritoryName();
     return out;
 }
 
@@ -604,29 +634,24 @@ Negotiate::~Negotiate() {
 // Methods
 bool Negotiate::validate() {
     // Negotiate order is valid only if the target player is not the player issuing the order
-    return (this->player->getId() != this->negotiator->getId());
+    return (Order::validate() && this->player->getId() != this->negotiator->getId());
 }
 
 void Negotiate::execute() {
     if (validate()) {
         isExecuted = true;
+        cout << this->orderType << " order has been executed. ";
         // The target player and the player issuing the order cannot attack each others’ territories for the remainder of the turn
         // TODO
+    } else {
+        cout << this->orderType << " order is invalid. Order has not been executed.";
     }
-}
-
-ostream &Negotiate::print(ostream &out) const {
-    out << this->orderType;
-    if (this->isExecuted) {
-        out << " order has been executed. ";
-        this->printEffect(out);
-    } else
-        out << " order has not been executed.";
-    return out << endl;
+    // Print effect of order after it is executed
+    cout << *this;
 }
 
 ostream &Negotiate::printEffect(ostream &out) const {
-    out << "Player" << this->player->getId() << " and Player" << this->negotiator->getId();
+    out << "Player " << this->player->getId() << " and Player " << this->negotiator->getId();
     out << " cannot attack each other's territories until the end of the turn.";
     return out;
 }
@@ -746,23 +771,22 @@ ostream &operator<<(ostream &out, const OrdersList &ordersList) {
     return out;
 }
 
-Order *OrdersList::highestPriority() {
+int OrdersList::highestPriority() {
     int indexOfHighest = 0;
     int numberToBeat = 0;
     if(this->listOrders.size() == 0){
         cout << "No orders in list!" << endl;
-    return nullptr;}
+    return -1;}
     else{
         numberToBeat = this->listOrders.at(0)->getPriority();
         for(int i = 1; i < this->listOrders.size(); i++){
-            if(this->listOrders.at(i)->getPriority() > numberToBeat){
+            if(this->listOrders.at(i)->getPriority() < numberToBeat){
                 numberToBeat = this->listOrders.at(i)->getPriority();
                 indexOfHighest = i;
             }//end of if (found something of higher priority)
         }//end of for (go through all orders in list)
-        Order *returnMe = this->listOrders.at(indexOfHighest);
-        this->listOrders.erase(this->listOrders.begin() + indexOfHighest);
-        return returnMe;
+
+        return indexOfHighest;
     }//end of else (list not empty)
 }
 
