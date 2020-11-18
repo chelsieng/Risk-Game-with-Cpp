@@ -219,8 +219,10 @@ void Advance::execute() {
                 if ((double) rand() / RAND_MAX <= 0.6)
                     this->targetTerritory->removeArmy();
                 // Each defending army unit has 70% chances of killing one attacking army unit
-                if ((double) rand() / RAND_MAX <= 0.7)
+                if ((double) rand() / RAND_MAX <= 0.7) {
+                    this->sourceTerritory->removeArmy();
                     numOfArmies--;
+                }
             }
 
             // If all the defender's armies are eliminated
@@ -248,7 +250,10 @@ void Advance::execute() {
                 if(!this->player->getConquered()) {
                     cout << "Player " << player->getId() << " gets a card for conquering a territory in this turn. ";
                     this->player->setConquered(true);
-//TODO                    draw(this->player->getHand());
+                    Card* newCard = this->player->getHand()->getDeck()->draw();
+                    this->player->getHand()->addToHand(newCard);
+                    if(newCard != NULL)
+                        cout << *newCard->getDescription();
                 }
             } else {
                 cout << "All attacking armies are eliminated. " << this->targetTerritory->getTerritoryName()
@@ -531,8 +536,10 @@ void Airlift::execute() {
                 if ((double) rand() / RAND_MAX <= 0.6)
                     this->targetTerritory->removeArmy();
                 // Each defending army unit has 70% chances of killing one attacking army unit
-                if ((double) rand() / RAND_MAX <= 0.7)
+                if ((double) rand() / RAND_MAX <= 0.7) {
+                    this->sourceTerritory->removeArmy();
                     numOfArmies--;
+                }
             }
 
             // If all the defender's armies are eliminated
@@ -560,7 +567,10 @@ void Airlift::execute() {
                 if(!this->player->getConquered()) {
                     cout << "Player " << player->getId() << " gets a card for conquering a territory in this turn. ";
                     this->player->setConquered(true);
-//TODO                    draw(this->player->getHand());
+                    Card* newCard = this->player->getHand()->getDeck()->draw();
+                    this->player->getHand()->addToHand(newCard);
+                    if(newCard != NULL)
+                        cout << *newCard->getDescription();
                 }
             } else {
                 cout << "All attacking armies are eliminated. " << this->targetTerritory->getTerritoryName()
@@ -643,6 +653,49 @@ void Negotiate::execute() {
         cout << this->orderType << " order has been executed. ";
         // The target player and the player issuing the order cannot attack each others’ territories for the remainder of the turn
         // TODO
+
+        // Remove orders where order issuer and negotiated player target each other
+        OrdersList *ordersList1 =  this->player->getOrdersList();
+        OrdersList *ordersList2 =  this->negotiator->getOrdersList();
+        // If there are orders made by the negotiation issuer before the Negotiate order is issued
+        for(int i = 0; i < ordersList1->getSize(); i++)
+            // If the current order has a target territory
+            if(ordersList1->getAt(i)->getTargetTerritory() != nullptr)
+                // Delete order if it targets negotiated player
+                if(this->negotiator->getId() == ordersList1->getAt(i)->getTargetTerritory()->getOwner()->getId()) {
+                    ordersList1->deleteAt(i);
+                    i--;
+                }
+
+        // If there are orders made by the negotiated player before the Negotiate order is issued
+        for(int i = 0; i < ordersList2->getSize(); i++)
+            // If the current order has a target territory
+            if(ordersList2->getAt(i)->getTargetTerritory() != nullptr)
+                // Delete order if it targets negotiation issuer
+                if(this->player->getId() == ordersList2->getAt(i)->getTargetTerritory()->getOwner()->getId()) {
+                    ordersList2->deleteAt(i);
+                    i--;
+                }
+
+        // Check if the 2 players have negotiated with each other before
+        bool playerAdded1 = false;
+        for(Player* p : this->player->getDiplomacyPlayers())
+            if(p->getId() == this->player->getId()) {
+                playerAdded1 = true;
+                break;
+            }
+        bool playerAdded2 = false;
+        for(Player* p : this->player->getDiplomacyPlayers())
+            if(p->getId() == this->negotiator->getId()) {
+                playerAdded2 = true;
+                break;
+            }
+
+        // If not then add players into each other's diplomacyPlayer list
+        if(!playerAdded1)
+            this->player->addDiplomacyPlayer(this->negotiator);
+        if(!playerAdded2)
+            this->negotiator->addDiplomacyPlayer(this->player);
     } else {
         cout << this->orderType << " order is invalid. Order has not been executed.";
     }

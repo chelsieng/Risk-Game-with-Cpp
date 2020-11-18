@@ -373,68 +373,68 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
 
 
 
-int main() {
-
-
-    Map *mapGame = nullptr;
-
-    int mapSelection; // int where user selects map file to be loaded
-    int numOfPlayers; // int where user selects the number of players in the game
-    string key; // Press any key feature for later
-    // Displaying welcome message
-    cout << "* ------------------------------ * " << endl;
-    cout << "| Welcome to Warzone's Risk Game |" << endl;
-    cout << "* ------------------------------ *" << endl;
-    cout << endl;
-    cout << "- Game start -" << endl;
-    cout << endl;
-    // If user selection loads invalid map files or creates invalid map graph, keep prompting user to select map file
-    while (true) {
-        // Since mapSelection is an int, if user enters otherwise keep prompting
-        if (cin.fail()) {
-            cin.clear(); // clears error flag
-            cin.ignore(); // skips to the next line
-            continue; // Keep prompting user
-        }
-        cout << "I. Choose a map from the list of map files below: " << endl;
-        cout << "\t1. artic.map" << endl;
-        cout << "\t2. berlin.map" << endl;
-        cout << "\t3. brasil.map" << endl;
-        cout << "\t4. mexico.map" << endl;
-        cout << "\t5. northern-europe.map" << endl;
-        cout << "\t6. swiss.map" << endl;
-        cout << "\t7. world.map" << endl;
-        cout << ">> ";
-        cin >> mapSelection; // user enter selection
-        // If user selects valid map file which creates valid map graph, map selection done
-        mapGame = GameEngine::selectMap(mapSelection);
-        if (mapGame != nullptr ) {
-            break;
-        }
-    }
-    // uncomment to see map of game which user selected from
-    cout << *mapGame;
-    while (numOfPlayers > 5 || numOfPlayers < 2) {
-        // Since numOfPlayers is an int, if user enters otherwise keep prompting
-        if (cin.fail()) {
-            cin.clear(); // clears error flag
-            cin.ignore(); // skips to the next line
-            continue; // Keep prompting user
-        }
-        cout << "II. Choose the number of players in the game (2-5 players): " << endl;
-        cout << ">> ";
-        cin >> numOfPlayers;
-    }
-    vector<Player*>* players = new vector<Player*>;
-    players = GameEngine::createPlayers(numOfPlayers); // Store players in vector of players
-    cout << "- You are now entering the Start Up Phase -" << endl;
-    while (key.empty()) {
-        cout << "Press any key >> "; // Prompt user to press any key to continue
-        cin >> key;
-        cout << endl;
-    }
-    GameEngine::startupPhase(players, mapGame->getTerritories());
-    GameEngine::mainGameLoop(players, mapGame->getContinents(), mapGame);
-    return 0;
-}
+//int main() {
+//
+//
+//    Map *mapGame = nullptr;
+//
+//    int mapSelection; // int where user selects map file to be loaded
+//    int numOfPlayers; // int where user selects the number of players in the game
+//    string key; // Press any key feature for later
+//    // Displaying welcome message
+//    cout << "* ------------------------------ * " << endl;
+//    cout << "| Welcome to Warzone's Risk Game |" << endl;
+//    cout << "* ------------------------------ *" << endl;
+//    cout << endl;
+//    cout << "- Game start -" << endl;
+//    cout << endl;
+//    // If user selection loads invalid map files or creates invalid map graph, keep prompting user to select map file
+//    while (true) {
+//        // Since mapSelection is an int, if user enters otherwise keep prompting
+//        if (cin.fail()) {
+//            cin.clear(); // clears error flag
+//            cin.ignore(); // skips to the next line
+//            continue; // Keep prompting user
+//        }
+//        cout << "I. Choose a map from the list of map files below: " << endl;
+//        cout << "\t1. artic.map" << endl;
+//        cout << "\t2. berlin.map" << endl;
+//        cout << "\t3. brasil.map" << endl;
+//        cout << "\t4. mexico.map" << endl;
+//        cout << "\t5. northern-europe.map" << endl;
+//        cout << "\t6. swiss.map" << endl;
+//        cout << "\t7. world.map" << endl;
+//        cout << ">> ";
+//        cin >> mapSelection; // user enter selection
+//        // If user selects valid map file which creates valid map graph, map selection done
+//        mapGame = GameEngine::selectMap(mapSelection);
+//        if (mapGame != nullptr ) {
+//            break;
+//        }
+//    }
+//    // uncomment to see map of game which user selected from
+//    cout << *mapGame;
+//    while (numOfPlayers > 5 || numOfPlayers < 2) {
+//        // Since numOfPlayers is an int, if user enters otherwise keep prompting
+//        if (cin.fail()) {
+//            cin.clear(); // clears error flag
+//            cin.ignore(); // skips to the next line
+//            continue; // Keep prompting user
+//        }
+//        cout << "II. Choose the number of players in the game (2-5 players): " << endl;
+//        cout << ">> ";
+//        cin >> numOfPlayers;
+//    }
+//    vector<Player*>* players = new vector<Player*>;
+//    players = GameEngine::createPlayers(numOfPlayers); // Store players in vector of players
+//    cout << "- You are now entering the Start Up Phase -" << endl;
+//    while (key.empty()) {
+//        cout << "Press any key >> "; // Prompt user to press any key to continue
+//        cin >> key;
+//        cout << endl;
+//    }
+//    GameEngine::startupPhase(players, mapGame->getTerritories());
+//    GameEngine::mainGameLoop(players, mapGame->getContinents(), mapGame);
+//    return 0;
+//}
 

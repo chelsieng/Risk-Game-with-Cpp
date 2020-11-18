@@ -23,6 +23,7 @@ private:
     Hand* playerHand;
     OrdersList*  playerOrdersList;
     vector<Territory*>* playerTerritories;
+    vector<Player*>* diplomacyPlayers = new vector<Player*>;    // players who are in diplomatic relationship with current player
     int reinforcementPool;
     bool hasConquered = false;              // Showing whether or this player has conquered a territory in that round
 
@@ -44,10 +45,12 @@ public:
     vector<Territory*>* getPlayerTerritories();
     vector<Territory*>* AttackAble(Map* theMap);
     void issueOrder(Map* theMap, vector<Player*>* thePlayers, int choice);
-    void setConquered(bool status) { this->hasConquered = status; };
-    bool getConquered() { return this->hasConquered; };
+    void setConquered(bool status) { this->hasConquered = status; }
+    bool getConquered() { return this->hasConquered; }
     void removeTerritory(Territory *t);
-    void addTerritory(Territory *t) { this->playerTerritories->push_back(t); };
+    void addTerritory(Territory *t) { this->playerTerritories->push_back(t); }
+    vector<Player*> getDiplomacyPlayers() { return *this->diplomacyPlayers; }
+    void addDiplomacyPlayer(Player* p) { this->diplomacyPlayers->push_back(p); }
 
     // assignment operator
     Player& operator = (const Player &player);

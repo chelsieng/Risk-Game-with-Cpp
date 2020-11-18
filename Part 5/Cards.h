@@ -183,6 +183,7 @@ public:
     void addToHand(Card* c);
     Card getCardatIndex(int i) const;
     int getSize() const;
+    Deck* getDeck() { return this->gameDeck; }
     friend ostream& operator<<(ostream& outs, const Hand& printMe);
 };
 
