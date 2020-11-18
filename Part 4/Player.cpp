@@ -497,4 +497,16 @@ std::vector<Territory*>* Player::toAttack(Map* theMap) {
     }
     // Returning territories to attack
     return chosen;
-}///end of toAttack method
+}
+///end of toAttack method
+
+void Player::removeTerritory(Territory *t) {
+    // Remove territory from player's list of Territory
+    int i = 0;
+    for(Territory *c : *this->getPlayerTerritories()) {
+        if (t->getId() == c->getId())
+            this->getPlayerTerritories()->erase(this->getPlayerTerritories()->begin()+i);
+        i++;
+    }
+}
+///end of removeTerritory

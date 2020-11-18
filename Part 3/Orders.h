@@ -28,6 +28,7 @@ class Territory;
  *
  * Blockade:    double the number of armies on one of the current player’s territories and make it a neutral territory
  *              *The blockade order can only be created by playing the blockade card*
+ *              To get access to the neutral player, use Blockade::getNeutralPlayer
  *
  * Airlift:     move some armies from one of the current player’s territories to any another territory
  *              *The airlift order can only be created by playing the airlift card*
@@ -57,10 +58,10 @@ public:
     // Methods
     virtual bool validate();
     int getPriority();
+    virtual ostream& print(ostream& out) const;
     // pure virtual methods
     virtual void execute() = 0;
     virtual ostream& printEffect(ostream& out) const = 0;
-    virtual ostream& print(ostream& out) const = 0;
     // Overloading operators
     Order& operator=(Order const& o);
     friend ostream& operator<<(ostream& out, const Order& order);
@@ -82,7 +83,6 @@ public:
     bool validate();
     void execute();
     ostream& printEffect(ostream& out) const;
-    ostream& print(ostream& out) const;
     // Overloading operators
     Deploy& operator=(Deploy const& o);
     friend ostream& operator<<(ostream& out, const Deploy& deploy);
@@ -105,7 +105,6 @@ public:
     bool validate();
     void execute();
     ostream& printEffect(ostream& out) const;
-    ostream& print(ostream& out) const;
     // Overloading operators
     Advance& operator=(Advance const& o);
     friend ostream& operator<<(ostream& out, const Advance& advance);
@@ -127,7 +126,6 @@ public:
     bool validate();
     void execute();
     ostream& printEffect(ostream& out) const;
-    ostream& print(ostream& out) const;
     // Overloading operators
     Bomb& operator=(Bomb const& o);
     friend ostream& operator<<(ostream& out, const Bomb& bomb);
@@ -138,6 +136,7 @@ class Blockade : public Order
 {
 private:
     Territory *targetTerritory;         // Territory to block
+    static Player *neutralPlayer;       // The neutral player for blockade order
 public:
     // Constructors and destructor
     Blockade();
@@ -147,8 +146,8 @@ public:
     // Methods
     bool validate();
     void execute();
+    static Player* getNeutralPlayer() { return neutralPlayer; };
     ostream& printEffect(ostream& out) const;
-    ostream& print(ostream& out) const;
     // Overloading operators
     Blockade& operator=(Blockade const& o);
     friend ostream& operator<<(ostream& out, const Blockade& blockade);
@@ -158,8 +157,8 @@ public:
 class Airlift : public Order
 {
 private:
-    Territory *sourceTerritory;          // Starting territory
-    Territory *targetTerritory;            // Advancing territory
+    Territory *sourceTerritory;         // Starting territory
+    Territory *targetTerritory;         // Advancing territory
     int numOfArmies;                    // Number of armies to advance
 public:
     // Constructors and destructor
@@ -171,7 +170,6 @@ public:
     bool validate();
     void execute();
     ostream& printEffect(ostream& out) const;
-    ostream& print(ostream& out) const;
     // Overloading operators
     Airlift& operator=(Airlift const& o);
     friend ostream& operator<<(ostream& out, const Airlift& airlift);
@@ -192,7 +190,6 @@ public:
     bool validate();
     void execute();
     ostream& printEffect(ostream& out) const;
-    ostream& print(ostream& out) const;
     // Overloading operators
     Negotiate& operator=(Negotiate const& o);
     friend ostream& operator<<(ostream& out, const Negotiate& negotiate);
@@ -220,4 +217,3 @@ public:
     OrdersList& operator=(OrdersList const& o);
     friend ostream& operator<<(ostream& out, const OrdersList &ordersList);
 };
-

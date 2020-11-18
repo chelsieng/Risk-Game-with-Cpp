@@ -81,6 +81,7 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
 
     if (type->compare("Bomb") == 0) {
         cout << "You are playing a card of type: " << *this->getType() << ".\n";
+
         cout << "\n Here are the places that you can attack:" << endl;
         vector<Territory*>* attackable = p->AttackAble(theMap);
         for(int i = 0; i < attackable->size(); i++){
@@ -130,46 +131,9 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
                      << endl;
             }
         }//end of while (chose proper number)
-        /*
-        bool fromFound = false;
-        bool toFound = false;
-        Territory *fromTerritory;
-        Territory *toTerritory;
-        while (fromFound == false) {
-            cout << "Please type the name of the territory you are bombing from." << endl;
-            string answer;
-            std::cin >> std::ws; // so we don't read whitespace
-            getline(cin, answer); //get their response
-            for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
-                if (t->getTerritoryName() == answer) {
-                    cout << "Understood!" << endl;
-                    fromTerritory = t;
-                    fromFound = true;
-                }
-            }//end of for (search player's list of territories)
-            if (fromFound == false)
-                cout << "You do not own a territory by that name! Please try again." << endl;
-        }//end of while (establish valid FromTerritory)
-        while (toFound == false) {
-            cout << "Please type the name of the territory you would like to bomb." << endl;
-            string answer;
-            std::cin >> std::ws; // so we don't read whitespace
-            getline(cin, answer); //get their response
-            for (Player *p : allPlayers) {
-                for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
-                    if (t->getTerritoryName() == answer) {
-                        cout << "Understood!" << endl;
-                        toTerritory = t;
-                        toFound = true;
-                    }
-                }//end of for (search player's list of territories)
-                if (toFound == true) { break; }
-            } //end of for (search through all players)
-            if (toFound == false)
-                cout << "Nobody owns a territory by that name! Please try again." << endl;
-        }//end of while (establish valid ToTerritory)
-         */
+
         p->issueOrder(new Bomb(p, chosenOne, destination));
+
 
     } ///END OF BOMB STUFF
     else if (type->compare("Diplomacy") == 0) {
@@ -238,34 +202,34 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
 
     else if (type->compare("Blockade") == 0) {
         cout << "You are playing a card of type: " << *this->getType() << ".\n";
-        bool fromFound = false;
-        bool toFound = false;
-        Territory *fromTerritory;
-        Territory *toTerritory;
-        while (fromFound == false) {
+        bool sourceFound = false;
+        bool targetFound = false;
+        Territory *sourceTerritory;
+        Territory *targetTerritory;
+        while (sourceFound == false) {
             cout << "Please type the name of the territory you are blockading." << endl;
             string answer;
             getline(cin, answer); //get their response
             for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
                 if (t->getTerritoryName() == answer) {
                     cout << "Understood!" << endl;
-                    fromTerritory = t;
-                    fromFound = true;
+                    sourceTerritory = t;
+                    sourceFound = true;
                 }
             }//end of for (search player's list of territories)
-            if (fromFound == false)
+            if (sourceFound == false)
                 cout << "You do not own a territory by that name! Please try again." << endl;
-        }//end of while (establish valid FromTerritory)
-        p->issueOrder(new Blockade(p, fromTerritory));
+        }//end of while (establish valid sourceTerritory)
+        p->issueOrder(new Blockade(p, sourceTerritory));
     } ///END OF BLOCKADE STUFF
 
     else if (type->compare("Airlift") == 0) {
         cout << "You are playing a card of type: " << *this->getType() << ".\n";
-        bool fromFound = false;
-        bool toFound = false;
-        Territory *fromTerritory;
-        Territory *toTerritory;
-        while (fromFound == false) {
+        bool sourceFound = false;
+        bool targetFound = false;
+        Territory *sourceTerritory;
+        Territory *targetTerritory;
+        while (sourceFound == false) {
             cout << "Please type the name of the territory you are moving armies from." << endl;
             string answer;
             std::cin >> std::ws; // so we don't read whitespace
@@ -273,14 +237,14 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
             for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
                 if (t->getTerritoryName() == answer) {
                     cout << "Understood!" << endl;
-                    fromTerritory = t;
-                    fromFound = true;
+                    sourceTerritory = t;
+                    sourceFound = true;
                 }
             }//end of for (search player's list of territories)
-            if (fromFound == false)
+            if (sourceFound == false)
                 cout << "You do not own a territory by that name! Please try again." << endl;
-        }//end of while (establish valid FromTerritory)
-        while (toFound == false) {
+        }//end of while (establish valid sourceTerritory)
+        while (targetFound == false) {
             cout << "Please type the name of the territory you are moving armies to." << endl;
             string answer;
             getline(cin, answer); //get their response
@@ -288,15 +252,15 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
                 for (Territory *t : *p->getPlayerTerritories()) { //see if they actually own this territory
                     if (t->getTerritoryName() == answer) {
                         cout << "Understood!" << endl;
-                        toTerritory = t;
-                        toFound = true;
+                        targetTerritory = t;
+                        targetFound = true;
                     }
                 }//end of for (search player's list of territories)
-                if (toFound == true) { break; }
+                if (targetFound == true) { break; }
             } //end of for (search through all players)
-            if (toFound == false)
+            if (targetFound == false)
                 cout << "Nobody owns a territory by that name! Please try again." << endl;
-        }//end of while (establish valid ToTerritory)
+        }//end of while (establish valid targetTerritory)
         //Get number of armies to move:
         bool finished = false;
         int numArmies = 0;
@@ -306,7 +270,7 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
             if (numArmies < 0) {
                 cout << "Invalid number of armies. Please try again." << endl;
             }//end of if (invalid)
-            else if (numArmies > fromTerritory->getMockArmies()) {
+            else if (numArmies > sourceTerritory->getMockArmies()) {
                 cout << "This territory does not have that many armies! Please try again." << endl;
             }//end of if (invalid)
             else {
@@ -314,7 +278,7 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
                 cout << "Understood!" << endl;
             }//end of else (valid)
         }//end of while (get number of territories)
-        p->issueOrder(new Airlift(p, fromTerritory, toTerritory, numArmies));
+        p->issueOrder(new Airlift(p, sourceTerritory, targetTerritory, numArmies));
     } ///END OF AIRLIFT STUFF
 
     cout << "You played a card of type: " << *this->getType() << endl;
@@ -325,7 +289,7 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
 
 BombCard::BombCard()
         : Card("Bomb") {
-    setDescription("This is a bomb card. More info will be added later");
+    setDescription("This is a bomb card. Play this card to kill half of the armies on the adjacent territory.");
 }
 
 BombCard::BombCard(const BombCard &copyMe)    //if parameter is const we're not able to access the getters and setters
@@ -351,7 +315,7 @@ BombCard &BombCard::operator=(const BombCard &rightSide) {
 
 DiplomacyCard::DiplomacyCard()
         : Card("Diplomacy") {
-    setDescription("This is a diplomacy card. More info will be added later");
+    setDescription("This is a diplomacy card. Play this card to enforces peace between two players for a turn.");
 }
 
 DiplomacyCard::DiplomacyCard(const DiplomacyCard &copyMe) {
@@ -377,7 +341,7 @@ ReinforcementCard::ReinforcementCard()
         : Card("Reinforcement"), numberOfTroops(1) {
     string str("This is a reinforcement card. It yields ");
     str.append(to_string(numberOfTroops));
-    str.append(" armies. More info will be added later.");
+    str.append(" armies. Play this card to to gain additional armies.");
     setDescription(str);
 }
 
@@ -386,7 +350,7 @@ ReinforcementCard::ReinforcementCard(int armies)
 
     string str("This is a reinforcement card. It yields ");
     str.append(to_string(numberOfTroops));
-    str.append(" armies. More info will be added later.");
+    str.append(" armies. Play this card to to gain additional armies.");
     setDescription(str);
 }
 
@@ -421,7 +385,7 @@ ReinforcementCard::~ReinforcementCard() {
 
 AirliftCard::AirliftCard()
         : Card("Airlift") {
-    setDescription("This is an airlift card. More info will be added later");
+    setDescription("This is an airlift card. Play this card to transfer your armies long distances.");
 }
 
 AirliftCard::AirliftCard(const AirliftCard &copyMe) {
@@ -446,7 +410,7 @@ AirliftCard::~AirliftCard() {
 
 BlockadeCard::BlockadeCard()
         : Card("Blockade") {
-    setDescription("This is a blockade card. More info will be added later");
+    setDescription("This is a blockade card. Play this card to change one of your territories to a neutral and double the number of armies on that territory.");
 }
 
 BlockadeCard::BlockadeCard(const BlockadeCard &copyMe) {
