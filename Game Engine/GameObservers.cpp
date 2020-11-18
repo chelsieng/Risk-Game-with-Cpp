@@ -178,7 +178,7 @@ void StatisticsObserver::showInfo() {
         }
         for (Player *p : *subject->getTotalPlayers()) {
             cout << "|-------------------------------------------------------------------------------------|" << endl;
-            cout << "|      " << p->getId() << "      |             " << hash[p->getId()] << "            |          " << p->getOrdersList()->getSize() << "          " << "|          " << p->getHand()->getSize() << "          |" << endl;
+            cout << "|      " << p->getId() << "      |             " << ((double)hash[p->getId()] / (double)total ) * 100 << "            |          " << p->getOrdersList()->getSize() << "          " << "|          " << p->getHand()->getSize() << "          |" << endl;
         }
         cout << "|-------------------------------------------------------------------------------------|" << endl;
         cout << endl;
