@@ -1,4 +1,3 @@
-#pragma once
 
 #include <iostream>
 #include <cstdlib> //so that we can create random numbers
@@ -295,7 +294,7 @@ void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
                          cout << "Got it!" << endl;
                      }
                      else if(response == 3 && p->getHand()->getSize() < 1){
-                         cout << "You don't! have any cards in hand! Try something else." << endl;
+                         cout << "You don't have any cards in hand! Try something else." << endl;
                      }
                      else{ cout << "Invalid choice! Please try again." << endl;}
                  }//end of while (get valid choice)
