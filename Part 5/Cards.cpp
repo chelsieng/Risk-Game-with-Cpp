@@ -77,10 +77,60 @@ void Card::play(Player *p) {
     //return pointer to order created -> hm no I guess not?
 }
 
-void Card::play(Player *p, std::vector<Player *> allPlayers) {
+void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
 
     if (type->compare("Bomb") == 0) {
         cout << "You are playing a card of type: " << *this->getType() << ".\n";
+        cout << "\n Here are the places that you can attack:" << endl;
+        vector<Territory*>* attackable = p->AttackAble(theMap);
+        for(int i = 0; i < attackable->size(); i++){
+            cout << i << ": " << attackable->at(i)->getTerritoryName() << endl;
+        }//end of for (show all options)
+        cout << "Please input the number from the list above beside the territory you would like to bomb." << endl;
+        int ans;
+        bool valid;
+        while(valid == false){
+            cin >> ans;
+            if(ans >= 0 && ans < attackable->size()){
+                cout << "Understood!" << endl;
+                valid = true;
+            }
+            else{
+                cout << "Invalid input! Please try again." << endl;
+            }
+        }//end of while
+        Territory* destination = attackable->at(ans);
+        vector<Territory*>* theNeighbours = theMap->getNeighbours(destination);
+        vector<Territory *> *neighboursYouOwn = new vector<Territory *>;
+        for (int j = 0; j < theNeighbours->size(); j++) {
+            if (theNeighbours->at(j)->isOccupiedBy(p)) {
+                neighboursYouOwn->push_back(theNeighbours->at(j));
+            }//end of if (valid option)
+        }//end of for (get neighbours of territory to be attacked that attacking player owns)
+        cout << "\nYou chose to attack " << destination->getTerritoryName() << "." << endl;
+        cout << "\nHere are your neighbouring territories that you can advance from." << endl;
+        for (int k = 0; k < neighboursYouOwn->size(); k++) {
+            cout << k << ": " << neighboursYouOwn->at(k)->getTerritoryName() << endl;
+        }//end of for (show neighbors)
+        cout
+                << "\nPlease type in the number in the above list beside the territory that you would like to bomb from."
+                << endl;
+        int response;
+        bool chosen = false;
+        Territory *chosenOne;
+        while (chosen == false) {
+            cin >> response;
+            if (response < 0 || response > neighboursYouOwn->size()) {
+                cout << "Invalid number! Please try again." << endl;
+            }//end of if (invalid choice)
+            else {
+                chosen = true;
+                chosenOne = neighboursYouOwn->at(response);
+                cout << "Great! You will bomb from " << neighboursYouOwn->at(ans)->getTerritoryName()
+                     << endl;
+            }
+        }//end of while (chose proper number)
+        /*
         bool fromFound = false;
         bool toFound = false;
         Territory *fromTerritory;
@@ -118,7 +168,9 @@ void Card::play(Player *p, std::vector<Player *> allPlayers) {
             if (toFound == false)
                 cout << "Nobody owns a territory by that name! Please try again." << endl;
         }//end of while (establish valid ToTerritory)
-        p->issueOrder(new Bomb(p, fromTerritory, toTerritory));
+         */
+        p->issueOrder(new Bomb(p, chosenOne, destination));
+
     } ///END OF BOMB STUFF
     else if (type->compare("Diplomacy") == 0) {
         cout << "You are playing a card of type: " << *this->getType() << ".\n";
@@ -613,9 +665,9 @@ void Hand::playCardAtIndex(int i, Player *p) //"default" version, don't use in g
 
 }
 
-void Hand::playCardAtIndex(int i, Player *p, const std::vector<Player *> &allPlayers) {
+void Hand::playCardAtIndex(int i, Player *p, const std::vector<Player *> &allPlayers, Map* theMap) {
     Card cardToPlay = *cardsInHand.at(i);
-    cardsInHand.at(i)->play(p, allPlayers);                         //uses new version of play() method
+    cardsInHand.at(i)->play(p, allPlayers, theMap);                         //uses new version of play() method
     gameDeck->placeOnBottom(cardsInHand.at(i));
     cardsInHand.erase(cardsInHand.begin() + i); //the begin() part is necessary, it seems (can't just use index)
 
