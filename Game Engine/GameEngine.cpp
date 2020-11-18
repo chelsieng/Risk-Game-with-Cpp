@@ -257,7 +257,6 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *
 void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
     phase = "Order Issuing Phase";
     //Reset mock armies for everyone's territories: (moved this to the start of the turn -> bug fix)
-    //NEW: Set conquered to false for each player
     for (int i = 0; i < thePlayers->size(); i++) {
         Player *p = thePlayers->at(i);
         for(int j = 0; j < p->getPlayerTerritories()->size(); j++){
