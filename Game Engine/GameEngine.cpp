@@ -21,12 +21,15 @@ int GameEngine::getPlayerTurn() {
 }
 
 // Function returns true if user selected a valid map file with valid map graph
-Map* GameEngine::selectMap(int mapSelection) {
+Map* GameEngine::selectMap() {
     phaseObserver = new PhaseObserver(this);
     statisticsObserver = new StatisticsObserver(this);
     this->phase = "Map Selection";
     this->notify();
+
+    int mapSelection = -1;
     string key; // "Press any key" feature for later
+
     // Map data structure where key = user select int and value = map files from ../Map Files/ directory
     map<int, string> map = {
             {1, "../Map Files/artic.map"},
@@ -37,34 +40,62 @@ Map* GameEngine::selectMap(int mapSelection) {
             {6, "../Map Files/swiss.map"},
             {7, "../Map Files/world.map"}
     };
-    // Returns false if user enters integer which is out of bound
-    if (map.count(mapSelection) < 1 || map.count(mapSelection) > 7) {
-        cout << "Please try again." << endl << endl;
-        return nullptr;
-    }
-    auto *m = new MapLoader(map[mapSelection]); //Loading selected map files
-    // Returns false if map file fails to load (ie invalid map file)
-    if (m->getMap() == nullptr) {
-        cout << "Please try again." << endl << endl;
-        delete m; // handling memory
-        return nullptr;
-    }
-    // Map file successfully loaded
-    cout << "Great! Now let's have a look at your map: " << endl;
-    // returns true if map graph is valid
-    if (m->getMap()->validate()) {
-        while (key.empty()) {
-            cout << "Press any key >> "; // Prompt user to press any key to continue
-            cin >> key;
-            cout << endl;
+
+    // If user selection loads invalid map files or creates invalid map graph, keep prompting user to select map file
+    while (true) {
+        // Since mapSelection is an int, if user enters otherwise keep prompting
+        if (cin.fail()) {
+            cin.clear(); // clears error flag
+            cin.ignore(); // skips to the next line
+            continue; // Keep prompting user
         }
-   //     *mapGame = *m->getMap(); // Assign valid map to global variable mapGame
-        return m->getMap();
-    } // else return false if map graph is invalid
-    else {
-        cout << "Please try again." << endl << endl;
-        delete m; // handling memory
-        return nullptr;
+        cout << "I. Choose a map from the list of map files below: " << endl;
+        cout << "\t1. artic.map" << endl;
+        cout << "\t2. berlin.map" << endl;
+        cout << "\t3. brasil.map" << endl;
+        cout << "\t4. mexico.map" << endl;
+        cout << "\t5. northern-europe.map" << endl;
+        cout << "\t6. swiss.map" << endl;
+        cout << "\t7. world.map" << endl;
+        cout << ">> ";
+        cin >> mapSelection; // user enter selection
+
+        // Returns false if user enters integer which is out of bound
+        if (map.count(mapSelection) < 1 || map.count(mapSelection) > 7) {
+            cout << "Please try again." << endl << endl;
+            mapSelection = -1;
+            continue;
+        }
+
+        auto *m = new MapLoader(map[mapSelection]); //Loading selected map files
+        // Returns false if map file fails to load (ie invalid map file)
+        if (m->getMap() == nullptr) {
+            cout << "Please try again." << endl << endl;
+            delete m; // handling memory
+            continue;
+        }
+
+        // Map file successfully loaded
+        cout << endl;
+        cout << "Great! Now let's have a look at your map: " << endl;
+
+        // returns true if map graph is valid
+        if (m->getMap()->validate()) {
+            while (key.empty()) {
+                cout << "Enter any key to continue>> "; // Prompt user to press any key to continue
+                cin >> key;
+                cout << endl;
+                // uncomment to see map of game which user selected from
+                cout << *m->getMap();
+            }
+            //     *mapGame = *m->getMap(); // Assign valid map to global variable mapGame
+            return m->getMap();
+        } // else return false if map graph is invalid
+        else {
+            cout << "Please try again." << endl << endl;
+            delete m; // handling memory
+            continue;
+        }
     }
 
 }
@@ -417,48 +448,16 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
 
 
 int main() {
-
-
     Map *mapGame = nullptr;
 
     GameEngine* gameEngine = new GameEngine();
 
-    int mapSelection; // int where user selects map file to be loaded
     int numOfPlayers; // int where user selects the number of players in the game
     string key; // Press any key feature for later
-    // Displaying welcome message
-    cout << "* ------------------------------ * " << endl;
-    cout << "| Welcome to Warzone's Risk Game |" << endl;
-    cout << "* ------------------------------ *" << endl;
-    cout << endl;
-    cout << "- Game start -" << endl;
-    cout << endl;
-    // If user selection loads invalid map files or creates invalid map graph, keep prompting user to select map file
-    while (true) {
-        // Since mapSelection is an int, if user enters otherwise keep prompting
-        if (cin.fail()) {
-            cin.clear(); // clears error flag
-            cin.ignore(); // skips to the next line
-            continue; // Keep prompting user
-        }
-        cout << "I. Choose a map from the list of map files below: " << endl;
-        cout << "\t1. artic.map" << endl;
-        cout << "\t2. berlin.map" << endl;
-        cout << "\t3. brasil.map" << endl;
-        cout << "\t4. mexico.map" << endl;
-        cout << "\t5. northern-europe.map" << endl;
-        cout << "\t6. swiss.map" << endl;
-        cout << "\t7. world.map" << endl;
-        cout << ">> ";
-        cin >> mapSelection; // user enter selection
-        // If user selects valid map file which creates valid map graph, map selection done
-        mapGame = gameEngine->selectMap(mapSelection);
-        if (mapGame != nullptr ) {
-            break;
-        }
-    }
-    // uncomment to see map of game which user selected from
-    cout << *mapGame;
+
+
+    // If user selects valid map file which creates valid map graph, map selection done
+    mapGame = gameEngine->selectMap();
 
     // PLAYER AND DECK CREATION PHASE
     vector<Player*>* players = new vector<Player*>;

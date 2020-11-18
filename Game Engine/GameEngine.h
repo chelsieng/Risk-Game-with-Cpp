@@ -29,7 +29,7 @@ public:
     ~GameEngine();
     string getPhase();
     int getPlayerTurn();
-    Map* selectMap(int); // Function to load selected map file
+    Map* selectMap(); // Function to load selected map file
     vector<Player *> *createPlayers(); // Function to create players for the game
     Deck *createDeck(); //Function to create the deck of cards for the game
     void startupPhase(vector<Player *> *, vector<Territory *> *);
