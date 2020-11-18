@@ -18,6 +18,8 @@ class Negotiate;	//Diplomacy card uses this
 class Blockade;
 class OrdersList;
 class Player;
+class Map;
+class Territory;
 //
 using namespace std;
 //as per the instructions of the assignment, all data members (of user-made classes) must be of the pointer type
@@ -53,7 +55,7 @@ public:
     //To do everything required, we will have another method in the Hand class to play() a specific card and then
     // add it back to the game deck
     void play(Player* p);
-    void play(Player* p, std::vector<Player*> allPlayers);
+    void play(Player* p, std::vector<Player*> allPlayers, Map* theMap);
 
     //this last one is the only one that is actually gonna be used
 
@@ -174,7 +176,7 @@ public:
 
     void showCardsInHand();
     void playCardAtIndex(int i, Player* p); //this version only creates "default orders"- don't use in game engine
-    void playCardAtIndex(int i, Player* p, const std::vector<Player*>& allPlayers);
+    void playCardAtIndex(int i, Player* p, const std::vector<Player*>& allPlayers, Map* theMap);
          // -> updated version that takes vector of players
 
     //(in practice, all the players of the game), so we can create proper orders with their non-default constructors

@@ -413,7 +413,7 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                 cout << "\nInvalid answer! Please try again." << endl;
             }
         }//end of while (get valid answer)
-        this->getHand()->playCardAtIndex(ans, this, *thePlayers);
+        this->getHand()->playCardAtIndex(ans, this, *thePlayers, theMap);
     }//end of playing card in hand
 
 }///End of issue order method
