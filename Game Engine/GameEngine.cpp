@@ -16,6 +16,10 @@ string GameEngine::getPhase() {
     return this->phase;
 }
 
+int GameEngine::getPlayerTurn() {
+    return this->playerTurn;
+}
+
 // Function returns true if user selected a valid map file with valid map graph
 Map* GameEngine::selectMap(int mapSelection) {
     phaseObserver = new PhaseObserver(this);
@@ -54,7 +58,6 @@ Map* GameEngine::selectMap(int mapSelection) {
             cin >> key;
             cout << endl;
         }
-        cout << *m->getMap() << endl; // Display info of map
    //     *mapGame = *m->getMap(); // Assign valid map to global variable mapGame
         return m->getMap();
     } // else return false if map graph is invalid
@@ -66,8 +69,24 @@ Map* GameEngine::selectMap(int mapSelection) {
 
 }
 
-vector<Player *> *GameEngine::createPlayers(int numOfPlayers) {
-    phase = "Player and Deck Creation";
+vector<Player *> *GameEngine::createPlayers() {
+    this->phase = "Player and Deck Creation";
+    this->notify();
+
+    int numOfPlayers = 0;
+
+    while (numOfPlayers > 5 || numOfPlayers < 2) {
+        // Since numOfPlayers is an int, if user enters otherwise keep prompting
+        if (cin.fail()) {
+            cin.clear(); // clears error flag
+            cin.ignore(); // skips to the next line
+            continue; // Keep prompting user
+        }
+        cout << "II. Choose the number of players in the game (2-5 players): " << endl;
+        cout << ">> ";
+        cin >> numOfPlayers;
+    }
+
     Deck *deck = createDeck(); // creating deck of cards for the game
     auto *pList = new vector<Player *>;
     string key; // "Press any key" feature for later
@@ -122,7 +141,8 @@ Deck *GameEngine::createDeck() {
 }
 
 void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
-    phase = "Startup Phase";
+    this->phase = "Startup Phase";
+    this->notify();
     //create shallow copy of players vector that will be assigned back to the original later.
     vector<Player *> psv(*ps1);
     vector<Player *> *ps = new vector<Player *>(psv);
@@ -225,7 +245,8 @@ void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
 ////END OF STARTUPPHASE FUNCTION
 
 void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *theContinents) {
-    phase = "Reinforcement Phase";
+    this->phase = "Reinforcement Phase";
+    this->notify();
     //Give each player a number of armies based on the number of territories they own
     //(number owned / 3, rounded down)
 
@@ -270,7 +291,7 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *
 }///end of reinforcementPhase function
 
 void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
-    phase = "Order Issuing Phase";
+    this->phase = "Order Issuing Phase";
     //Reset mock armies for everyone's territories: (moved this to the start of the turn -> bug fix)
     for (int i = 0; i < thePlayers->size(); i++) {
         Player *p = thePlayers->at(i);
@@ -285,6 +306,7 @@ void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
         for (int i = 0; i < thePlayers->size(); i++) {
             Player *p = thePlayers->at(i);
             playerTurn = thePlayers->at(i)->getId();
+            this->notify();
             cout << "\nAlright Player " << p->getId() << ", it's your turn to issue an order!" << endl;
             if (issueRound == 0) {
                 cout << "\nYou must issue any deploy orders before you can do anything else!\n" << endl;
@@ -326,7 +348,8 @@ void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
 }///end of order issuing phase function
 
 void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
-        phase = "Order Execution Phase";
+    this->phase = "Order Execution Phase";
+    this->notify();
     cout << "Time to execute everyone's orders!" << endl;
     bool notDone = true;
     while(notDone == true){
@@ -367,12 +390,15 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
         for(int i = 0; i < thePlayers->size(); i++){
             all = true;
             Player* current = thePlayers->at(i);
+            this->playerTurn = current->getId();
             for(int j = 0;  j < theContinents->size(); j++){
                 if(!(theContinents->at(j)->isOccupiedBy(current))){all = false;}
             }//end of for (check all continents)
-            if(all == true){winner = current;
-            won = true;
-            cout << "\nCongratulations P" << winner->getId() << ", you've won the game!" << endl;
+            if (all == true){
+                winner = current;
+                this->phase = "Game Over";
+                won = true;
+                this->notify();
             }//end of if(current player has won)
         }//end of for (check for all players)
         if(won == false){
@@ -433,19 +459,10 @@ int main() {
     }
     // uncomment to see map of game which user selected from
     cout << *mapGame;
-    while (numOfPlayers > 5 || numOfPlayers < 2) {
-        // Since numOfPlayers is an int, if user enters otherwise keep prompting
-        if (cin.fail()) {
-            cin.clear(); // clears error flag
-            cin.ignore(); // skips to the next line
-            continue; // Keep prompting user
-        }
-        cout << "II. Choose the number of players in the game (2-5 players): " << endl;
-        cout << ">> ";
-        cin >> numOfPlayers;
-    }
+
+    // PLAYER AND DECK CREATION PHASE
     vector<Player*>* players = new vector<Player*>;
-    players = gameEngine->createPlayers(numOfPlayers); // Store players in vector of players
+    players = gameEngine->createPlayers(); // Store players in vector of players
 
     cout << "- You are now entering the Start Up Phase -" << endl;
     while (key.empty()) {

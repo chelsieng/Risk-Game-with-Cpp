@@ -18,8 +18,53 @@ void PhaseObserver::showInfo() {
 //    int currentPlayer = GameEngine::playerTurn;
 
     if (currentPhase == "Map Selection") {
+        cout << endl;
+        cout << endl;
         cout << "==========================================================" << endl;
-        cout << "STARTUP PHASE" << endl;
+        cout << ">>>>>>>>>>>>>>>>>>>>MAP SELECTION PHASE<<<<<<<<<<<<<<<<<<<" << endl;
+        cout << "==========================================================" << endl;
+    }
+    if (currentPhase == "Player and Deck Creation") {
+        cout << endl;
+        cout << endl;
+        cout << "==========================================================" << endl;
+        cout << ">>>>>>>>>>>>>>PLAYER AND DECK CREATION PHASE<<<<<<<<<<<<<<" << endl;
+        cout << "==========================================================" << endl;
+    }
+    if (currentPhase == "Startup Phase") {
+        cout << endl;
+        cout << endl;
+        cout << "==========================================================" << endl;
+        cout << ">>>>>>>>>>>>>>>>>>>>>>STARTUP PHASE<<<<<<<<<<<<<<<<<<<<<<<" << endl;
+        cout << "==========================================================" << endl;
+    }
+    if (currentPhase == "Reinforcement Phase") {
+        cout << endl;
+        cout << endl;
+        cout << "==========================================================" << endl;
+        cout << ">>>>>>>>>>>>>>>>>>>>>REINFORCEMENT PHASE<<<<<<<<<<<<<<<<<<" << endl;
+        cout << "==========================================================" << endl;
+    }
+    if (currentPhase == "Order Issuing Phase") {
+        cout << endl;
+        cout << endl;
+        cout << "==========================================================" << endl;
+        cout << ">>>>>>>>>>>>>>>Player " << subject->getPlayerTurn() << ": ORDER ISSUING PHASE<<<<<<<<<<<<<<" << endl;
+        cout << "==========================================================" << endl;
+    }
+    if (currentPhase == "Order Execution Phase") {
+        cout << endl;
+        cout << endl;
+        cout << "==========================================================" << endl;
+        cout << ">>>>>>>>>>>>>>>>>>>>>ORDER EXECUTION PHASE<<<<<<<<<<<<<<<<" << endl;
+        cout << "==========================================================" << endl;
+    }
+    if (currentPhase == "Game Over") {
+        cout << endl;
+        cout << endl;
+        cout << "==========================================================" << endl;
+        cout << "\t \t \t \t \t \t Game Over" << endl;
+        cout << "Congratulations Player " << subject->getPlayerTurn() << ", you've won the game!" << endl;
         cout << "==========================================================" << endl;
     }
 
