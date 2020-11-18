@@ -1,4 +1,3 @@
-#pragma once
 
 #include <iostream>
 #include <cstdlib> //so that we can create random numbers
@@ -257,6 +256,13 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *
 
 void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
     phase = "Order Issuing Phase";
+    //Reset mock armies for everyone's territories: (moved this to the start of the turn -> bug fix)
+    for (int i = 0; i < thePlayers->size(); i++) {
+        Player *p = thePlayers->at(i);
+        for(int j = 0; j < p->getPlayerTerritories()->size(); j++){
+            p->getPlayerTerritories()->at(j)->resetMockArmies();
+        }//end of for (all owned territories)
+    }//end of for (all players)
     int issueRound = 0;
     bool notDone = true;
     while(notDone == true) {
@@ -287,7 +293,7 @@ void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
                          cout << "Got it!" << endl;
                      }
                      else if(response == 3 && p->getHand()->getSize() < 1){
-                         cout << "You don't! have any cards in hand! Try something else." << endl;
+                         cout << "You don't have any cards in hand! Try something else." << endl;
                      }
                      else{ cout << "Invalid choice! Please try again." << endl;}
                  }//end of while (get valid choice)
@@ -300,13 +306,7 @@ void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
         } //end of for (round robing order issuing for all players)
         issueRound = issueRound + 1;
     }//end of while
-    //Reset mock armies for everyone's territories:
-    for (int i = 0; i < thePlayers->size(); i++) {
-        Player *p = thePlayers->at(i);
-        for(int j = 0; j < p->getPlayerTerritories()->size(); j++){
-            p->getPlayerTerritories()->at(j)->resetMockArmies();
-        }//end of for (all owned territories)
-    }//end of for (all players)
+
 }///end of order issuing phase function
 
 void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
@@ -335,7 +335,9 @@ void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
 void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> *theContinents, Map *theMap) {
     bool won = false;
     while(won == false){
-
+        for(int i = 0; i < thePlayers->size(); i++){
+            thePlayers->at(i)->setConquered(false);
+        }//end of for (set hasConquered to false for each player at start of round)
         GameEngine::reinforcementPhase(thePlayers, theContinents);
 
         GameEngine::orderIssuingPhase(thePlayers, theMap);
