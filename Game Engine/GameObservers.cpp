@@ -10,6 +10,18 @@ PhaseObserver::PhaseObserver(GameEngine *subject) {
 }
 
 void PhaseObserver::update() {
+    showInfo();
+}
+
+void PhaseObserver::showInfo() {
+    string currentPhase = subject->getPhase();
+//    int currentPlayer = GameEngine::playerTurn;
+
+    if (currentPhase == "Map Selection") {
+        cout << "==========================================================" << endl;
+        cout << "STARTUP PHASE" << endl;
+        cout << "==========================================================" << endl;
+    }
 
 }
 
@@ -24,11 +36,23 @@ StatisticsObserver::StatisticsObserver(GameEngine *subject) {
 }
 
 void StatisticsObserver::update() {
+    showInfo();
+}
+
+void StatisticsObserver::showInfo() {
+
 }
 
 StatisticsObserver::~StatisticsObserver() {
     delete this->subject;
     this->subject = nullptr;
+}
+Subject::Subject() {
+
+}
+
+Subject::~Subject() {
+
 }
 
 void Subject::attach(Observer *o) {

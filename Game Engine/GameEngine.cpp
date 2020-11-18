@@ -1,14 +1,27 @@
-#pragma once
-
 #include <iostream>
 #include <cstdlib> //so that we can create random numbers
 #include "GameEngine.h"
 #include "Cards.h"
 #include "MapLoader.h"
 
+GameEngine::GameEngine() {
+
+}
+
+GameEngine::~GameEngine() {
+
+}
+
+string GameEngine::getPhase() {
+    return this->phase;
+}
+
 // Function returns true if user selected a valid map file with valid map graph
 Map* GameEngine::selectMap(int mapSelection) {
-    phase = "Map Selection";
+    phaseObserver = new PhaseObserver(this);
+    statisticsObserver = new StatisticsObserver(this);
+    this->phase = "Map Selection";
+    this->notify();
     string key; // "Press any key" feature for later
     // Map data structure where key = user select int and value = map files from ../Map Files/ directory
     map<int, string> map = {
@@ -221,6 +234,7 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *
         //(number owned / 3, rounded down)
         int toAdd = 0;
         Player *player = ps1->at(i);
+        playerTurn = ps1->at(i)->getId();
         int numOfTerritories = player->getPlayerTerritories()->size();
         toAdd = numOfTerritories / 3;
         player->setReinforcementPool(player->getReinforcementPool() + toAdd);
@@ -263,6 +277,7 @@ void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
         if(issueRound != 0){notDone = false;}
         for (int i = 0; i < thePlayers->size(); i++) {
             Player *p = thePlayers->at(i);
+            playerTurn = thePlayers->at(i)->getId();
             cout << "\nAlright Player " << p->getId() << ", it's your turn to issue an order!" << endl;
             if (issueRound == 0) {
                 cout << "\nYou must issue any deploy orders before you can do anything else!\n" << endl;
@@ -315,6 +330,7 @@ void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
     bool notDone = true;
     while(notDone == true){
         for(int i = 0; i < thePlayers->size(); i++){
+            playerTurn = thePlayers->at(i)->getId();
             if(thePlayers->at(i)->getOrdersList()->getSize() == 0){
                 notDone = false;
             }//end of if (player has no more orders)
@@ -376,6 +392,8 @@ int main() {
 
     Map *mapGame = nullptr;
 
+    GameEngine* gameEngine = new GameEngine();
+
     int mapSelection; // int where user selects map file to be loaded
     int numOfPlayers; // int where user selects the number of players in the game
     string key; // Press any key feature for later
@@ -405,7 +423,7 @@ int main() {
         cout << ">> ";
         cin >> mapSelection; // user enter selection
         // If user selects valid map file which creates valid map graph, map selection done
-        mapGame = GameEngine::selectMap(mapSelection);
+        mapGame = gameEngine->selectMap(mapSelection);
         if (mapGame != nullptr ) {
             break;
         }
@@ -424,15 +442,18 @@ int main() {
         cin >> numOfPlayers;
     }
     vector<Player*>* players = new vector<Player*>;
-    players = GameEngine::createPlayers(numOfPlayers); // Store players in vector of players
+    players = gameEngine->createPlayers(numOfPlayers); // Store players in vector of players
+
     cout << "- You are now entering the Start Up Phase -" << endl;
     while (key.empty()) {
         cout << "Press any key >> "; // Prompt user to press any key to continue
         cin >> key;
         cout << endl;
     }
-    GameEngine::startupPhase(players, mapGame->getTerritories());
-    GameEngine::mainGameLoop(players, mapGame->getContinents(), mapGame);
+    gameEngine->startupPhase(players, mapGame->getTerritories());
+    gameEngine->mainGameLoop(players, mapGame->getContinents(), mapGame);
+
+    delete gameEngine;
     return 0;
 }
 

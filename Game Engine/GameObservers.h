@@ -23,6 +23,7 @@ public:
     ~PhaseObserver();
 
     virtual void update();
+    void showInfo();
 };
 
 class StatisticsObserver : public Observer {
@@ -33,8 +34,8 @@ public:
     StatisticsObserver(GameEngine* subject);
     ~StatisticsObserver();
 
-
     virtual void update();
+    void showInfo();
 
 };
 
@@ -43,6 +44,8 @@ private:
     // subscribers to the subject
     vector<Observer*> observers;
 public:
+    Subject();
+    ~Subject();
     virtual void attach(Observer* o);
     virtual void detach(Observer* o);
     virtual void notify();
