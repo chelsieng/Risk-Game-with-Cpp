@@ -146,11 +146,9 @@ string Territory::getTerritoryName() const {
 ostream &operator<<(ostream &output, const Territory &territory) {
     if (!territory.armies->empty()) {
         output << "Territory " << territory.getId() << ", " << territory.getTerritoryName() << ":" << endl;
-        output << "Army(ies) on territory " << territory.getTerritoryName() << ":" << endl;
-        for (Army *army : *territory.armies) {
-            cout << *army;
-        }
-        output << "The territory is owned by " << territory.owner->getId() << endl;
+        output << "Total number of army(ies) on territory " << territory.getTerritoryName() << ": " <<  territory.getNumberOfArmies() << endl;
+
+        output << "The territory is owned by P" << territory.owner->getId() << endl;
     } else if (territory.owner != nullptr) {
         output << "Territory " << territory.getId() << ", " << territory.getTerritoryName() << " is owned by P"
                << territory.owner->getId()
