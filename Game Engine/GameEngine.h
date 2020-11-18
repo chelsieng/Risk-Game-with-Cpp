@@ -22,6 +22,9 @@ class GameEngine : public Subject{
 private:
     string phase;
     int playerTurn;
+    int issueRound;
+    int issueResponse;
+    Player* curr_player;
 public:
     PhaseObserver* phaseObserver;
     StatisticsObserver* statisticsObserver;
@@ -29,6 +32,11 @@ public:
     ~GameEngine();
     string getPhase();
     int getPlayerTurn();
+    Player* getCurrPlayer();
+    int getIssueRound();
+    int getIssueResponse();
+    void setIssueResponse(int);
+    void setPlayerTurn(int);
     Map* selectMap(); // Function to load selected map file
     vector<Player *> *createPlayers(); // Function to create players for the game
     Deck *createDeck(); //Function to create the deck of cards for the game
