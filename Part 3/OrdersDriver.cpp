@@ -8,107 +8,180 @@ using std::vector;
 
 int main()
 {
-    cout << "\nThis is a driver class for the Orders and OrdersList class" << endl;
-
+    cout << "This is a driver class for the Orders and OrdersList class" << endl;
     // Initialize variables
-    Player *player1 = new Player();
-    Player *player2 = new Player();
-    Player *player3 = new Player();
-    Player *player4 = new Player();
-    Player *player5 = new Player();
-    Player *player6 = new Player();
+    int oldOwner, newOwner;         // To store ID of players for comparison
+//    BombCard *startCard = new BombCard();
+//    deckNode *baseOfDeck = new deckNode(startCard);
+//    Deck theDeck(baseOfDeck);
+    Hand *hand1;
+    Hand *hand2;
 
-    string *name1 = new string("North Korea");
-    string *name2 = new string("USA");
-    string *name3 = new string("China");
-    string *name4 = new string("Canada");
-    string *name5 = new string("Russia");
-    string *name6 = new string("Britain");
+    vector<Territory *> *player1Territory = new vector<Territory *>;
+    vector<Territory *> *player2Territory = new vector<Territory *>;
 
-    Territory *territory1 = new Territory(player1, *name1);
-    Territory *territory2 = new Territory(player2, *name2);
-    Territory *territory3 = new Territory(player3, *name3);
-    Territory *territory4 = new Territory(player4, *name4);
-    Territory *territory5 = new Territory(player5, *name5);
-    Territory *territory6 = new Territory(player6, *name6);
+    Player *player0;
+    Player *player1 = new Player(hand1, new OrdersList(), player1Territory);
+    Player *player2 = new Player(hand2, new OrdersList(), player2Territory);
+    player1->setReinforcementPool(10);
+    player2->setReinforcementPool(10);
 
-    int numOfArmies = 5;
+    // Creating a mini map
+    // Creating territories
+    string *territoryName1 = new string("Canada");
+    string *territoryName2 = new string("America");
+    string *territoryName3 = new string("Mexico");
+    string *territoryName4 = new string("China");
+    string *territoryName5 = new string("Russia");
+    string *territoryName6 = new string("North Korea");
 
-    // Testing each order subclass
-    // Create an object of each type of Order
-    Order *deploy = new Deploy(player1, territory1, numOfArmies);
-    Order *advance = new Advance(player1, territory1, territory2, numOfArmies);
-    Order *blockade = new Blockade(player4, territory4);
-    Order *bomb = new Bomb(player3, territory3, territory4);
-    Order *airlift = new Airlift(player5, territory5, territory6, numOfArmies);
-    Order *negotiate = new Negotiate(player5, player6);
+    Territory *canada = new Territory(player1, *territoryName1);
+    Territory *america = new Territory(player1, *territoryName2);
+    Territory *mexico = new Territory(player1, *territoryName3);
+    Territory *china = new Territory(player2, *territoryName4);
+    Territory *russia = new Territory(player2, *territoryName5);
+    Territory *northKorea = new Territory(player2, *territoryName6);
 
-    cout << "\nTesting Deploy methods execute(): " << endl;
+    Graph<int> *theWorld = new Graph<int>;
+
+    // Creating continents
+    vector<Territory *> *territoriesVector1 = new vector<Territory *>;
+    territoriesVector1->push_back(canada);
+    territoriesVector1->push_back(america);
+    territoriesVector1->push_back(mexico);
+
+    vector<Territory *> *territoriesVector2 = new vector<Territory *>;
+    territoriesVector2->push_back(china);
+    territoriesVector2->push_back(russia);
+    territoriesVector2->push_back(northKorea);
+
+    Continent *northAmerica = new Continent("North America", theWorld, territoriesVector1);
+    Continent *asia = new Continent("Asia", theWorld, territoriesVector2);
+
+    theWorld->add_vertex(canada->getId());
+    theWorld->add_vertex(america->getId());
+    theWorld->add_vertex(mexico->getId());
+    theWorld->add_vertex(china->getId());
+    theWorld->add_vertex(russia->getId());
+    theWorld->add_vertex(northKorea->getId());
+
+    // In North America, America is connected to Canada and Mexico
+    theWorld->add_edge(america->getId(), canada->getId());
+    theWorld->add_edge(america->getId(), mexico->getId());
+    // In Asia, China is connected to Russia and North Korea
+    theWorld->add_edge(russia->getId(), china->getId());
+    theWorld->add_edge(china->getId(), northKorea->getId());
+    // America and Russia are connected
+    theWorld->add_edge(america->getId(), russia->getId());
+
+    // Assigning territories to players
+    player1Territory->push_back(canada);
+    player1Territory->push_back(america);
+    player1Territory->push_back(mexico);
+    player2Territory->push_back(china);
+    player2Territory->push_back(russia);
+    player2Territory->push_back(northKorea);
+
+    // Testing orders
+    Order *deploy;
+    Order *advance;
+    Order *blockade;
+    Order *bomb;
+    Order *airlift;
+    Order *negotiate;
+
+    // Checking validate() function
+    cout << "\nChecking the validity of each order" << endl;
+    cout << "Cases where orders are invalid:" << endl;
+    cout << "Player deploy to territory owned by different player:" << endl;
+    deploy = new Deploy(player1, china, 5);
     deploy->execute();
-    cout << *deploy;
 
-    cout << "\nTesting Advance methods execute(): " << endl;
+    cout << "\nPlayer advance a territory that is owned by different player:" << endl;
+    advance = new Advance(player2, canada, america, 5);
     advance->execute();
-    cout << *advance;
 
-    cout << "\nTesting Bomb methods execute(): " << endl;
-    bomb->execute();
-    cout << *bomb;
-
-    cout << "\nTesting Blockade methods execute(): " << endl;
+    cout << "\nPlayer blockade a territory that is owned by different player:" << endl;
+    blockade = new Blockade(player1, china);
     blockade->execute();
-    cout << *blockade;
 
-    cout << "\nTesting Negotiate methods execute(): " << endl;
+    cout << "\nPlayer bomb a territory that they own:" << endl;
+    bomb = new Bomb(player2, northKorea, china);
+    bomb->execute();
+
+    cout << "\nPlayer airlift from a territory that is owned by different player:" << endl;
+    airlift = new Airlift(player1, northKorea, china, 5);
+    bomb->execute();
+
+    cout << "\nPlayer negotiate with themselves:" << endl;
+    negotiate = new Negotiate(player1, player1);
     negotiate->execute();
-    cout << *negotiate;
 
-    cout << "Testing Airlift methods execute(): " << endl;
+
+    cout << "\n\nExecuting orders correctly:" << endl;
+    cout << "Deploy order:" << endl;
+    deploy = new Deploy(player1, america, 7);
+    deploy->execute();
+    cout << "Player 1 enforcement pool after deploy: " << player1->getReinforcementPool() << endl;
+    cout << "Number of armies in America after deploy: " << america->getNumberOfArmies() << endl;
+
+    cout << "\nAdvance to a territory that is owned by player that issued the order:" << endl;
+    advance = new Advance(player2, russia, china, 2);
+    advance->execute();
+    cout << "Number of armies in Russia after advance: " << russia->getNumberOfArmies() << endl;
+    cout << "Number of armies in China after advance: " << china->getNumberOfArmies() << endl;
+
+    cout << "\nAdvance to a territory that is owned by a different player:" << endl;
+    advance = new Advance(player1, america, russia, 9);
+    cout << "Number of armies in Russia before advance: " << russia->getNumberOfArmies() << endl;
+    oldOwner = russia->getOwner()->getId();
+    advance->execute();
+    newOwner = russia->getOwner()->getId();
+    cout << "Before, Russia is owned by player " << oldOwner;
+    cout << ". After, Russia is owned by player " << newOwner << "." << endl;
+    cout << "Number of armies in Russia after advance: " << russia->getNumberOfArmies() << endl;
+
+    cout << "\nAirlift to a territory that is owned by the player that issued the order:" << endl;
+    airlift = new Airlift(player1, mexico, canada, 4);
+    cout << "Number of armies in Canada before airlift: " << canada->getNumberOfArmies() << endl;
     airlift->execute();
-    cout << *airlift;
+    cout << "Number of armies in Canada after airlift: " << canada->getNumberOfArmies() << endl;
 
-//    // Testing OrdersList
-//    cout << "\nAdding all types of Order into an OrdersList" << endl;
-//    OrdersList *ordersList = new OrdersList();
-//    ordersList->addToLast(deploy);
-//    ordersList->addToLast(advance);
-//    ordersList->addToLast(bomb);
-//    ordersList->addToLast(blockade);
-//    ordersList->addToLast(negotiate);
-//    ordersList->addToLast(airlift);
-//
-//    // List after added: [deploy, advance, bomb, blockade, negotiation, airlift]
-//    cout << "Expected list: [deploy, advance, bomb, blockade, negotiation, airlift]" << endl;
-//    cout << "OrdersList after everything is added:"<< endl
-//        << *ordersList << endl;
-//
-//    // Move Order in index 1 to index 3
-//    ordersList->move(1,3);
-//    // List after moving: [deploy, bomb, blockade, advance, negotiation, airlift]
-//    cout << "Expected list: [deploy, bomb, blockade, advance, negotiation, airlift]" << endl;
-//    cout << "OrdersList after Order is moved:" << endl
-//        << *ordersList  << endl;
-//
-//    // Delete Order at index 4
-//    ordersList->deleteAt(4);
-//    // List after deleting: [deploy, bomb, blockade, advance, airlift]
-//    cout << "Expected list: [deploy, bomb, blockade, advance, airlift]" << endl;
-//    cout << "OrdersList after Order is deleted:" << endl
-//        << *ordersList  << endl;
+    cout << "\nAirlift to a territory that is owned by a different player:" << endl;
+    airlift = new Airlift(player2, northKorea, america, 5);
+    oldOwner = america->getOwner()->getId();
+    cout << "Number of armies in America before airlift: " << america->getNumberOfArmies() << endl;
+    airlift->execute();
+    newOwner = america->getOwner()->getId();
+    cout << "Before, America is owned by player " << oldOwner;
+    cout << ". After, America is owned by player " << newOwner << "." << endl;
+    cout << "Number of armies in America after airlift: " << america->getNumberOfArmies() << endl;
+
+    cout << "\nBlockade the territory that is owned by the played that isused the order:" << endl;
+    blockade = new Blockade(player2, china);
+    blockade->execute();
+    cout << "Comparing old owner and the current owner of the blockade territory: ";
+    cout << (player2->getId() == china->getOwner()->getId()) << endl;
+
+    cout << "\nBomb a territory that is owned by a different player:" << endl;
+    bomb = new Bomb(player2, america, canada);
+    cout << "Number of armies in Canada before bomb: " << canada->getNumberOfArmies() << endl;
+    bomb->execute();
+    cout << "Number of armies in Canada after bomb: " << canada->getNumberOfArmies() << endl;
+
+    cout << "\nPerform negotiate order:" << endl;
+    negotiate = new Negotiate(player1, player2);
+    negotiate->execute();
 
     // Delete pointers
 //    delete player1;         player1 = nullptr;
 //    delete player2;         player2 = nullptr;
-//    delete player3;         player3 = nullptr;
-//    delete player4;         player4 = nullptr;
-//    delete player5;         player5 = nullptr;
-//    delete player6;         player6 = nullptr;
-    delete name1;           name1 = nullptr;
-    delete name2;           name2 = nullptr;
-    delete name3;           name3 = nullptr;
-    delete name4;           name4 = nullptr;
-    delete name5;           name5 = nullptr;
-    delete name6;           name6 = nullptr;
+    delete territoryName2;  territoryName2 = nullptr;
+    delete territoryName3;  territoryName3 = nullptr;
+    delete territoryName1;  territoryName1 = nullptr;
+    delete territoryName4;  territoryName4 = nullptr;
+    delete territoryName5;  territoryName5 = nullptr;
+    delete territoryName6;  territoryName6 = nullptr;
 //    delete territory1;      territory1 = nullptr;
 //    delete territory2;      territory2 = nullptr;
 //    delete territory3;      territory3 = nullptr;
@@ -121,7 +194,6 @@ int main()
 //    delete blockade;        blockade = nullptr;
 //    delete negotiate;       negotiate = nullptr;
 //    delete airlift;         airlift = nullptr;
-//    delete ordersList;      ordersList = nullptr;
 
     cout << "\nEnd of OrdersDriver" << endl;
     return 0;

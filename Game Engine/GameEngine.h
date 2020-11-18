@@ -19,7 +19,7 @@ using namespace std;
 //vector<Player *> *players; // vector storing all players for the game
 // this is the GameEngine class, it will have number of players who will have armies. Also, territories assigned to only and only one player.
 static string phase;
-string getPhase(){return phase;}
+static string getPhase(){return phase;}
 
 class GameEngine {
 public:
