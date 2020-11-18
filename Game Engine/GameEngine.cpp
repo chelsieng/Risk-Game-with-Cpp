@@ -463,7 +463,7 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
             theFallenOnes->clear();
             /////
 
-            cout << "Let's see everyone's current standings:" << endl;
+            cout << "\nLet's see everyone's current standings:" << endl;
             for(int m = 0; m < thePlayers->size(); m++){
                 cout << *thePlayers->at(m) << endl;
             }//end of for (print all player statuses
@@ -474,9 +474,6 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
 
 
 
-
-
-/*
 int main() {
     Map *mapGame = nullptr;
 
@@ -484,6 +481,7 @@ int main() {
 
     int numOfPlayers; // int where user selects the number of players in the game
     string key; // Press any key feature for later
+    string secondKey;
 
 
     // If user selects valid map file which creates valid map graph, map selection done
@@ -499,10 +497,19 @@ int main() {
         cin >> key;
         cout << endl;
     }
+
     gameEngine->startupPhase(players, mapGame->getTerritories());
+
+    cout << "- You are now entering the Main Game Loop -" << endl;
+    while (secondKey.empty()) {
+        cout << "Press any key >> "; // Prompt user to press any key to continue
+        cin >> secondKey;
+        cout << endl;
+    }
+
     gameEngine->mainGameLoop(players, mapGame->getContinents(), mapGame);
 
     delete gameEngine;
     return 0;
 }
-*/
+
