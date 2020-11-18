@@ -25,6 +25,8 @@ private:
     int issueRound;
     int issueResponse;
     Player* curr_player;
+    vector<Player*>* totalPlayers;
+    Map *currMap;
 public:
     PhaseObserver* phaseObserver;
     StatisticsObserver* statisticsObserver;
@@ -33,7 +35,9 @@ public:
     string getPhase();
     int getPlayerTurn();
     Player* getCurrPlayer();
+    Map* getMap();
     int getIssueRound();
+    vector<Player*>* getTotalPlayers();
     int getIssueResponse();
     void setIssueResponse(int);
     void setPlayerTurn(int);

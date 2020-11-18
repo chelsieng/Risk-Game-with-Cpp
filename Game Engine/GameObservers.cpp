@@ -162,7 +162,38 @@ void StatisticsObserver::update() {
 }
 
 void StatisticsObserver::showInfo() {
+    string currPhase = subject->getPhase();
 
+    if (currPhase == "Statistics") {
+        map<int, int> hash = {};
+        int total = 0;
+        cout << "Let's see everyone's current standings:" << endl;
+        cout << "" << endl;
+        cout << "|-------------------------------------------------------------------------------------|" << endl;
+        cout << "|    Player   |    Percent of Map Owned   |   Number of Orders  |   Number of Cards   |" << endl;
+
+        for (auto t : *subject->getMap()->getTerritories()) {
+            total++;
+            hash[t->getOwner()->getId()]++;
+        }
+        for (Player *p : *subject->getTotalPlayers()) {
+            cout << "|-------------------------------------------------------------------------------------|" << endl;
+            cout << "|      " << p->getId() << "      |             " << hash[p->getId()] << "            |          " << p->getOrdersList()->getSize() << "          " << "|          " << p->getHand()->getSize() << "          |" << endl;
+        }
+        cout << "|-------------------------------------------------------------------------------------|" << endl;
+        cout << endl;
+    }
+    if (currPhase == "Game Over") {
+        cout << endl;
+        cout << endl;
+        cout << "\t \t \t \t \t Game Over" << endl;
+        cout << "*****************************************************" << endl;
+        cout << "*****************************************************" << endl;
+        cout << "** Congratulations Player " << subject->getPlayerTurn() << ", you've won the game! **" << endl;
+        cout << "*****************************************************" << endl;
+        cout << "*****************************************************" << endl;
+        cout << endl;
+    }
 }
 
 void PhaseObserver::update() {
@@ -171,7 +202,6 @@ void PhaseObserver::update() {
 
 void PhaseObserver::showInfo() {
     string currentPhase = subject->getPhase();
-//    int currentPlayer = GameEngine::playerTurn;
 
     if (currentPhase == "Map Selection") {
         // Displaying welcome message
@@ -262,16 +292,6 @@ void PhaseObserver::showInfo() {
         cout << "----------------------------------------------------------" << endl;
         cout << "---------------Player " << subject->getPlayerTurn() << ": ORDER EXECUTION PHASE------------" << endl;
         cout << "----------------------------------------------------------" << endl;
-        cout << "Executing Player" << subject->getPlayerTurn() << "'s next order." << endl;
+        cout << "Executing Player " << subject->getPlayerTurn() << "'s next order." << endl;
     }
-    if (currentPhase == "Game Over") {
-        cout << endl;
-        cout << endl;
-        cout << "==========================================================" << endl;
-        cout << "\t \t \t \t \t \t Game Over" << endl;
-        cout << "Congratulations Player " << subject->getPlayerTurn() << ", you've won the game!" << endl;
-        cout << "==========================================================" << endl;
-        cout << endl;
-    }
-
 }

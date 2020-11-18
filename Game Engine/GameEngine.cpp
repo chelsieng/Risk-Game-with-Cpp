@@ -10,11 +10,17 @@ GameEngine::GameEngine() {
     this->curr_player = nullptr;
     this->issueRound = -1;
     this->issueResponse = -1;
+    this->totalPlayers= nullptr;
+    this->currMap = nullptr;
 }
 
 GameEngine::~GameEngine() {
     delete this->curr_player;
     this->curr_player = nullptr;
+}
+
+Map* GameEngine::getMap() {
+    return this->currMap;
 }
 
 string GameEngine::getPhase() {
@@ -23,6 +29,10 @@ string GameEngine::getPhase() {
 
 int GameEngine::getPlayerTurn() {
     return this->playerTurn;
+}
+
+vector<Player*>* GameEngine::getTotalPlayers() {
+    return this->totalPlayers;
 }
 
 void GameEngine::setPlayerTurn(int p) {
@@ -44,8 +54,8 @@ Player* GameEngine::getCurrPlayer() {
 
 // Function returns true if user selected a valid map file with valid map graph
 Map* GameEngine::selectMap() {
-    phaseObserver = new PhaseObserver(this);
-    statisticsObserver = new StatisticsObserver(this);
+    this->phaseObserver = new PhaseObserver(this);
+    this->statisticsObserver = new StatisticsObserver(this);
     this->phase = "Map Selection";
     this->notify();
 
@@ -142,6 +152,7 @@ vector<Player *> *GameEngine::createPlayers() {
 
     Deck *deck = createDeck(); // creating deck of cards for the game
     auto *pList = new vector<Player *>;
+    this->totalPlayers = pList;
     string key; // "Press any key" feature for later
     for (int i = 0; i < numOfPlayers; i++) {
         Hand *hand = new Hand(0, deck); // creating hand for each player
@@ -159,6 +170,13 @@ vector<Player *> *GameEngine::createPlayers() {
     for (auto p: *pList) {
         cout << *p << endl;
     }
+
+    while (key.empty()) {
+        cout << "Enter any key to continue>> "; // Prompt user to press any key to continue
+        cin >> key;
+        cout << endl;
+    }
+
     return pList;
 }
 
@@ -194,6 +212,7 @@ Deck *GameEngine::createDeck() {
 }
 
 void GameEngine::startupPhase(vector<Player *> *ps1, vector<Territory *> *ts) {
+//    this->currMap =
     this->phase = "Startup Phase";
     this->notify();
     //create shallow copy of players vector that will be assigned back to the original later.
@@ -476,7 +495,10 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
             }//end of if(current player has won)
         }//end of for (check for all players)
         if(won == false){
-            cout << "Let's see everyone's current standings:" << endl;
+            this->totalPlayers = thePlayers;
+            this->currMap = theMap;
+            this->phase = "Statistics";
+            this->notify();
             for(int k = 0; k < thePlayers->size(); k++){
                 cout << *thePlayers->at(k) << endl;
             }//end of for (print all player statuses
@@ -484,10 +506,6 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
     }//end of while
 
 }///END OF MAIN GAME LOOP
-
-
-
-
 
 
 int main() {
@@ -504,14 +522,9 @@ int main() {
 
     // PLAYER AND DECK CREATION PHASE
     vector<Player*>* players = new vector<Player*>;
+
     players = gameEngine->createPlayers(); // Store players in vector of players
 
-    cout << "- You are now entering the Start Up Phase -" << endl;
-    while (key.empty()) {
-        cout << "Enter any key to continue>> "; // Prompt user to press any key to continue
-        cin >> key;
-        cout << endl;
-    }
     gameEngine->startupPhase(players, mapGame->getTerritories());
     gameEngine->mainGameLoop(players, mapGame->getContinents(), mapGame);
 
