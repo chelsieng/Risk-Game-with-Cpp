@@ -81,11 +81,11 @@ StatisticsObserver& StatisticsObserver::operator=(const StatisticsObserver& s) {
 }
 
 // Insertion stream operator
-std::ostream &operator<<(ostream &out, const PhaseObserver &phaseObserver) {
-    return out << "Phase Observer" << endl;
+std::ostream &operator<<(ostream &out, const StatisticsObserver &statisticsObserver) {
+    return out << "Statistics Observer" << endl;
 }
 
-// ====================================== Statistics Observer =======================================
+// ====================================== Subject Observer =======================================
 
 Subject::Subject() {}
 
@@ -127,6 +127,13 @@ Subject& Subject::operator=(const Subject& subject) {
     return *this;
 }
 
+// Insertion stream operator
+std::ostream &operator<<(ostream &out, const Subject &subject) {
+    return out << "This Subject has " << subject.observers.size() << " observers subscribed" << endl;
+}
+
+// ------------------------------------------------------ PATTERN METHODS --------------------------------
+
 // Attach
 void Subject::attach(Observer *o) {
     this->observers.push_back(o);
@@ -143,8 +150,6 @@ void Subject::detach(Observer *o) {
     }
     this->observers.erase(this->observers.begin() + counter);
 }
-
-// IMPLEMENTATION
 
 void Subject::notify() {
     for (Observer* o : this->observers) {
