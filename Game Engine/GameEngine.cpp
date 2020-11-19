@@ -410,7 +410,13 @@ void GameEngine::orderIssuingPhase(vector<Player *> * thePlayers, Map *theMap) {
                 cout << "Would you like to issue another order? Type 1 for yes, and any other number for no." << endl;
                 int ans;
                 cin >> ans;
-                if(ans == 1) {
+                if (cin.fail()) {
+                    cin.clear(); // clears error flag
+                    cin.ignore(); // skips to the next line
+                    --i;
+                    notDone = true; // Keep prompting user
+                }
+                else if(ans == 1) {
                     notDone = true;
                     this->phase = "Issue Continue";
                     this->notify();
