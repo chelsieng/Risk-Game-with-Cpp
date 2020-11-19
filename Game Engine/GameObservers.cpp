@@ -37,6 +37,10 @@ PhaseObserver::PhaseObserver(const PhaseObserver *p) {
 
 // Assignment Operator
 PhaseObserver& PhaseObserver::operator=(const PhaseObserver& p) {
+    if (this == &p) {
+        return *this;
+    }
+
     delete this->subject;
     this->subject = nullptr;
     this->subject = new GameEngine(*p.subject);
@@ -73,6 +77,10 @@ StatisticsObserver::StatisticsObserver(const StatisticsObserver *s) {
 
 // Assignment Operator
 StatisticsObserver& StatisticsObserver::operator=(const StatisticsObserver& s) {
+    if (this == &s) {
+        return *this;
+    }
+
     delete this->subject;
     this->subject = nullptr;
     this->subject = new GameEngine(*s.subject);

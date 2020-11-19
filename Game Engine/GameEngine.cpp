@@ -17,6 +17,12 @@ GameEngine::GameEngine() {
 GameEngine::~GameEngine() {
     delete this->curr_player;
     this->curr_player = nullptr;
+
+    delete this->currMap;
+    this->currMap = nullptr;
+
+    delete this->totalPlayers;
+    this->totalPlayers = nullptr;
 }
 
 Map* GameEngine::getMap() {
