@@ -476,18 +476,19 @@ void GameEngine::orderIssuingPhase(vector<Player *> *thePlayers, Map *theMap) {
                     notDone = true; // Keep prompting user
                 } else if(ans == 1) {
                     notDone = true;
-                    cout << "Here are your options. Type in the number corresponding to your choice:" << endl;
-                    cout << "1. Advance armies to defend." << endl;
-                    cout << "2. Advance armies to attack." << endl;
-                    cout << "3. Play a card from your hand." << endl;
                     bool valid = false;
+                    int response;
                     while(valid == false){
-                        int response;
+                        cout << "Here are your options. Type in the number corresponding to your choice:" << endl;
+                        cout << "1. Advance armies to defend." << endl;
+                        cout << "2. Advance armies to attack." << endl;
+                        cout << "3. Play a card from your hand." << endl;
                         cin >> response;
                         if (cin.fail()) {
                             cin.clear(); // clears error flag
                             cin.ignore(); // skips to the next line
                             valid = false; // Keep prompting user
+                            cout << "Please try again" << endl;
                         }
                         else if(response == 1 || response == 2 || (response == 3 && p->getHand()->getSize() > 0)){
                             valid = true;
@@ -497,7 +498,7 @@ void GameEngine::orderIssuingPhase(vector<Player *> *thePlayers, Map *theMap) {
                         } else{ cout << "Invalid choice! Please try again." << endl;}
                     }//end of while (get valid choice)
 
-                    p->issueOrder(theMap, thePlayers, this->getIssueResponse());
+                    p->issueOrder(theMap, thePlayers, response);
                 }//end of if (issue another order)
                 else {
                     cout << "Okay! No order will be issued." << endl;
@@ -559,6 +560,7 @@ void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
         }
     }//end of while
 
+    cout << endl;
     string key;
     while (key.empty()) {
         cout << "Enter any key to continue>> "; // Prompt user to press any key to continue
