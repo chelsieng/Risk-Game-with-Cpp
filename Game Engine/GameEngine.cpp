@@ -12,6 +12,8 @@ GameEngine::GameEngine() {
     this->issueResponse = -1;
     this->totalPlayers = nullptr;
     this->currMap = nullptr;
+    this->isPhase = true;
+    this->isStatistics = true;
 }
 
 GameEngine::~GameEngine() {
@@ -61,11 +63,22 @@ Player *GameEngine::getCurrPlayer() {
     return this->curr_player;
 }
 
+void GameEngine::gameStart(GameEngine *g) {
+    this->phaseObserver = new PhaseObserver(this);
+    this->statisticsObserver = new StatisticsObserver(this);
+    Map *mapGame = nullptr;
+    vector<Player *> *players = new vector<Player *>;
+    // If user selects valid map file which creates valid map graph, map selection done
+    mapGame = g->selectMap();
+    // PLAYER AND DECK CREATION PHASE
+    players = g->createPlayers(); // Store players in vector of players
+
+    g->startupPhase(players, mapGame->getTerritories());
+    g->mainGameLoop(players, mapGame->getContinents(), mapGame);
+}
 
 // Function returns true if user selected a valid map file with valid map graph
 Map *GameEngine::selectMap() {
-    this->phaseObserver = new PhaseObserver(this);
-    this->statisticsObserver = new StatisticsObserver(this);
     this->phase = "Map Selection";
     this->notify();
 
@@ -563,25 +576,8 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
 }///END OF MAIN GAME LOOP
 
 int main() {
-    Map *mapGame = nullptr;
-
     GameEngine *gameEngine = new GameEngine();
-
-    int numOfPlayers; // int where user selects the number of players in the game
-    string key; // Press any key feature for later
-    string secondKey;
-
-
-    // If user selects valid map file which creates valid map graph, map selection done
-    mapGame = gameEngine->selectMap();
-
-    // PLAYER AND DECK CREATION PHASE
-    vector<Player *> *players = new vector<Player *>;
-
-    players = gameEngine->createPlayers(); // Store players in vector of players
-
-    gameEngine->startupPhase(players, mapGame->getTerritories());
-    gameEngine->mainGameLoop(players, mapGame->getContinents(), mapGame);
+    gameEngine->gameStart(gameEngine);
 
     delete gameEngine;
     return 0;

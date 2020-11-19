@@ -25,6 +25,8 @@ private:
     int eliminatedPlayer;
     int issueRound;
     int issueResponse;
+    bool isPhase;
+    bool isStatistics;
     Player* curr_player;
     vector<Player*>* totalPlayers;
     Map *currMap;
@@ -46,15 +48,12 @@ public:
     Map* selectMap(); // Function to load selected map file
     vector<Player *> *createPlayers(); // Function to create players for the game
     Deck *createDeck(); //Function to create the deck of cards for the game
+    void gameStart(GameEngine *g);
     void startupPhase(vector<Player *> *, vector<Territory *> *);
-
-
- //   static void reinforcementPhase(vector<Player *> *, vector<Continent *> *);
- //   static void orderIssuingPhase(vector<Player*> *thePlayers, Map* theMap);
-       void reinforcementPhase(vector<Player *> *thePlayers, vector<Continent *> * theContinents);
-       void orderIssuingPhase(vector<Player*> *thePLayers, Map* theMap);
-       void orderExecutionPhase(vector<Player*> *thePlayers);
-       void mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> * theContinents, Map* theMap);
+    void reinforcementPhase(vector<Player *> *thePlayers, vector<Continent *> * theContinents);
+    void orderIssuingPhase(vector<Player*> *thePLayers, Map* theMap);
+    void orderExecutionPhase(vector<Player*> *thePlayers);
+    void mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> * theContinents, Map* theMap);
 
 };
 
