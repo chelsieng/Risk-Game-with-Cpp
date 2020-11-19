@@ -224,6 +224,11 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                             bool valid = false;
                             while (valid == false) {
                                 cin >> amount;
+                                if (cin.fail()) {
+                                    cin.clear(); // clears error flag
+                                    cin.ignore(); // skips to the next line
+                                    valid=false; // Keep prompting user
+                                }
                                 if (amount <= usableArmies && amount >= 0) {
                                     valid = true;
                                     if (amount > 0) {
@@ -363,7 +368,12 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                 Territory *chosenOne;
                 while (chosen == false) {
                     cin >> ans;
-                    if (ans < 0 || ans > neighboursYouOwn->size()) {
+                    if (cin.fail()) {
+                        cin.clear(); // clears error flag
+                        cin.ignore(); // skips to the next line
+                        chosen=false; // Keep prompting user
+                    }
+                    else if (ans < 0 || ans > neighboursYouOwn->size()) {
                         cout << "Invalid number! Please try again." << endl;
                     }//end of if (invalid choice)
                     else {
@@ -434,6 +444,11 @@ vector<Territory*>* Player::toDefend(Map* theMap) {
         cout << "What territory will you defend?" << endl;
         cin >> ans;
         if (ans < 0) { done = true; }
+        else if (cin.fail()) {
+            cin.clear(); // clears error flag
+            cin.ignore(); // skips to the next line
+            continue; // Keep prompting user
+        }
         else if (options->find(ans) == options->end()) {
             cout << "That is not an option!"
                  << "\nRemember that you cannot chose the same territory more than once, "
@@ -474,6 +489,11 @@ std::vector<Territory*>* Player::toAttack(Map* theMap) {
             cout << "What territory will you attack?" << endl;
             cin >> ans;
             if (ans < 0) { done = true; }
+            else if (cin.fail()) {
+                cin.clear(); // clears error flag
+                cin.ignore(); // skips to the next line
+                continue; // Keep prompting user
+            }
             else if (options->find(ans) == options->end()) {
                 cout << "That is not an option!"
                      << "\nRemember that you cannot chose the same territory more than once, "

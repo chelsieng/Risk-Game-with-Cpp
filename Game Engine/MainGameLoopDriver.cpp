@@ -118,6 +118,8 @@ int main() {
         cout << *ps1->at(i) << endl;
     }
     GameEngine* gameEngine = new GameEngine();
+    gameEngine->phaseObserver = new PhaseObserver(gameEngine);
+    gameEngine->statisticsObserver = new StatisticsObserver(gameEngine);
     cout << "We will now enter the start up phase function:" << endl;
     gameEngine->startupPhase(ps1,map1->getTerritories());
 
