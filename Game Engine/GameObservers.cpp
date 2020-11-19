@@ -195,15 +195,18 @@ void StatisticsObserver::showInfo() {
     }
 
     if (currPhase == "Conquered") {
+        cout << endl;
         cout << "********************UPDATE : Territory Conquered********************" << endl;
         cout << "Player " << subject->getPlayerTurn() << " conquered territory " << subject->getConqTerr() << endl;
         cout << "********************************************************************" << endl;
+        cout << endl;
     }
 
     if (currPhase == "Player Eliminated") {
         cout << "********************UPDATE : Player Eliminated********************" << endl;
         cout << "Player " << subject->getEliminatedPLayer() << " owns no territories - they have been removed from the game!" << endl;
         cout << "******************************************************************" << endl;
+        cout << endl;
     }
     if (currPhase == "Game Over") {
         cout << endl;
