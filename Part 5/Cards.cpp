@@ -127,7 +127,7 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
             else {
                 chosen = true;
                 chosenOne = neighboursYouOwn->at(response);
-                cout << "Great! You will bomb from " << neighboursYouOwn->at(ans)->getTerritoryName()
+                cout << "Great! You will bomb from " << neighboursYouOwn->at(response)->getTerritoryName()
                      << endl;
             }
         }//end of while (chose proper number)
