@@ -9,6 +9,8 @@ class GameEngine;
 
 class Observer {
 public:
+    Observer();
+    ~Observer();
     // pure virtual function
     virtual void update() = 0;
 };
@@ -19,11 +21,14 @@ private:
     GameEngine* subject;
 
 public:
-    PhaseObserver(GameEngine* subject);
+    explicit PhaseObserver(GameEngine* subject);
     ~PhaseObserver();
-
+    PhaseObserver(const PhaseObserver *phaseObserver);
+    PhaseObserver& operator=(const PhaseObserver &p);
     virtual void update();
     void showInfo();
+
+    friend ostream& operator << (ostream& ostream, const PhaseObserver &phaseObserver);
 };
 
 class StatisticsObserver : public Observer {
@@ -31,11 +36,14 @@ private:
     GameEngine* subject;
 
 public:
-    StatisticsObserver(GameEngine* subject);
+    explicit StatisticsObserver(GameEngine* subject);
     ~StatisticsObserver();
-
+    StatisticsObserver(const StatisticsObserver *StatisticsObserver);
+    StatisticsObserver& operator=(const StatisticsObserver &s);
     virtual void update();
     void showInfo();
+
+    friend ostream& operator << (ostream& ostream, const StatisticsObserver &statisticsObserver);
 
 };
 
@@ -46,10 +54,13 @@ private:
 public:
     Subject();
     ~Subject();
+    Subject(const Subject &subject);
+    Subject& operator=(const Subject &s);
     virtual void attach(Observer* o);
     virtual void detach(Observer* o);
     virtual void notify();
-};
 
+    friend ostream& operator << (ostream& ostream, const Subject &subject);
+};
 
 

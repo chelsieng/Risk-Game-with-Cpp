@@ -105,7 +105,7 @@ int main() {
     vector<Player*>* ps1 = new vector<Player*>();
     ps1->push_back(p1);
     ps1->push_back(p2);
- //   ps1->push_back(p3);
+    ps1->push_back(p3);
  //   ps1->push_back(p4);
 
  //We'll start each player off with a card in hand:
@@ -117,34 +117,11 @@ int main() {
     for(int i = 0; i < ps1->size(); i++){
         cout << *ps1->at(i) << endl;
     }
-
+    GameEngine* gameEngine = new GameEngine();
     cout << "We will now enter the start up phase function:" << endl;
     gameEngine->startupPhase(ps1,map1->getTerritories());
 
-//    cout << "\nWe have exited the start up phase function. Now, let's look at our list of players again.\n"
-//         << "They should now be in their assigned turn order, and have territories assigned to them." << endl;
 
-//    cout << "\nHere is our list of players now:\n" << endl;
-//    for(int i = 0; i < ps1->size(); i++){
-//        cout << *ps1->at(i) << endl;
-//    }
-
-  //  cout << "\nLet's enter the reinforcement phase function" << endl;
-
-//    GameEngine::reinforcementPhase(ps1, map1->getContinents());
-
-//    cout << "\nTime to enter the order issuing phase!" << endl;
-
-  //  GameEngine::orderIssuingPhase(ps1, map1);
-
- //   cout << "\nHere is our list of players now:\n" << endl;
- //   for(int i = 0; i < ps1->size(); i++){
- //       cout << *ps1->at(i) << endl;
- //   }
-
-
- //   cout << "\nNow let's enter the order execution phase!" << endl;
- //   GameEngine::orderExecutionPhase(ps1);
  cout << "Time for the main game loop!" << endl;
     gameEngine->mainGameLoop(ps1, map1->getContinents(), map1);
 
