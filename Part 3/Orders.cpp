@@ -445,7 +445,7 @@ void Blockade::execute() {
 
 ostream &Blockade::printEffect(ostream &out) const {
     out << "Player " << this->player->getId() << " blockade " << this->targetTerritory->getTerritoryName()
-        << ". Territory now belongs to the Neutral player. The number of armies is doubled to "
+        << ". Territory now belongs to the Neutral player (Player 0). The number of armies is doubled to "
         << this->targetTerritory->getNumberOfArmies() << ". ";
     return out;
 }
