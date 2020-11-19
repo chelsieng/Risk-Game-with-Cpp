@@ -302,7 +302,7 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                                        cin.ignore(); // skips to the next line
                                        chosen = false; // Keep prompting user
                                    }
-                                   else if (ans < 0 || ans > neighboursYouOwn->size()) {
+                                   else if (ans < 0 || ans >= neighboursYouOwn->size()) {
                                        cout << "Invalid number! Please try again." << endl;
                                    }//end of if (invalid choice)
                                    else {
@@ -389,7 +389,7 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                         cin.ignore(); // skips to the next line
                         chosen=false; // Keep prompting user
                     }
-                    else if (ans < 0 || ans > neighboursYouOwn->size()) {
+                    else if (ans < 0 || ans >= neighboursYouOwn->size()) {
                         cout << "Invalid number! Please try again." << endl;
                     }//end of if (invalid choice)
                     else {
@@ -480,7 +480,6 @@ vector<Territory*>* Player::toDefend(Map* theMap) {
                  << "\nRemember that you cannot chose the same territory more than once, "
                  << "and must chose from the list provided" << endl;
         } else {
-            set<int, less<int>>::iterator itr;
             listToDefend->push_back(this->getPlayerTerritories()->at(ans));
             counter = 0;
             for (auto el : options) {
@@ -527,7 +526,6 @@ std::vector<Territory*>* Player::toAttack(Map* theMap) {
                      << "\nRemember that you cannot chose the same territory more than once, "
                      << "and must chose from the list provided" << endl;
             } else {
-                set<int, less<int>>::iterator itr;
                 chosen->push_back(attackable->at(ans));
                 counter = 0;
                 for (auto el : options) {
