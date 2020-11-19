@@ -44,10 +44,10 @@ public:
     vector<Territory*>* getPlayerTerritories();
     vector<Territory*>* AttackAble(Map* theMap);
     void issueOrder(Map* theMap, vector<Player*>* thePlayers, int choice);
-    void setConquered(bool status) { this->hasConquered = status; };
-    bool getConquered() { return this->hasConquered; };
+    void setConquered(bool status) { this->hasConquered = status; }
+    bool getConquered() { return this->hasConquered; }
     void removeTerritory(Territory *t);
-    void addTerritory(Territory *t) { this->playerTerritories->push_back(t); };
+    void addTerritory(Territory *t) { this->playerTerritories->push_back(t); }
 
     // assignment operator
     Player& operator = (const Player &player);
