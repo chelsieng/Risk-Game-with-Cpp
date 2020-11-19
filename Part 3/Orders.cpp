@@ -656,8 +656,6 @@ void Negotiate::execute() {
         isExecuted = true;
         cout << this->orderType << " order has been executed. ";
         // The target player and the player issuing the order cannot attack each others’ territories for the remainder of the turn
-        // TODO
-
         // Remove orders where order issuer and negotiated player target each other
         OrdersList *ordersList1 =  this->player->getOrdersList();
         OrdersList *ordersList2 =  this->negotiator->getOrdersList();
