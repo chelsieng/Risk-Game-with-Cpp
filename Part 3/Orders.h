@@ -53,8 +53,8 @@ public:
     Order(const Order &order);
     virtual ~Order();
     // Accessor and Mutator for orderType
-    string getOrderType()       { return this->orderType; };
-    void setType(string type)   { this->orderType = move(type); };
+    string getOrderType()       { return this->orderType; }
+    void setType(string type)   { this->orderType = move(type); }
     // Methods
     virtual bool validate();
     int getPriority();
@@ -62,6 +62,7 @@ public:
     // pure virtual methods
     virtual void execute() = 0;
     virtual ostream& printEffect(ostream& out) const = 0;
+    virtual Territory* getTargetTerritory() = 0;
     // Overloading operators
     Order& operator=(Order const& o);
     friend ostream& operator<<(ostream& out, const Order& order);
@@ -82,6 +83,7 @@ public:
     // Methods
     bool validate();
     void execute();
+    Territory* getTargetTerritory() { return nullptr; }
     ostream& printEffect(ostream& out) const;
     // Overloading operators
     Deploy& operator=(Deploy const& o);
@@ -104,6 +106,7 @@ public:
     // Methods
     bool validate();
     void execute();
+    Territory* getTargetTerritory() { return this->targetTerritory; }
     ostream& printEffect(ostream& out) const;
     // Overloading operators
     Advance& operator=(Advance const& o);
@@ -125,6 +128,7 @@ public:
     // Methods
     bool validate();
     void execute();
+    Territory* getTargetTerritory() { return this->targetTerritory; }
     ostream& printEffect(ostream& out) const;
     // Overloading operators
     Bomb& operator=(Bomb const& o);
@@ -146,7 +150,8 @@ public:
     // Methods
     bool validate();
     void execute();
-    static Player* getNeutralPlayer() { return neutralPlayer; };
+    Territory* getTargetTerritory() { return nullptr; }
+    static Player* getNeutralPlayer() { return neutralPlayer; }
     ostream& printEffect(ostream& out) const;
     // Overloading operators
     Blockade& operator=(Blockade const& o);
@@ -169,6 +174,7 @@ public:
     // Methods
     bool validate();
     void execute();
+    Territory* getTargetTerritory() { return this->targetTerritory; }
     ostream& printEffect(ostream& out) const;
     // Overloading operators
     Airlift& operator=(Airlift const& o);
@@ -189,6 +195,7 @@ public:
     // Methods
     bool validate();
     void execute();
+    Territory* getTargetTerritory() { return nullptr; }
     ostream& printEffect(ostream& out) const;
     // Overloading operators
     Negotiate& operator=(Negotiate const& o);

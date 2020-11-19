@@ -173,6 +173,9 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
                     if (pl->getId() == answer) { toNegotiate = pl; }
                 }//end of for (set the indicated player as the one to negotiate with)
                 cout << "Understood!" << endl;
+                // Print effect when issue negotiate order
+                cout << "\nNegotiate order has been issued. Player " << p->getId() << " and Player " << toNegotiate->getId();
+                cout << " cannot attack each other's territories until the end of the turn.\n" << endl;
             }//end of else (valid player)
         }//end of while (find player)
         p->issueOrder(new Negotiate(p, toNegotiate));
