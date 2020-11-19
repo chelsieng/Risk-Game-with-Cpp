@@ -22,6 +22,7 @@ PhaseObserver::PhaseObserver(GameEngine *subject) {
     this->subject = subject;
 }
 
+// Destructor
 PhaseObserver::~PhaseObserver() {
     subject->detach(this);
     delete this->subject;
@@ -142,12 +143,12 @@ std::ostream &operator<<(ostream &out, const Subject &subject) {
 
 // ------------------------------------------------------ PATTERN METHODS --------------------------------
 
-// Attach
+// subscribe to subject
 void Subject::attach(Observer *o) {
     this->observers.push_back(o);
 }
 
-// Dettach
+// unsubscribe
 void Subject::detach(Observer *o) {
     int counter = 0;
     for (int i = 0; i < this->observers.size(); i++) {
@@ -159,6 +160,7 @@ void Subject::detach(Observer *o) {
     this->observers.erase(this->observers.begin() + counter);
 }
 
+// notify all observers
 void Subject::notify() {
     for (Observer* o : this->observers) {
         o->update();
@@ -190,6 +192,12 @@ void StatisticsObserver::showInfo() {
         }
         cout << "|-------------------------------------------------------------------------------------|" << endl;
         cout << endl;
+    }
+
+    if (currPhase == "Player Eliminated") {
+        cout << "********************UPDATE : Player Eliminated********************" << endl;
+        cout << "Player " << subject->getEliminatedPLayer() << " owns no territories - they have been removed from the game!";
+        cout << "******************************************************************" << endl;
     }
     if (currPhase == "Game Over") {
         cout << endl;
@@ -260,32 +268,6 @@ void PhaseObserver::showInfo() {
         cout << "----------------------------------------------------------" << endl;
         cout << "--------------Player " << subject->getPlayerTurn() << ": ORDER ISSUING PHASE---------------" << endl;
         cout << "----------------------------------------------------------" << endl;
-        cout << "\nAlright Player " << subject->getPlayerTurn() << ", it's your turn to issue an order!" << endl;
-    }
-    if (currentPhase == "Issue Round 1") {
-        cout << "\nYou must issue any deploy orders before you can do anything else!\n" << endl;
-    }
-    if (currentPhase == "Issue Continue") {
-        cout << "Here are your options. Type in the number corresponding to your choice:" << endl;
-        cout << "1. Advance armies to defend." << endl;
-        cout << "2. Advance armies to attack." << endl;
-        cout << "3. Play a card from your hand." << endl;
-        bool valid = false;
-        while(valid == false){
-            int response;
-            cin >> response;
-            subject->setIssueResponse(response);
-            if(subject->getIssueResponse() == 1 || subject->getIssueResponse() == 2 || (subject->getIssueResponse() == 3
-                                                                                        && subject->getCurrPlayer()->getHand()->getSize() > 0)){
-                valid = true;
-                cout << "Got it!" << endl;
-            } else if(subject->getIssueResponse() == 3 && subject->getCurrPlayer()->getHand()->getSize() < 1){
-                cout << "You don't have any cards in hand! Try something else." << endl;
-            } else{ cout << "Invalid choice! Please try again." << endl;}
-        }//end of while (get valid choice)
-    }
-    if (currentPhase == "Issue Order End") {
-        cout << "Okay! No order will be issued." << endl;
     }
     if (currentPhase == "Order Execution Phase") {
         cout << endl;
