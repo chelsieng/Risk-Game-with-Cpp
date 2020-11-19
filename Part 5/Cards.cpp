@@ -92,7 +92,12 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
         bool valid;
         while(valid == false){
             cin >> ans;
-            if(ans >= 0 && ans < attackable->size()){
+            if (cin.fail()) {
+                cin.clear(); // clears error flag
+                cin.ignore(); // skips to the next line
+                valid=false; // Keep prompting user
+            }
+            else if(ans >= 0 && ans < attackable->size()){
                 cout << "Understood!" << endl;
                 valid = true;
             }
@@ -121,7 +126,12 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
         Territory *chosenOne;
         while (chosen == false) {
             cin >> response;
-            if (response < 0 || response > neighboursYouOwn->size()) {
+            if (cin.fail()) {
+                cin.clear(); // clears error flag
+                cin.ignore(); // skips to the next line
+                chosen=false; // Keep prompting user
+            }
+            else if (response < 0 || response > neighboursYouOwn->size()) {
                 cout << "Invalid number! Please try again." << endl;
             }//end of if (invalid choice)
             else {
@@ -146,7 +156,12 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
                     << endl;
             int answer;
             cin >> answer;
-            if (answer > allPlayers.size() || answer < 1) {
+            if (cin.fail()) {
+                cin.clear(); // clears error flag
+                cin.ignore(); // skips to the next line
+                found=false; // Keep prompting user
+            }
+            else if (answer > allPlayers.size() || answer < 1) {
                 cout << "That player does not exist! Please try again." << endl;
             }//end of if (not valid player)
             else if (answer == p->getId()) {
@@ -184,7 +199,12 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
                     bool valid = false;
                     while(valid == false){
                         cin >> amount;
-                        if(amount <= usableArmies && amount >= 0){
+                        if (cin.fail()) {
+                            cin.clear(); // clears error flag
+                            cin.ignore(); // skips to the next line
+                            valid=false; // Keep prompting user
+                        }
+                        else if(amount <= usableArmies && amount >= 0){
                             valid = true;
                             if(amount > 0) {
                                 p->getPlayerTerritories()->at(j)->addToMockArmies(amount);
