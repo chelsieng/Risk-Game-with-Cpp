@@ -450,7 +450,12 @@ void GameEngine::orderIssuingPhase(vector<Player *> *thePlayers, Map *theMap) {
                     while(valid == false){
                         int response;
                         cin >> response;
-                        if(response == 1 || response == 2 || (response == 3 && p->getHand()->getSize() > 0)){
+                        if (cin.fail()) {
+                            cin.clear(); // clears error flag
+                            cin.ignore(); // skips to the next line
+                            valid = false; // Keep prompting user
+                        }
+                        else if(response == 1 || response == 2 || (response == 3 && p->getHand()->getSize() > 0)){
                             valid = true;
                             cout << "Got it!" << endl;
                         } else if(response == 3 && p->getHand()->getSize() < 1){
