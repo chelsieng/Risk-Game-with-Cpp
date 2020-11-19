@@ -117,7 +117,7 @@ int main() {
     for(int i = 0; i < ps1->size(); i++){
         cout << *ps1->at(i) << endl;
     }
-    GameEngine* gameEngine = new GameEngine();
+ //   GameEngine* gameEngine = new GameEngine();
     gameEngine->phaseObserver = new PhaseObserver(gameEngine);
     gameEngine->statisticsObserver = new StatisticsObserver(gameEngine);
     cout << "We will now enter the start up phase function:" << endl;

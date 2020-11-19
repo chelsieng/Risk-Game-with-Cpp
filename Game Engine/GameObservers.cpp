@@ -187,28 +187,28 @@ void StatisticsObserver::showInfo() {
             hash[t->getOwner()->getId()]++;
         }
         for (Player *p : *subject->getTotalPlayers()) {
-            cout << "|-----------------------------------------------------------|" << endl;
+            cout << "|---------------------------------------------------------------|" << endl;
             cout << "|      " << p->getId() << "      |             " << ((double)hash[p->getId()] / (double)total ) * 100 << "            |          " << p->getHand()->getSize() << "          |" << endl;
         }
-        cout << "|---------------------------------------------------------------|" << endl;
+            cout << "|---------------------------------------------------------------|" << endl;
         cout << endl;
     }
 
     if (currPhase == "Conquered") {
         cout << "********************UPDATE : Territory Conquered********************" << endl;
-        cout << "Player " << subject->getPlayerTurn() << " conquered territory " << subject->getConqTerr();
-        cout << "******************************************************************" << endl;
+        cout << "Player " << subject->getPlayerTurn() << " conquered territory " << subject->getConqTerr() << endl;
+        cout << "********************************************************************" << endl;
     }
 
     if (currPhase == "Player Eliminated") {
         cout << "********************UPDATE : Player Eliminated********************" << endl;
-        cout << "Player " << subject->getEliminatedPLayer() << " owns no territories - they have been removed from the game!";
+        cout << "Player " << subject->getEliminatedPLayer() << " owns no territories - they have been removed from the game!" << endl;
         cout << "******************************************************************" << endl;
     }
     if (currPhase == "Game Over") {
         cout << endl;
         cout << endl;
-        cout << "\t \t \t \t \t Game Over" << endl;
+        cout << "\t \t Game Over" << endl;
         cout << "*****************************************************" << endl;
         cout << "*****************************************************" << endl;
         cout << "** Congratulations Player " << subject->getPlayerTurn() << ", you've won the game! **" << endl;
