@@ -179,19 +179,25 @@ void StatisticsObserver::showInfo() {
         int total = 0;
         cout << "Let's see everyone's current standings:" << endl;
         cout << "" << endl;
-        cout << "|-------------------------------------------------------------------------------------|" << endl;
-        cout << "|    Player   |    Percent of Map Owned   |   Number of Orders  |   Number of Cards   |" << endl;
+        cout << "|---------------------------------------------------------------|" << endl;
+        cout << "|    Player   |    Percent of Map Owned   |   Number of Cards   |" << endl;
 
         for (auto t : *subject->getMap()->getTerritories()) {
             total++;
             hash[t->getOwner()->getId()]++;
         }
         for (Player *p : *subject->getTotalPlayers()) {
-            cout << "|-------------------------------------------------------------------------------------|" << endl;
-            cout << "|      " << p->getId() << "      |             " << ((double)hash[p->getId()] / (double)total ) * 100 << "            |          " << p->getOrdersList()->getSize() << "          " << "|          " << p->getHand()->getSize() << "          |" << endl;
+            cout << "|-----------------------------------------------------------|" << endl;
+            cout << "|      " << p->getId() << "      |             " << ((double)hash[p->getId()] / (double)total ) * 100 << "            |          " << p->getHand()->getSize() << "          |" << endl;
         }
-        cout << "|-------------------------------------------------------------------------------------|" << endl;
+        cout << "|---------------------------------------------------------------|" << endl;
         cout << endl;
+    }
+
+    if (currPhase == "Conquered") {
+        cout << "********************UPDATE : Territory Conquered********************" << endl;
+        cout << "Player " << subject->getPlayerTurn() << " conquered territory " << subject->getConqTerr();
+        cout << "******************************************************************" << endl;
     }
 
     if (currPhase == "Player Eliminated") {
@@ -221,9 +227,6 @@ void PhaseObserver::showInfo() {
 
     if (currentPhase == "Map Selection") {
         // Displaying welcome message
-        cout << "* ------------------------------ * " << endl;
-        cout << "| Welcome to Warzone's Risk Game |" << endl;
-        cout << "* ------------------------------ *" << endl;
         cout << endl;
         cout << "==========================================================" << endl;
         cout << ">>>>>>>>>>>>>>>>>>>>MAP SELECTION PHASE<<<<<<<<<<<<<<<<<<<" << endl;
@@ -275,13 +278,11 @@ void PhaseObserver::showInfo() {
         cout << "==========================================================" << endl;
         cout << ">>>>>>>>>>>>>>>>>>>>>ORDER EXECUTION PHASE<<<<<<<<<<<<<<<<" << endl;
         cout << "==========================================================" << endl;
-        cout << "Time to execute everyone's orders!" << endl;
         cout << endl;
     }
     if (currentPhase == "Player Execution") {
         cout << "----------------------------------------------------------" << endl;
         cout << "---------------Player " << subject->getPlayerTurn() << ": ORDER EXECUTION PHASE------------" << endl;
         cout << "----------------------------------------------------------" << endl;
-        cout << "Executing Player " << subject->getPlayerTurn() << "'s next order." << endl;
     }
 }
