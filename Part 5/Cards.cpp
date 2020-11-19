@@ -290,7 +290,12 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
         while (finished == false) {
             cout << "How many armies are you moving?" << endl;
             cin >> numArmies;
-            if (numArmies < 0) {
+            if (cin.fail()) {
+                cin.clear(); // clears error flag
+                cin.ignore(); // skips to the next line
+                finished = false; // Keep prompting user
+            }
+            else if (numArmies < 0) {
                 cout << "Invalid number of armies. Please try again." << endl;
             }//end of if (invalid)
             else if (numArmies > sourceTerritory->getMockArmies()) {

@@ -269,6 +269,12 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                        cout << "\nWill you advance troops to " << defendList->at(i)->getTerritoryName() << "? Type 1 if yes, and any other number if no." << endl;
                        int advanceResponse;
                        cin >> advanceResponse;
+                       if (cin.fail()) {
+                           cin.clear(); // clears error flag
+                           cin.ignore(); // skips to the next line
+                           --i;
+                           continue; // Keep prompting user
+                       }
                        if(advanceResponse == 1) {
                            vector<Territory *> *theNeighbours = theMap->getNeighbours(defendList->at(i));
                            vector<Territory *> *neighboursYouOwn = new vector<Territory *>;
@@ -291,7 +297,12 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                                Territory *chosenOne;
                                while (chosen == false) {
                                    cin >> ans;
-                                   if (ans < 0 || ans > neighboursYouOwn->size()) {
+                                   if (cin.fail()) {
+                                       cin.clear(); // clears error flag
+                                       cin.ignore(); // skips to the next line
+                                       chosen = false; // Keep prompting user
+                                   }
+                                   else if (ans < 0 || ans > neighboursYouOwn->size()) {
                                        cout << "Invalid number! Please try again." << endl;
                                    }//end of if (invalid choice)
                                    else {
@@ -310,7 +321,12 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                                bool done = false;
                                while (done == false) {
                                    cin >> number;
-                                   if (number < 0 || number > availableArmies) {
+                                   if (cin.fail()) {
+                                       cin.clear(); // clears error flag
+                                       cin.ignore(); // skips to the next line
+                                       done = false; // Keep prompting user
+                                   }
+                                   else if (number < 0 || number > availableArmies) {
                                        cout << "That is not a valid amount! Please try again." << endl;
                                    }//end of if (invalid input)
                                    else {
@@ -391,7 +407,12 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
                 bool done = false;
                 while (done == false) {
                     cin >> number;
-                    if (number < 0 || number > availableArmies) {
+                    if (cin.fail()) {
+                        cin.clear(); // clears error flag
+                        cin.ignore(); // skips to the next line
+                        done = false; // Keep prompting user
+                    }
+                    else if (number < 0 || number > availableArmies) {
                         cout << "That is not a valid amount! Please try again." << endl;
                     }//end of if (invalid input)
                     else {
@@ -418,7 +439,12 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
         while(valid == false) {
             cin >> ans;
             cout << endl;
-            if(ans < this->getHand()->getSize() && ans >= 0){valid = true;}
+            if (cin.fail()) {
+                cin.clear(); // clears error flag
+                cin.ignore(); // skips to the next line
+                valid = false; // Keep prompting user
+            }
+            else if(ans < this->getHand()->getSize() && ans >= 0){valid = true;}
             else{
                 cout << "\nInvalid answer! Please try again." << endl;
             }
