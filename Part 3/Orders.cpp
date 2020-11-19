@@ -219,8 +219,10 @@ void Advance::execute() {
                 if ((double) rand() / RAND_MAX <= 0.6)
                     this->targetTerritory->removeArmy();
                 // Each defending army unit has 70% chances of killing one attacking army unit
-                if ((double) rand() / RAND_MAX <= 0.7)
+                if ((double) rand() / RAND_MAX <= 0.7) {
+                    this->sourceTerritory->removeArmy();
                     numOfArmies--;
+                }
             }
 
             // If all the defender's armies are eliminated
@@ -248,7 +250,13 @@ void Advance::execute() {
                 if(!this->player->getConquered()) {
                     cout << "Player " << player->getId() << " gets a card for conquering a territory in this turn. ";
                     this->player->setConquered(true);
-//TODO                    draw(this->player->getHand());
+                    // Draw a card
+                    Card* newCard = this->player->getHand()->getDeck()->draw();
+                    // If the deck is not empty, give player the card
+                    if(newCard != NULL) {
+                        this->player->getHand()->addToHand(newCard);
+                        cout << *newCard->getDescription();
+                    }
                 }
             } else {
                 cout << "All attacking armies are eliminated. " << this->targetTerritory->getTerritoryName()
@@ -437,7 +445,7 @@ void Blockade::execute() {
 
 ostream &Blockade::printEffect(ostream &out) const {
     out << "Player " << this->player->getId() << " blockade " << this->targetTerritory->getTerritoryName()
-        << ". Territory now belongs to the Neutral player. The number of armies is doubled to "
+        << ". Territory now belongs to the Neutral player (Player 0). The number of armies is doubled to "
         << this->targetTerritory->getNumberOfArmies() << ". ";
     return out;
 }
@@ -531,8 +539,10 @@ void Airlift::execute() {
                 if ((double) rand() / RAND_MAX <= 0.6)
                     this->targetTerritory->removeArmy();
                 // Each defending army unit has 70% chances of killing one attacking army unit
-                if ((double) rand() / RAND_MAX <= 0.7)
+                if ((double) rand() / RAND_MAX <= 0.7) {
+                    this->sourceTerritory->removeArmy();
                     numOfArmies--;
+                }
             }
 
             // If all the defender's armies are eliminated
@@ -560,7 +570,11 @@ void Airlift::execute() {
                 if(!this->player->getConquered()) {
                     cout << "Player " << player->getId() << " gets a card for conquering a territory in this turn. ";
                     this->player->setConquered(true);
-//TODO                    draw(this->player->getHand());
+                    Card* newCard = this->player->getHand()->getDeck()->draw();
+                    if(newCard != NULL) {
+                        this->player->getHand()->addToHand(newCard);
+                        cout << *newCard->getDescription();
+                    }
                 }
             } else {
                 cout << "All attacking armies are eliminated. " << this->targetTerritory->getTerritoryName()
@@ -640,14 +654,39 @@ bool Negotiate::validate() {
 void Negotiate::execute() {
     if (validate()) {
         isExecuted = true;
-        cout << this->orderType << " order has been executed. ";
+        cout << this->orderType << " order has been executed. " << *this;
         // The target player and the player issuing the order cannot attack each others’ territories for the remainder of the turn
-        // TODO
+        // Remove orders where order issuer and negotiated player target each other
+        OrdersList *ordersList1 =  this->player->getOrdersList();
+        OrdersList *ordersList2 =  this->negotiator->getOrdersList();
+        // If there are orders made by the negotiation issuer before the Negotiate order is issued
+        for(int i = 0; i < ordersList1->getSize(); i++)
+            // If the current order has a target territory
+            if(ordersList1->getAt(i)->getTargetTerritory() != nullptr)
+                // Delete order if it targets negotiated player
+                if(this->negotiator->getId() == ordersList1->getAt(i)->getTargetTerritory()->getOwner()->getId()) {
+                    cout << "Removing " << ordersList1->getAt(i)->getOrderType() << " order make by Player "
+                         <<  this->negotiator->getId() << " against Player " << this->player->getId()
+                         << " due to the effect of the Diplomacy Card." << endl;
+                    ordersList1->deleteAt(i);
+                    i--;
+                }
+
+        // If there are orders made by the negotiated player before the Negotiate order is issued
+        for(int i = 0; i < ordersList2->getSize(); i++)
+            // If the current order has a target territory
+            if(ordersList2->getAt(i)->getTargetTerritory() != nullptr)
+                // Delete order if it targets negotiation issuer
+                if(this->player->getId() == ordersList2->getAt(i)->getTargetTerritory()->getOwner()->getId()) {
+                    cout << "Removing " << ordersList2->getAt(i)->getOrderType() << " order make by Player "
+                         <<  this->player->getId() << " against Player " << this->negotiator->getId()
+                         << " due to the effect of the Diplomacy Card." << endl;
+                    ordersList2->deleteAt(i);
+                    i--;
+                }
     } else {
         cout << this->orderType << " order is invalid. Order has not been executed.";
     }
-    // Print effect of order after it is executed
-    cout << *this;
 }
 
 ostream &Negotiate::printEffect(ostream &out) const {

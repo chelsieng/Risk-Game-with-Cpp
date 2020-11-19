@@ -11,11 +11,13 @@
 
 int main() {
     //making a deck
-    BombCard bomb1;
-    ReinforcementCard reinforcement1;
-    deckNode head(&reinforcement1, NULL);
+    BlockadeCard card1;
+    DiplomacyCard card2;
+    deckNode head(&card2, NULL);
     Deck* theDeck = new Deck(&head);
-    theDeck->addToDeck(&bomb1);
+    theDeck->addToDeck(&card1);
+
+    GameEngine *gameEngine = new GameEngine();
 
  ///Create a map
     cout << "Making a map to use." << endl;
@@ -118,6 +120,7 @@ int main() {
     GameEngine* gameEngine = new GameEngine();
     cout << "We will now enter the start up phase function:" << endl;
     gameEngine->startupPhase(ps1,map1->getTerritories());
+
 
  cout << "Time for the main game loop!" << endl;
     gameEngine->mainGameLoop(ps1, map1->getContinents(), map1);
