@@ -39,6 +39,10 @@ int GameEngine::getPlayerTurn() {
     return this->playerTurn;
 }
 
+string GameEngine::getConqTerr() {
+    return this->conqTerr;
+}
+
 int GameEngine::getEliminatedPLayer() {
     return this->eliminatedPlayer;
 }
@@ -64,11 +68,41 @@ Player *GameEngine::getCurrPlayer() {
 }
 
 void GameEngine::gameStart(GameEngine *g) {
-    this->phaseObserver = new PhaseObserver(this);
-    this->statisticsObserver = new StatisticsObserver(this);
+    cout << "* ------------------------------ * " << endl;
+    cout << "| Welcome to Warzone's Risk Game |" << endl;
+    cout << "* ------------------------------ *" << endl;
+
+    string boolPhase = "";
+    cout << "Would you like to enable Observers?" << endl;
+    cout << "Enter y or n" << endl;
+
+    while (boolPhase.empty() || (boolPhase != "y" && boolPhase != "n")) {
+        cin >> boolPhase;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore();
+            continue;
+        }
+        cout << "Enter any key to continue>> "; // Prompt user to press any key to continue
+        cout << endl;
+    }
+
+    if (boolPhase == "y") {
+        this->isPhase = true;
+    }
+    if (boolPhase == "n") {
+        this->isPhase = false;
+    }
+
+    if (this->isPhase) {
+        this->phaseObserver = new PhaseObserver(this);
+        this->statisticsObserver = new StatisticsObserver(this);
+    }
     Map *mapGame = nullptr;
     vector<Player *> *players = new vector<Player *>;
     // If user selects valid map file which creates valid map graph, map selection done
+
+
     mapGame = g->selectMap();
     // PLAYER AND DECK CREATION PHASE
     players = g->createPlayers(); // Store players in vector of players
@@ -485,6 +519,7 @@ void GameEngine::orderIssuingPhase(vector<Player *> *thePlayers, Map *theMap) {
 void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
     this->phase = "Order Execution Phase";
     this->notify();
+    cout << "Time to execute everyone's orders!" << endl;
     bool notDone = true;
     bool someoneIssued = false;
     while (notDone == true) {
@@ -496,12 +531,24 @@ void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
             else {
                 this->phase = "Player Execution";
                 this->notify();
+                int owner = -1;
                 someoneIssued = true;
                 cout << "Executing P" << thePlayers->at(i)->getId() << "'s next order." << endl;
                 int indexOfHighest = thePlayers->at(i)->getOrdersList()->highestPriority();
                 Order *toExecute = thePlayers->at(i)->getOrdersList()->getAt(indexOfHighest);
+
+                if (toExecute->getTargetTerritory() != nullptr) {
+                    owner = toExecute->getTargetTerritory()->getOwner()->getId();
+                }
                 toExecute->execute();
-                cout << *toExecute << endl;
+                if (toExecute->getTargetTerritory() != nullptr) {
+                    if (toExecute->getTargetTerritory()->getOwner()->getId() == owner) {
+                        this->conqTerr = toExecute->getTargetTerritory()->getTerritoryName();
+                        this->phase = "Conquered";
+                        this->notify();
+
+                    }
+                }
                 thePlayers->at(i)->getOrdersList()->deleteAt(indexOfHighest);
             }//end of else (player still has orders)
         }//end of for (go through all players)
@@ -550,6 +597,9 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
                 won = true;
                 this->phase = "Game Over";
                 this->notify();
+
+                if (!this->isPhase)
+                    cout << "Congratulations Player " << current->getId() << ", you've won the game! **" << endl;
             }//end of if(current player has won)
         }//end of for (check for all players)
         if (won == false) {
@@ -568,6 +618,8 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
                             this->eliminatedPlayer = IDofPlayer;
                             this->phase = "Player Eliminated";
                             this->notify();
+                            if (!this->isPhase)
+                                cout << "Player " << IDofPlayer << " owns no territories - they have been removed from the game!";
                         }//end of if (player to be removed found)
                     }//end of for (go and remove that player from the players list)
                 }//end of for (go through all players that have to be removed)
@@ -577,7 +629,8 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
             this->currMap = theMap;
             this->phase = "Statistics";
             this->notify();
-            cout << "\nLet's see everyone's current standings:" << endl;
+            if (!this->isPhase)
+                cout << "\nLet's see everyone's current standings:" << endl;
             for (int m = 0; m < thePlayers->size(); m++) {
                 cout << *thePlayers->at(m) << endl;
             }//end of for (print all player statuses

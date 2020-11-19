@@ -22,6 +22,7 @@ class GameEngine : public Subject{
 private:
     string phase;
     int playerTurn;
+    string conqTerr;
     int eliminatedPlayer;
     int issueRound;
     int issueResponse;
@@ -37,6 +38,7 @@ public:
     ~GameEngine();
     string getPhase();
     int getPlayerTurn();
+    string getConqTerr();
     int getEliminatedPLayer();
     Player* getCurrPlayer();
     Map* getMap();
