@@ -654,7 +654,7 @@ bool Negotiate::validate() {
 void Negotiate::execute() {
     if (validate()) {
         isExecuted = true;
-        cout << this->orderType << " order has been executed. ";
+        cout << this->orderType << " order has been executed. " << *this;
         // The target player and the player issuing the order cannot attack each others’ territories for the remainder of the turn
         // Remove orders where order issuer and negotiated player target each other
         OrdersList *ordersList1 =  this->player->getOrdersList();
@@ -665,6 +665,9 @@ void Negotiate::execute() {
             if(ordersList1->getAt(i)->getTargetTerritory() != nullptr)
                 // Delete order if it targets negotiated player
                 if(this->negotiator->getId() == ordersList1->getAt(i)->getTargetTerritory()->getOwner()->getId()) {
+                    cout << "Removing " << ordersList1->getAt(i)->getOrderType() << " order make by Player "
+                         <<  this->negotiator->getId() << " against Player " << this->player->getId()
+                         << " due to the effect of the Diplomacy Card." << endl;
                     ordersList1->deleteAt(i);
                     i--;
                 }
@@ -675,34 +678,15 @@ void Negotiate::execute() {
             if(ordersList2->getAt(i)->getTargetTerritory() != nullptr)
                 // Delete order if it targets negotiation issuer
                 if(this->player->getId() == ordersList2->getAt(i)->getTargetTerritory()->getOwner()->getId()) {
+                    cout << "Removing " << ordersList2->getAt(i)->getOrderType() << " order make by Player "
+                         <<  this->player->getId() << " against Player " << this->negotiator->getId()
+                         << " due to the effect of the Diplomacy Card." << endl;
                     ordersList2->deleteAt(i);
                     i--;
                 }
-
-        // Check if the 2 players have negotiated with each other before
-        bool playerAdded1 = false;
-        for(Player* p : this->player->getDiplomacyPlayers())
-            if(p->getId() == this->player->getId()) {
-                playerAdded1 = true;
-                break;
-            }
-        bool playerAdded2 = false;
-        for(Player* p : this->player->getDiplomacyPlayers())
-            if(p->getId() == this->negotiator->getId()) {
-                playerAdded2 = true;
-                break;
-            }
-
-        // If not then add players into each other's diplomacyPlayer list
-        if(!playerAdded1)
-            this->player->addDiplomacyPlayer(this->negotiator);
-        if(!playerAdded2)
-            this->negotiator->addDiplomacyPlayer(this->player);
     } else {
         cout << this->orderType << " order is invalid. Order has not been executed.";
     }
-    // Print effect of order after it is executed
-    cout << *this;
 }
 
 ostream &Negotiate::printEffect(ostream &out) const {

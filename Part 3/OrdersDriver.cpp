@@ -184,36 +184,16 @@ int main()
 
     // Testing Negotiate
     player1->getOrdersList()->addToLast(new Advance(player1, canada, america, 1));
-    player2->getOrdersList()->addToLast(new Airlift(player1, america, mexico, 1));
+    player1->getOrdersList()->addToLast(new Airlift(player1, russia, america, 1));
+    player2->getOrdersList()->addToLast(new Airlift(player2, northKorea, canada, 1));
+    player2->getOrdersList()->addToLast(new Advance(player2, america, mexico, 1));
     cout << "\nPerform negotiate order:" << endl;
     negotiate = new Negotiate(player1, player2);
     cout << "Player 1's list of orders before the negotiate order: " << *player1->getOrdersList();
     cout << "Player 2's list of orders before the negotiate order: " << *player2->getOrdersList();
-    cout << "Players who negotiated with player 1 before the negotiate order:" << endl;
-    if(player1->getDiplomacyPlayers().empty())
-        cout << "Player 1 has not negotiate with anyone yet." << endl;
-    for(Player* p : player1->getDiplomacyPlayers())
-        cout << "Player " << p->getId() << endl;
-    cout << "Players who negotiated with player 2 before the negotiate order:" << endl;
-    if(player1->getDiplomacyPlayers().empty())
-        cout << "Player 2 has not negotiate with anyone yet." << endl;
-    for(Player* p : player2->getDiplomacyPlayers())
-        cout << "Player " << p->getId() << endl;
-
     negotiate->execute();
-
     cout << "Player 1's list of orders after the negotiate order: " << *player1->getOrdersList();
     cout << "Player 2's list of orders after the negotiate order: " << *player2->getOrdersList();
-    cout << "Players who negotiated with player 1 after the negotiate order:" << endl;
-    if(player1->getDiplomacyPlayers().empty())
-        cout << "Player 1 has not negotiate with anyone yet." << endl;
-    for(Player* p : player1->getDiplomacyPlayers())
-        cout << "Player " << p->getId() << endl;
-    cout << "Players who negotiated with player 2 after the negotiate order:" << endl;
-    if(player1->getDiplomacyPlayers().empty())
-        cout << "Player 2 has not negotiate with anyone yet." << endl;
-    for(Player* p : player2->getDiplomacyPlayers())
-        cout << "Player " << p->getId() << endl;
 
     // Delete pointers
     delete theDeck;             theDeck = nullptr;
