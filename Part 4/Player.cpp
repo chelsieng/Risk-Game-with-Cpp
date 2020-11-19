@@ -457,9 +457,9 @@ void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice) {
 vector<Territory*>* Player::toDefend(Map* theMap) {
     vector<Territory*>* listToDefend = new vector<Territory*>;
     cout << "Here are the territories you can defend:" << endl;
-    set<int> *options = new set<int>; //so that they don't pick the same territory more than once
+    vector<int> options = {}; //so that they don't pick the same territory more than once
     for(int i = 0; i < this->getPlayerTerritories()->size(); i++){
-        options->insert(i);
+        options.push_back(i);
         cout << i << ": " << this->getPlayerTerritories()->at(i)->getTerritoryName() << endl;
     }//end of for (print all options)
     cout  << "\nType the corresponding numbers in the above list of the territories you would like to defend, in order of priority."
@@ -475,18 +475,19 @@ vector<Territory*>* Player::toDefend(Map* theMap) {
             cin.ignore(); // skips to the next line
             continue; // Keep prompting user
         }
-        else if (options->find(ans) == options->end()) {
+        else if (find(options.begin(), options.end(), ans) == options.end()) {
             cout << "That is not an option!"
                  << "\nRemember that you cannot chose the same territory more than once, "
                  << "and must chose from the list provided" << endl;
         } else {
             set<int, less<int>>::iterator itr;
             listToDefend->push_back(this->getPlayerTerritories()->at(ans));
-            for (itr = options->begin(); itr != options->end(); itr++) {
-                int value = *itr;
-                if (value == ans) {
-                    options->erase(*itr);
+            counter = 0;
+            for (auto el : options) {
+                if (el == ans) {
+                    options.erase(options.begin() + counter);
                 }
+                counter++;
             }//end of for
             cout << "Added " << this->getPlayerTerritories()->at(ans)->getTerritoryName() << " to your list." << endl;
         }//end of else (valid option chosen)
@@ -501,9 +502,10 @@ std::vector<Territory*>* Player::toAttack(Map* theMap) {
     vector<Territory*>* attackable = this->AttackAble(theMap);
     vector<Territory *> *chosen = new vector<Territory *>;
     if(attackable->size() > 0) {
-        set<int> *options = new set<int>; //so that they don't pick the same territory more than once
+        vector<int> options = {}; //so that they don't pick the same territory more than once
+//        set<int> *options = new set<int>; //so that they don't pick the same territory more than once
         for (int i = 0; i < attackable->size(); i++) {
-            options->insert(i);
+            options.push_back(i);
             cout << i << ": " << attackable->at(i)->getTerritoryName() << endl;
         }//end of for (show all attackable territories)
         cout
@@ -520,18 +522,19 @@ std::vector<Territory*>* Player::toAttack(Map* theMap) {
                 cin.ignore(); // skips to the next line
                 continue; // Keep prompting user
             }
-            else if (options->find(ans) == options->end()) {
+            else if (find(options.begin(), options.end(), ans) == options.end()) {
                 cout << "That is not an option!"
                      << "\nRemember that you cannot chose the same territory more than once, "
                      << "and must chose from the list provided" << endl;
             } else {
                 set<int, less<int>>::iterator itr;
                 chosen->push_back(attackable->at(ans));
-                for (itr = options->begin(); itr != options->end(); itr++) {
-                    int value = *itr;
-                    if (value == ans) {
-                        options->erase(*itr);
+                counter = 0;
+                for (auto el : options) {
+                    if (el == ans) {
+                        options.erase(options.begin() + counter);
                     }
+                    counter++;
                 }//end of for
                 cout << "Added " << attackable->at(ans)->getTerritoryName() << " to your list." << endl;
             }//end of else (valid option chosen)
