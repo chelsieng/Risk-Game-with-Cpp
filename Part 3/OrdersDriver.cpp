@@ -146,6 +146,8 @@ int main()
     cout << ". After, Russia is owned by player " << newOwner << "." << endl;
     cout << "Number of armies in America after advance: " << america->getNumberOfArmies() << endl;
     cout << "Number of armies in Russia after advance: " << russia->getNumberOfArmies() << endl;
+    cout << "Player 1's hand after capturing a territory:" << endl;
+    cout << *player1->getHand();
 
     cout << "\nAirlift to a territory that is owned by the player that issued the order:" << endl;
     airlift = new Airlift(player1, mexico, canada, 4);
@@ -180,8 +182,13 @@ int main()
     bomb->execute();
     cout << "Number of armies in Canada after bomb: " << canada->getNumberOfArmies() << endl;
 
+    // Testing Negotiate
+    player1->getOrdersList()->addToLast(new Advance(player1, canada, america, 1));
+    player2->getOrdersList()->addToLast(new Airlift(player1, america, mexico, 1));
     cout << "\nPerform negotiate order:" << endl;
     negotiate = new Negotiate(player1, player2);
+    cout << "Player 1's list of orders before the negotiate order: " << *player1->getOrdersList();
+    cout << "Player 2's list of orders before the negotiate order: " << *player2->getOrdersList();
     cout << "Players who negotiated with player 1 before the negotiate order:" << endl;
     if(player1->getDiplomacyPlayers().empty())
         cout << "Player 1 has not negotiate with anyone yet." << endl;
@@ -195,6 +202,8 @@ int main()
 
     negotiate->execute();
 
+    cout << "Player 1's list of orders after the negotiate order: " << *player1->getOrdersList();
+    cout << "Player 2's list of orders after the negotiate order: " << *player2->getOrdersList();
     cout << "Players who negotiated with player 1 after the negotiate order:" << endl;
     if(player1->getDiplomacyPlayers().empty())
         cout << "Player 1 has not negotiate with anyone yet." << endl;

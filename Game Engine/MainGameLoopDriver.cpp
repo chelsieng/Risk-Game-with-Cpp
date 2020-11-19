@@ -11,11 +11,13 @@
 
 int main() {
     //making a deck
-    BombCard bomb1;
-    ReinforcementCard reinforcement1;
-    deckNode head(&reinforcement1, NULL);
+    BlockadeCard card1;
+    DiplomacyCard card2;
+    deckNode head(&card2, NULL);
     Deck* theDeck = new Deck(&head);
-    theDeck->addToDeck(&bomb1);
+    theDeck->addToDeck(&card1);
+
+    GameEngine *gameEngine = new GameEngine();
 
  ///Create a map
     cout << "Making a map to use." << endl;
@@ -117,7 +119,7 @@ int main() {
     }
 
     cout << "We will now enter the start up phase function:" << endl;
-    GameEngine::startupPhase(ps1,map1->getTerritories());
+    gameEngine->startupPhase(ps1,map1->getTerritories());
 
 //    cout << "\nWe have exited the start up phase function. Now, let's look at our list of players again.\n"
 //         << "They should now be in their assigned turn order, and have territories assigned to them." << endl;
@@ -144,7 +146,7 @@ int main() {
  //   cout << "\nNow let's enter the order execution phase!" << endl;
  //   GameEngine::orderExecutionPhase(ps1);
  cout << "Time for the main game loop!" << endl;
-    GameEngine::mainGameLoop(ps1, map1->getContinents(), map1);
+    gameEngine->mainGameLoop(ps1, map1->getContinents(), map1);
 
     //All the deletes that are commented out cause errors when the program terminates, probably cause they result
     //in deleting things that have already been deleted... Though actually I'm not entirely sure.
