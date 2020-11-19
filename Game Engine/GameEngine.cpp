@@ -123,7 +123,7 @@ Map *GameEngine::selectMap() {
     map<int, string> map = {
             {1, "../Map Files/artic.map"},
             {2, "../Map Files/berlin.map"},
-            {3, "../Map Files/brasil.map"},
+            {3, "../Map Files/brasil2.map"},
             {4, "../Map Files/mexico.map"},
             {5, "../Map Files/northern-europe.map"},
             {6, "../Map Files/swiss.map"},
@@ -405,7 +405,7 @@ void GameEngine::reinforcementPhase(vector<Player *> *ps1, vector<Continent *> *
         int toAdd2 = 0;
         for (int j = 0; j < theContinents->size(); j++) {
             if (theContinents->at(j)->isOccupiedBy(player)) {
-                int bonus = theContinents->at(i)->getControlValue();
+                int bonus = theContinents->at(j)->getControlValue();
                 toAdd2 = toAdd2 + bonus;
                 cout << "Since P" << player->getId() << " owns the continent "
                      << theContinents->at(j)->getContinentName()
@@ -543,7 +543,7 @@ void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
                 }
                 toExecute->execute();
                 if (toExecute->getTargetTerritory() != nullptr) {
-                    if (toExecute->getTargetTerritory()->getOwner()->getId() == owner) {
+                    if (toExecute->getTargetTerritory()->getOwner()->getId() != owner) {
                         this->conqTerr = toExecute->getTargetTerritory()->getTerritoryName();
                         this->phase = "Conquered";
                         this->notify();
@@ -648,4 +648,5 @@ int main() {
     delete gameEngine;
     return 0;
 }
+
 
