@@ -438,16 +438,18 @@ void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
     this->phase = "Order Execution Phase";
     this->notify();
     bool notDone = true;
+    bool someoneIssued = false;
     while(notDone == true){
+        someoneIssued = false;
         for(int i = 0; i < thePlayers->size(); i++){
             playerTurn = thePlayers->at(i)->getId();
-            if (thePlayers->at(i)->getOrdersList()->getSize() == 0) {
-                notDone = false;
+            if(thePlayers->at(i)->getOrdersList()->getSize() == 0){
             }//end of if (player has no more orders)
             else{
-                notDone = true;
                 this->phase = "Player Execution";
                 this->notify();
+                someoneIssued = true;
+                cout << "Executing P" << thePlayers->at(i)->getId() << "'s next order." << endl;
                 int indexOfHighest = thePlayers->at(i)->getOrdersList()->highestPriority();
                 Order* toExecute = thePlayers->at(i)->getOrdersList()->getAt(indexOfHighest);
                 toExecute->execute();
@@ -455,6 +457,12 @@ void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
                 thePlayers->at(i)->getOrdersList()->deleteAt(indexOfHighest);
             }//end of else (player still has orders)
         }//end of for (go through all players)
+        if(someoneIssued == true){
+            notDone = true;
+        }
+        else{
+            notDone = false;
+        }
     }//end of while
 
     string key;
@@ -467,6 +475,7 @@ void GameEngine::orderExecutionPhase(vector<Player *> *thePlayers) {
 
 void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> *theContinents, Map *theMap) {
     bool won = false;
+    vector<Player*> *theFallenOnes = new vector<Player*>; //will contain players to remove, if any
     while(won == false){
         for(int i = 0; i < thePlayers->size(); i++){
             thePlayers->at(i)->setConquered(false);
@@ -495,18 +504,39 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
             }//end of if(current player has won)
         }//end of for (check for all players)
         if(won == false){
+            ///Remove players with no more territories from the game
             this->totalPlayers = thePlayers;
             this->currMap = theMap;
             this->phase = "Statistics";
             this->notify();
+
             for(int k = 0; k < thePlayers->size(); k++){
-                cout << *thePlayers->at(k) << endl;
+                if(thePlayers->at(k)->getPlayerTerritories()->empty()){
+                    theFallenOnes->push_back(thePlayers->at(k));
+                }//end of if (player no longer owns any territories)
+            }//end of for (see who has to be removed from the game)
+            if(theFallenOnes != nullptr && !theFallenOnes->empty()) {
+                for (int i = 0; i < theFallenOnes->size(); i++) {
+                    int IDofPlayer = theFallenOnes->at(i)->getId();
+                    for(int j = 0; j < thePlayers->size(); j++){
+                        if(thePlayers->at(j)->getId() == IDofPlayer){
+                            thePlayers->erase(thePlayers->begin() + j);
+                            cout << "Player " << IDofPlayer << " owns no territories- they have been removed from the game!";
+                        }//end of if (player to be removed found)
+                    }//end of for (go and remove that player from the players list)
+                }//end of for (go through all players that have to be removed)
+            }//end of if (there are players who must be removed from the game)
+            theFallenOnes->clear();
+            /////
+
+            cout << "\nLet's see everyone's current standings:" << endl;
+            for(int m = 0; m < thePlayers->size(); m++){
+                cout << *thePlayers->at(m) << endl;
             }//end of for (print all player statuses
-        }
+        }//end of if (nobody has won so far)
     }//end of while
 
 }///END OF MAIN GAME LOOP
-
 
 int main() {
     Map *mapGame = nullptr;
@@ -515,6 +545,7 @@ int main() {
 
     int numOfPlayers; // int where user selects the number of players in the game
     string key; // Press any key feature for later
+    string secondKey;
 
 
     // If user selects valid map file which creates valid map graph, map selection done
