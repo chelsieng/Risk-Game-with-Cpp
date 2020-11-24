@@ -9,17 +9,23 @@
 //create the abstract class PlayerStrategy
 class PlayerStrategy{
 public:
-    virtual void issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice, Player* player) = 0;
+    virtual bool issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice, Player* player) = 0;
     virtual vector<Territory*>* toAttack(Map* theMap, Player *player) = 0;
     virtual vector<Territory*>* toDefend(Map* theMap, Player *player) = 0;
 
 };//end of PlayerStrategy class
 
 class HumanPlayerStrategy : public PlayerStrategy{
-    virtual void issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice, Player* player);
+    virtual bool issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice, Player* player);
     virtual vector<Territory*>* toAttack(Map* theMap, Player *player);
     virtual vector<Territory*>* toDefend(Map* theMap, Player *player);
 };//end of human player strategy class (will take user input)
+
+class AggressivePlayerStrategy : public PlayerStrategy{
+    virtual bool issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice, Player* player);
+    virtual vector<Territory*>* toAttack(Map* theMap, Player *player);
+    virtual vector<Territory*>* toDefend(Map* theMap, Player *player);
+};
 
 
 

@@ -465,44 +465,12 @@ void GameEngine::orderIssuingPhase(vector<Player *> *thePlayers, Map *theMap) {
                 p->issueOrder(theMap, thePlayers, 0, p);
             }//end of if (deploy round)
             else {
-                cout << "Would you like to issue another order? Type 1 for yes, and any other number for no." << endl;
-                int ans;
-                cin >> ans;
-              
-                if (cin.fail()) {
-                    cin.clear(); // clears error flag
-                    cin.ignore(); // skips to the next line
-                    --i;
-                    notDone = true; // Keep prompting user
-                } else if(ans == 1) {
-                    notDone = true;
-                    bool valid = false;
-                    int response;
-                    while(valid == false){
-                        cout << "Here are your options. Type in the number corresponding to your choice:" << endl;
-                        cout << "1. Advance armies to defend." << endl;
-                        cout << "2. Advance armies to attack." << endl;
-                        cout << "3. Play a card from your hand." << endl;
-                        cin >> response;
-                        if (cin.fail()) {
-                            cin.clear(); // clears error flag
-                            cin.ignore(); // skips to the next line
-                            valid = false; // Keep prompting user
-                            cout << "Please try again" << endl;
-                        }
-                        else if(response == 1 || response == 2 || (response == 3 && p->getHand()->getSize() > 0)){
-                            valid = true;
-                            cout << "Got it!" << endl;
-                        } else if(response == 3 && p->getHand()->getSize() < 1){
-                            cout << "You don't have any cards in hand! Try something else." << endl;
-                        } else{ cout << "Invalid choice! Please try again." << endl;}
-                    }//end of while (get valid choice)
+            bool didTheyIssue = false;
+                   didTheyIssue = p->issueOrder(theMap, thePlayers, 1, p);
+                   if(didTheyIssue == true){
+                       notDone = true;
+                   }//(someone issued an order this round, so there will be another round after this)
 
-                    p->issueOrder(theMap, thePlayers, response, p);
-                }//end of if (issue another order)
-                else {
-                    cout << "Okay! No order will be issued." << endl;
-                }//end of else
             }//end of else (not first issue round)
         } //end of for (round robing order issuing for all players)
         issueRound = issueRound + 1;
@@ -513,7 +481,7 @@ void GameEngine::orderIssuingPhase(vector<Player *> *thePlayers, Map *theMap) {
         cout << "Enter any key to continue>> "; // Prompt user to press any key to continue
         cin >> key;
         cout << endl;
-    }
+    }//end of while
 
 }///end of order issuing phase function
 

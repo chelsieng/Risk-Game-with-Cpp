@@ -203,8 +203,8 @@ vector<Territory *> *Player::AttackAble(Map *theMap){
     return attackable;
 }//end of Attackable method
 
-void Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice, Player* player) {
-    this->playerStrategy->issueOrder(theMap,thePlayers,choice, this);
+bool Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice, Player* player) {
+   return this->playerStrategy->issueOrder(theMap,thePlayers,choice, this);
 //(calls the version of the player's strategy)
 }///End of issue order method
 

@@ -47,7 +47,7 @@ public:
     OrdersList* getOrdersList();
     vector<Territory*>* getPlayerTerritories();
     vector<Territory*>* AttackAble(Map* theMap);
-    void issueOrder(Map* theMap, vector<Player*>* thePlayers, int choice, Player* player);
+    bool issueOrder(Map* theMap, vector<Player*>* thePlayers, int choice, Player* player);
     void setConquered(bool status) { this->hasConquered = status; }
     bool getConquered() { return this->hasConquered; }
     void removeTerritory(Territory *t);
