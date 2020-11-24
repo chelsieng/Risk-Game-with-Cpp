@@ -5,6 +5,7 @@
 
 #include "Orders.h"
 #include "Cards.h"
+#include "PlayerStrategies.h"
 
 using namespace std;
 
@@ -25,6 +26,8 @@ private:
     vector<Territory*>* playerTerritories;
     int reinforcementPool;
     bool hasConquered = false;              // Showing whether or this player has conquered a territory in that round
+    PlayerStrategy *playerStrategy; //this has to be a pointer since PlayerStrategy is an abstract class
+                                        //(and we'll be using polymorphism and changing the strategy so makes more sense)
 
 public:
     Player(); // default Constructor
@@ -48,7 +51,8 @@ public:
     bool getConquered() { return this->hasConquered; }
     void removeTerritory(Territory *t);
     void addTerritory(Territory *t) { this->playerTerritories->push_back(t); }
-
+    void setPlayerStrategy(PlayerStrategy* p);
+    PlayerStrategy* getPlayerStrategy();
     // assignment operator
     Player& operator = (const Player &player);
 

@@ -23,6 +23,7 @@ Player::Player(Hand *hand, OrdersList *OrdersList, vector<Territory *> *territor
     this->playerOrdersList = OrdersList;
     this->playerTerritories = territories;
     this->reinforcementPool = 0;
+    this->playerStrategy = new HumanPlayerStrategy; //sets strategy to human by default
 }
 
 // copy constructor
@@ -54,6 +55,11 @@ Player::Player(const Player &playerCopy) {
     delete this->playerTerritories;
     playerTerritories = nullptr;
 
+    delete this->playerStrategy;
+    playerStrategy = nullptr;
+
+    this->setPlayerStrategy(playerCopy.playerStrategy);
+
     // copy using Territory copy constructor
     for (auto pt : *playerCopy.playerTerritories) {
         this->playerTerritories->push_back(new Territory(*pt));
@@ -81,6 +87,9 @@ Player::~Player() {
     }
     delete this->playerTerritories;
     playerTerritories = nullptr;
+
+    delete this->playerStrategy;
+    playerStrategy = nullptr;
 }
 
 // Returning the player's ID
@@ -556,5 +565,13 @@ void Player::removeTerritory(Territory *t) {
             this->getPlayerTerritories()->erase(this->getPlayerTerritories()->begin()+i);
         i++;
     }
+}
+
+void Player::setPlayerStrategy(PlayerStrategy *p) {
+    this->playerStrategy = p;
+}
+
+PlayerStrategy *Player::getPlayerStrategy() {
+    return this->playerStrategy;
 }
 ///end of removeTerritory
