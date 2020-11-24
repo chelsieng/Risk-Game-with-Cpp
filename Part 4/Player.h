@@ -15,6 +15,7 @@ class Territory;
 class Order;
 class Hand;
 class Map;
+class PlayerStrategy;
 
 
 class Player {
@@ -37,8 +38,8 @@ public:
 
     // Methods
     void issueOrder(Order* orderToIssue);
-    vector<Territory*>* toDefend(Map* theMap);
-    vector<Territory*>* toAttack(Map* theMap);
+    vector<Territory*>* toDefend(Map* theMap, Player *player);
+    vector<Territory*>* toAttack(Map* theMap, Player *player);
     int getId() const;
     int getReinforcementPool() const;
     void setReinforcementPool(int i);
@@ -46,7 +47,7 @@ public:
     OrdersList* getOrdersList();
     vector<Territory*>* getPlayerTerritories();
     vector<Territory*>* AttackAble(Map* theMap);
-    void issueOrder(Map* theMap, vector<Player*>* thePlayers, int choice);
+    void issueOrder(Map* theMap, vector<Player*>* thePlayers, int choice, Player* player);
     void setConquered(bool status) { this->hasConquered = status; }
     bool getConquered() { return this->hasConquered; }
     void removeTerritory(Territory *t);

@@ -462,7 +462,7 @@ void GameEngine::orderIssuingPhase(vector<Player *> *thePlayers, Map *theMap) {
             cout << "\nAlright Player " << p->getId() << ", it's your turn to issue an order!" << endl;
             if (issueRound == 0) {
                 cout << "\nYou must issue any deploy orders before you can do anything else!\n" << endl;
-                p->issueOrder(theMap, thePlayers, 0);
+                p->issueOrder(theMap, thePlayers, 0, p);
             }//end of if (deploy round)
             else {
                 cout << "Would you like to issue another order? Type 1 for yes, and any other number for no." << endl;
@@ -498,7 +498,7 @@ void GameEngine::orderIssuingPhase(vector<Player *> *thePlayers, Map *theMap) {
                         } else{ cout << "Invalid choice! Please try again." << endl;}
                     }//end of while (get valid choice)
 
-                    p->issueOrder(theMap, thePlayers, response);
+                    p->issueOrder(theMap, thePlayers, response, p);
                 }//end of if (issue another order)
                 else {
                     cout << "Okay! No order will be issued." << endl;
