@@ -179,8 +179,8 @@ void Player::setReinforcementPool(int i) {
 }
 
 ///Gives all the territories that a player can attack (and returns a vector of pointers to said territories)
-vector<Territory *> *Player::AttackAble(Map *theMap){
-    vector<Territory *>* attackable = new vector<Territory*>;
+vector<Territory *> Player::AttackAble(Map *theMap){
+    vector<Territory *> attackable(0); //initializing it as size 0
     set<int> *IDs = new set<int>;
     for(int i = 0; i < this->getPlayerTerritories()->size(); i++){
         vector<Territory*>* yourNeighbours = theMap->getNeighbours(this->getPlayerTerritories()->at(i));
@@ -196,7 +196,7 @@ vector<Territory *> *Player::AttackAble(Map *theMap){
         int theNeighbourID = *itr;
         for(int i = 0; i < theMap->getTerritories()->size(); i++){
             if(theMap->getTerritories()->at(i)->getId() == theNeighbourID && theMap->getTerritories()->at(i)->getOwner() != this){
-                attackable->push_back(theMap->getTerritories()->at(i));
+                attackable.push_back(theMap->getTerritories()->at(i));
             }//end of if (valid to attack)
         }//for each ID, check all territories to see if they have the matching ID and don't belong to the player
     }//end of for (go through all IDs in list)
@@ -208,13 +208,13 @@ bool Player::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice, P
 //(calls the version of the player's strategy)
 }///End of issue order method
 
-vector<Territory*>* Player::toDefend(Map* theMap, Player *player) {
-    vector<Territory*>* toReturn = this->playerStrategy->toDefend(theMap, player); //calls version of toAttack depending on
+vector<Territory*> Player::toDefend(Map* theMap, Player *player) {
+    vector<Territory*> toReturn = this->playerStrategy->toDefend(theMap, player); //calls version of toAttack depending on
     return toReturn;                                                    //the player's strategy
 } ///end of toDefend() method
 
-std::vector<Territory*>* Player::toAttack(Map* theMap, Player* player) {
-    vector<Territory*>* toReturn = this->playerStrategy->toAttack(theMap, player); //calls version of toAttack depending on
+std::vector<Territory*> Player::toAttack(Map* theMap, Player* player) {
+    vector<Territory*> toReturn = this->playerStrategy->toAttack(theMap, player); //calls version of toAttack depending on
     return toReturn;                                                    //the player's strategy
 }
 ///end of toAttack method

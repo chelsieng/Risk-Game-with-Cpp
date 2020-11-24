@@ -103,9 +103,10 @@ int main() {
 
     ///create vector of players
     vector<Player*>* ps1 = new vector<Player*>();
+    p1->setPlayerStrategy(new AggressivePlayerStrategy);
     ps1->push_back(p1);
     ps1->push_back(p2);
-    ps1->push_back(p3);
+ //   ps1->push_back(p3);
  //   ps1->push_back(p4);
 
  //We'll start each player off with a card in hand:

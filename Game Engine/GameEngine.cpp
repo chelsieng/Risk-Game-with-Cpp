@@ -608,7 +608,7 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
     }//end of while
 
 }///END OF MAIN GAME LOOP
-
+/*
 int main() {
     GameEngine *gameEngine = new GameEngine();
     gameEngine->gameStart(gameEngine);
@@ -616,5 +616,5 @@ int main() {
     delete gameEngine;
     return 0;
 }
-
+*/
 
