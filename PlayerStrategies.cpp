@@ -550,3 +550,88 @@ vector<Territory *> AggressivePlayerStrategy::toAttack(Map *theMap, Player *play
 
     ///End of Aggressive version of toAttack
 }
+
+vector<Territory *> BenevolentPlayerStrategy::toDefend(Map *theMap, Player *player) {
+    vector<Territory*> weaklings;
+    int smallestArmyCount = player->getPlayerTerritories()->at(0)->getMockArmies();
+    //Find out what the smallest amount of armies on any given country actually is
+    for(int i = 0; i < player->getPlayerTerritories()->size(); i++){
+        if(player->getPlayerTerritories()->at(i)->getMockArmies() < smallestArmyCount){
+            smallestArmyCount = player->getPlayerTerritories()->at(i)->getMockArmies();
+        }//end of if (smaller number found)
+    }//end of for
+    //Now return the weakest countries based on that amount
+    for(int i = 0; i < player->getPlayerTerritories()->size(); i++){
+        if(player->getPlayerTerritories()->at(i)->getMockArmies() == smallestArmyCount){
+            weaklings.push_back(player->getPlayerTerritories()->at(i));
+        }//end of if (smaller number found)
+    }//end of for
+    return weaklings;
+    ///End of Benevolent version of toDefend
+}
+
+vector<Territory *> BenevolentPlayerStrategy::toAttack(Map *theMap, Player *player) {
+    cout << "****You shouldn't be using this method, the benevolent player never attacks :o" << endl;
+    return vector<Territory *>();
+}
+
+bool BenevolentPlayerStrategy::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice, Player *player) {
+    if(choice == 0){
+        vector<Territory *> defendList = player->toDefend(theMap, player);
+        int usableArmies = player->getReinforcementPool();
+        bool allDeployed = false;
+        while(allDeployed == false){
+            if(usableArmies == 0){allDeployed = true;}
+            for(int i = 0; i < defendList.size(); i++){
+                if(usableArmies > 0){
+                    int amount = (rand() % usableArmies) + 1;
+                    cout << "\nPlayer " << player->getId() << " deployed " << amount << " armies to " <<
+                    defendList.at(i)->getTerritoryName() << endl;
+                    defendList.at(i)->addToMockArmies(amount);
+                    usableArmies = usableArmies - amount;
+                    player->issueOrder(new Deploy(player, defendList.at(i), amount));
+                }//end of if (still armies to deploy, so they will)
+            }//end of for (go through all weak territories)
+        }//end of while
+        return true;
+    }//end of if (deployment phase)
+    if(choice == 1){
+        //get weakest territories, check their neighbours to see if the player owns them and they have more armies
+        //if yes, issue an advance order
+        bool didSomething = false;
+        vector<Territory *> yourArmyGameIsWeak = player->toDefend(theMap, player);
+        for(int i = 0; i < yourArmyGameIsWeak.size(); i++) {
+            Territory* weakling = yourArmyGameIsWeak.at(i);
+            vector<Territory *> *theNeighbours = theMap->getNeighbours(weakling);
+            vector<Territory *> neighboursYouOwn(0);
+            for (int j = 0; j < theNeighbours->size(); j++) {
+                if (theNeighbours->at(j)->isOccupiedBy(player)) {
+                    neighboursYouOwn.push_back(theNeighbours->at(j));
+                }//end of if (valid option)
+            }//end of for (get neighbours of territory to be defended that defending player owns)
+            for(int k = 0; k < neighboursYouOwn.size(); k++){
+                if(weakling->getMockArmies() < neighboursYouOwn.at(k)->getMockArmies()){
+                    int amount = (rand() % neighboursYouOwn.at(k)->getMockArmies()/2) + 1; //divided by 2 so they don't move more than half
+                    neighboursYouOwn.at(k)->removeMockArmies(amount);
+                    weakling->addToMockArmies(amount);
+                    cout << "\nPlayer " << player->getId() << " is issuing an order to defensively advance " << amount
+                    << " armies from " << neighboursYouOwn.at(k)->getTerritoryName() << " to " << weakling->getTerritoryName() << "." << endl;
+                    player->issueOrder(new Advance(player,neighboursYouOwn.at(k),weakling,amount));
+                    didSomething = true;
+                    cout << "\nAdvance order issued!" << endl;
+                }//end of if (moving some over)
+            }//end of for (if the given neighbour has more armies, move some over)
+        }//end of for (go through all weakest countries)
+
+        if(didSomething == false){
+            cout << "\nPlayer " << player->getId() << " chose not to make any more defensive actions!" << endl;
+        }
+
+        ///Important: So even though the benevolent player may have issued an order, this is actually always gonna return
+        /// false (assuming we're not in deployment phase). This is to avoid an infinite loop of the benevolent
+        /// player passing armies back and forth between their stronger and weaker countries forever.
+        ///
+        return false;
+    }//end of if (not deployment phase)
+    ///End of Benevolent version of issue order
+}

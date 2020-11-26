@@ -5,7 +5,6 @@
 // Created by Dominique Cartier on 2020-11-10.
 //
 #include <iostream>
-#pragma once
 #include "GameEngine.h"
 #include <cstdlib>
 
@@ -112,7 +111,7 @@ int main() {
 
     ///create vector of players
     vector<Player*>* ps1 = new vector<Player*>();
-    p1->setPlayerStrategy(new AggressivePlayerStrategy);
+    p1->setPlayerStrategy(new BenevolentPlayerStrategy);
     ps1->push_back(p1);
     ps1->push_back(p2);
  //   ps1->push_back(p3);
