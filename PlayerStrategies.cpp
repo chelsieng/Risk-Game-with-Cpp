@@ -3,6 +3,8 @@
 //
 #include "PlayerStrategies.h"
 #include <algorithm>
+#include <cstdlib>
+#include <ctime>
 
 
 vector<Territory *> HumanPlayerStrategy::toAttack(Map *theMap, Player *player) {
@@ -436,6 +438,28 @@ bool AggressivePlayerStrategy::issueOrder(Map *theMap, vector<Player *> *thePlay
         //Aggressive player will attack until they can't anymore
         vector<Territory*> couldAttack = player->toAttack(theMap, player);
         bool attacked = false;
+        ///
+        //Remove from "couldAttack" places where all neighbours belonging to attacking player have 0 armies
+        for (int i = 0; i < couldAttack.size(); i++) {
+            cout << "\n****in theory, you could attack " << couldAttack.at(i)->getTerritoryName() << endl;
+            vector<Territory *> *theNeighbours = theMap->getNeighbours(couldAttack.at(i));
+            vector<Territory *> neighboursYouOwn;
+            for (int j = 0; j < theNeighbours->size(); j++) {
+                if (theNeighbours->at(j)->isOccupiedBy(player)) {
+                    cout << "\n*** you own the neighbouring territory " << theNeighbours->at(j)->getTerritoryName() <<
+                     " which has " << theNeighbours->at(j)->getMockArmies() << " disposable armies on it. " << endl;
+                    neighboursYouOwn.push_back(theNeighbours->at(j));
+                }//end of if (valid option)
+            }//end of for (get neighbours of territory to be attacked that attacking player owns)
+            bool atLeast = false;
+            for(int x = 0; x < neighboursYouOwn.size(); x++){
+                if(neighboursYouOwn.at(x)->getMockArmies()>0){atLeast = true;}
+            }//end of for (check all neighbours)
+            if(atLeast == false){couldAttack.erase(couldAttack.begin() + i);
+            i--;
+            }
+        }//end of for (check everything in couldAttack and remove things if necessary
+        ///
         for (int i = 0; i < couldAttack.size(); i++) {
             vector<Territory *> *theNeighbours = theMap->getNeighbours(couldAttack.at(i));
             vector<Territory *> neighboursYouOwn;
@@ -451,8 +475,16 @@ bool AggressivePlayerStrategy::issueOrder(Map *theMap, vector<Player *> *thePlay
                 }
             }//end of for (get neighbour we are attacking from)
             if(chosenOne != nullptr) {
-                int number = chosenOne->getMockArmies(); //they will attack with all the (mock) armies on this territory
-                chosenOne->removeMockArmies(chosenOne->getMockArmies());
+                ////////
+                int number;
+                if(neighboursYouOwn.size() == 1 || couldAttack.size() == 1){
+                    number = chosenOne->getMockArmies(); //if there's only territory to attack OR attack from, they'll attack with everything
+                }//end of if
+                else {
+                    number = (rand() % (chosenOne->getMockArmies())) +1;
+                              //otherwise, they will attack with some of the (mock) armies on this territory
+                }//end of else
+                chosenOne->removeMockArmies(number);
                 cout << "\nP" << player->getId() << " is advancing " << number << " armies from " << chosenOne->getTerritoryName()
                     << " into " << couldAttack.at(i)->getTerritoryName() << " to attack." << endl;
                 player->issueOrder(new Advance(player, chosenOne, couldAttack.at(i), number));

@@ -216,6 +216,28 @@ vector<Player *> *GameEngine::createPlayers() {
         auto *territories = new vector<Territory *>; // creating vector territories for each player
         auto *ordersList = new OrdersList(); // creating orderList for each player
         auto *player = new Player(hand, ordersList, territories); // creating amount of players user initiated
+        ///Get strategy type
+        cout << "\nWhat type of player is P" << player->getId() << "? Type in the corresponding number from the list below." << endl;
+        cout << "1. Human player" << endl;
+        cout << "2. Aggressive CPU" << endl;
+     //   cout << "2. Benevolent CPU" << endl;
+     //   cout << "1. Neutral CPU" << endl;
+        int ans;
+        bool valid = false;
+        while (valid == false) {
+            cin >> ans;
+            cout << endl;
+            if (cin.fail()) {
+                cin.clear(); // clears error flag
+                cin.ignore(); // skips to the next line
+                valid = false; // Keep prompting user
+            } else if (ans < 3 && ans > 0) { valid = true; } //(switch 3 to 5 later)
+            else {
+                cout << "\nInvalid answer! Please try again." << endl;
+            }
+        }//end of while (get valid answer)
+        if(ans == 2){player->setPlayerStrategy(new AggressivePlayerStrategy);}
+        ///
         pList->push_back(player); // storing players in global vector variable players
     }
     cout << endl << numOfPlayers << " players have been successfully created. \nLet's have a look at them: " << endl;
