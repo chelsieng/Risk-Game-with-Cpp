@@ -460,10 +460,52 @@ bool AggressivePlayerStrategy::issueOrder(Map *theMap, vector<Player *> *thePlay
                 attacked = true;
             }//end of if (player had a neighbour that actually had armies to attack from)
         }//end of for (go through all territories in the attack list)
-        if(attacked == false){
+        if(attacked == true){return attacked;}
+        else if(attacked == false){
             cout << "\nP" << player->getId() << " could not attack anymore! No new advance orders will be placed." << endl;
         }
-        return attacked;
+        //If the aggressive player couldn't attack anywhere, they will try to reinforce one country as much as possible
+        if(attacked == false){
+            bool defended = false;
+            Territory* strongest = this->toDefend(theMap,player).at(0);
+            vector<Territory *> *theNeighbours = theMap->getNeighbours(strongest);
+            vector<Territory *> neighboursYouOwn(0);
+            for (int j = 0; j < theNeighbours->size(); j++) {
+                if (theNeighbours->at(j)->isOccupiedBy(player)) {
+                    neighboursYouOwn.push_back(theNeighbours->at(j));
+                }//end of if (valid option)
+            }//end of for (get neighbours of territory to be defended that defending player owns)
+            Territory* moveFromHere = nullptr;
+            int armiesToMove = 0;
+            if (neighboursYouOwn.size() > 0) {
+                for (int k = 0; k < neighboursYouOwn.size(); k++) {
+                    if(neighboursYouOwn.at(k)->getMockArmies()>0){
+                        moveFromHere = neighboursYouOwn.at(k);
+                        armiesToMove = moveFromHere->getMockArmies();
+                    }
+                }//end of for (check neighbors to see if they have any armies to actually move)
+               if(moveFromHere != nullptr) {
+                   moveFromHere->removeMockArmies(armiesToMove);
+                   player->issueOrder(new Advance(player, strongest, moveFromHere, armiesToMove));
+                   cout << "Player " << player->getId() << " moved " << armiesToMove << " armies from "
+                   << moveFromHere->getTerritoryName() << " to " << strongest->getTerritoryName() << "." << endl;
+                   defended = true;
+               }
+               else {
+                   cout << "Player " << player->getId() << " has chosen not to make any defensive advance orders either!" << endl;
+                   defended = false;
+               }//end of else (no immediate neighbours with a non=zero number of troops to move)
+            }//end of if (player actually has neighbours from which to advance)
+            else {
+                cout << "Player " << player->getId() << " has chosen not to make any defensive advance orders either!" << endl;
+                     defended = false;
+            }//end of else (no neighbours)
+
+
+            return defended;
+
+                    ///////
+        }//end of if (player couldn't attack so they've tried to reinforce
     }//end of else if (not deploy phase- some other action must be taken)
     ///End of Aggressive version of issue order
     cout << "\nNo order was issued!" << endl;
