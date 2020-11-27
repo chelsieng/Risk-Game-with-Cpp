@@ -429,7 +429,7 @@ bool AggressivePlayerStrategy::issueOrder(Map *theMap, vector<Player *> *thePlay
         int amount = player->getReinforcementPool();
         deployHere->addToMockArmies(amount);
         player->issueOrder(new Deploy(player, deployHere, amount));
-        cout << "\n" << amount << " armies will be deployed to"
+        cout << "\n" << amount << " armies will be deployed to "
              << deployHere->getTerritoryName()
              << "." << endl;
         return true;
@@ -441,13 +441,10 @@ bool AggressivePlayerStrategy::issueOrder(Map *theMap, vector<Player *> *thePlay
         ///
         //Remove from "couldAttack" places where all neighbours belonging to attacking player have 0 armies
         for (int i = 0; i < couldAttack.size(); i++) {
-            cout << "\n****in theory, you could attack " << couldAttack.at(i)->getTerritoryName() << endl;
             vector<Territory *> *theNeighbours = theMap->getNeighbours(couldAttack.at(i));
             vector<Territory *> neighboursYouOwn;
             for (int j = 0; j < theNeighbours->size(); j++) {
                 if (theNeighbours->at(j)->isOccupiedBy(player)) {
-                    cout << "\n*** you own the neighbouring territory " << theNeighbours->at(j)->getTerritoryName() <<
-                     " which has " << theNeighbours->at(j)->getMockArmies() << " disposable armies on it. " << endl;
                     neighboursYouOwn.push_back(theNeighbours->at(j));
                 }//end of if (valid option)
             }//end of for (get neighbours of territory to be attacked that attacking player owns)
@@ -584,8 +581,10 @@ bool BenevolentPlayerStrategy::issueOrder(Map *theMap, vector<Player *> *thePlay
             if(usableArmies == 0){allDeployed = true;}
             for(int i = 0; i < defendList.size(); i++){
                 if(usableArmies > 0){
-                    int amount = (rand() % usableArmies) + 1;
-                    cout << "\nPlayer " << player->getId() << " deployed " << amount << " armies to " <<
+                    int amount = 0;
+                    if(defendList.size() == 1){amount = usableArmies;}
+                    else{amount = (rand() % usableArmies) + 1;}
+                    cout <<  amount << " armies will be deployed to " <<
                     defendList.at(i)->getTerritoryName() << endl;
                     defendList.at(i)->addToMockArmies(amount);
                     usableArmies = usableArmies - amount;
@@ -633,5 +632,29 @@ bool BenevolentPlayerStrategy::issueOrder(Map *theMap, vector<Player *> *thePlay
         ///
         return false;
     }//end of if (not deployment phase)
+    return false;
     ///End of Benevolent version of issue order
+}
+
+vector<Territory *> NeutralPlayerStrategy::toDefend(Map *theMap, Player *player) {
+    return vector<Territory *>();
+}
+
+vector<Territory *> NeutralPlayerStrategy::toAttack(Map *theMap, Player *player) {
+    return vector<Territory *>();
+}
+
+bool NeutralPlayerStrategy::issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice, Player *player) {
+
+    if(choice == 0){
+        cout << "\nPlayer " << player->getId() << " didn't want to play this game in the first place, so they won't deploy any armies." <<endl;
+    return false;
+    }
+    else{
+        cout << "\nPlayer " << player->getId() << " stubbornly refused to issue any orders." << endl;
+        return false;
+    }
+    return false;
+
+    ///End of Neutral version of issueOrder
 }

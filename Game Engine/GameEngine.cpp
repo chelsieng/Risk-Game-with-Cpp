@@ -220,8 +220,8 @@ vector<Player *> *GameEngine::createPlayers() {
         cout << "\nWhat type of player is P" << player->getId() << "? Type in the corresponding number from the list below." << endl;
         cout << "1. Human player" << endl;
         cout << "2. Aggressive CPU" << endl;
-     //   cout << "2. Benevolent CPU" << endl;
-     //   cout << "1. Neutral CPU" << endl;
+        cout << "3. Benevolent CPU" << endl;
+        cout << "4. Neutral CPU" << endl;
         int ans;
         bool valid = false;
         while (valid == false) {
@@ -231,12 +231,14 @@ vector<Player *> *GameEngine::createPlayers() {
                 cin.clear(); // clears error flag
                 cin.ignore(); // skips to the next line
                 valid = false; // Keep prompting user
-            } else if (ans < 3 && ans > 0) { valid = true; } //(switch 3 to 5 later)
+            } else if (ans < 5 && ans > 0) { valid = true; } //(switch 3 to 5 later)
             else {
                 cout << "\nInvalid answer! Please try again." << endl;
             }
         }//end of while (get valid answer)
         if(ans == 2){player->setPlayerStrategy(new AggressivePlayerStrategy);}
+        if(ans == 3){player->setPlayerStrategy(new BenevolentPlayerStrategy);}
+        if(ans == 4){player->setPlayerStrategy(new NeutralPlayerStrategy);}
         ///
         pList->push_back(player); // storing players in global vector variable players
     }
@@ -481,7 +483,7 @@ void GameEngine::orderIssuingPhase(vector<Player *> *thePlayers, Map *theMap) {
             this->curr_player = nullptr;
             this->curr_player = p;
             this->setPlayerTurn(thePlayers->at(i)->getId());
-            cout << "\nAlright Player " << p->getId() << ", it's your turn to issue an order!" << endl;
+            cout << "\n***Alright Player " << p->getId() << ", it's your turn to issue an order!***" << endl;
             if (issueRound == 0) {
                 cout << "\nYou must issue any deploy orders before you can do anything else!\n" << endl;
                 p->issueOrder(theMap, thePlayers, 0, p);
@@ -497,10 +499,10 @@ void GameEngine::orderIssuingPhase(vector<Player *> *thePlayers, Map *theMap) {
         } //end of for (round robing order issuing for all players)
         issueRound = issueRound + 1;
     }//end of while
-
+    cout << "\nIt seems that everyone is finished issuing orders!" << endl;
     string key;
     while (key.empty()) {
-        cout << "Enter any key to continue>> "; // Prompt user to press any key to continue
+        cout << "\nEnter any key to continue>> "; // Prompt user to press any key to continue
         cin >> key;
         cout << endl;
     }//end of while
@@ -630,7 +632,7 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
     }//end of while
 
 }///END OF MAIN GAME LOOP
-/*
+
 int main() {
     GameEngine *gameEngine = new GameEngine();
     gameEngine->gameStart(gameEngine);
@@ -638,5 +640,5 @@ int main() {
     delete gameEngine;
     return 0;
 }
-*/
+
 

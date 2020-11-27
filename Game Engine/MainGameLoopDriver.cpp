@@ -111,7 +111,7 @@ int main() {
 
     ///create vector of players
     vector<Player*>* ps1 = new vector<Player*>();
-    p1->setPlayerStrategy(new BenevolentPlayerStrategy);
+    p1->setPlayerStrategy(new NeutralPlayerStrategy);
     ps1->push_back(p1);
     ps1->push_back(p2);
  //   ps1->push_back(p3);

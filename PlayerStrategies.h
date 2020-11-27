@@ -32,6 +32,11 @@ class BenevolentPlayerStrategy : public PlayerStrategy{
     virtual vector<Territory*> toAttack(Map* theMap, Player *player);
     virtual vector<Territory*> toDefend(Map* theMap, Player *player);
 };
+class NeutralPlayerStrategy : public PlayerStrategy{
+    virtual bool issueOrder(Map *theMap, vector<Player *> *thePlayers, int choice, Player* player);
+    virtual vector<Territory*> toAttack(Map* theMap, Player *player);
+    virtual vector<Territory*> toDefend(Map* theMap, Player *player);
+};
 
 
 
