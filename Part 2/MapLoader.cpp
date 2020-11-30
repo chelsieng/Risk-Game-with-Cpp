@@ -250,6 +250,10 @@ std::vector<string> MapLoader::parseString(string s) {
 //---------------------------------------------------CONQUEST FILES----------------------------------------------
 //===============================================================================================================
 
+ConquestFileReaderAdapter::~ConquestFileReaderAdapter() {
+    delete conquestFileReader_;
+}
+
 // Default constructor
 ConquestFileReader::ConquestFileReader() {
     filePath = "";
@@ -435,6 +439,7 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
             }
         }
     }
+
     // Adding all the territory vertices to the graph
     // Looping through continents and their territories
     // adding vertices of all territories from each continent to the mapGraph
@@ -477,7 +482,6 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
             terrID = terrMap.find(terrName)->second; // avoid uncaught exception of "no conversion"
         }
         if (s != "") { //avoiding uncaught exception for later
-//            borderInfo = s.erase(0, s.find(delimiter) + delimiter.length()); //gets border specs of territory ID
             //gets border specs of territory ID -> starts at position 5
             borderInfo = s.erase(0, s.find(delimiter) + delimiter.length());
             borderInfo = s.erase(0, s.find(delimiter) + delimiter.length());
@@ -492,8 +496,8 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
             token = borderInfo.substr(0, pos);
             if (token != "") {
                 edge = terrMap.find(token)->second;
-//                edge = stoi(token); // avoiding uncaught exception of "no conversion"
             }
+
             // Creating the edges between countries
             // Looping through the graph
             // adding an edge between all the territories that share a border
@@ -504,6 +508,7 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
             }
             borderInfo.erase(0, pos + delimiter.length()); // removing already used token from line
         }
+
         // last token
         if (borderInfo != "\r" && borderInfo != "\n" && borderInfo != "") {
             borderInfo = borderInfo.substr(0, borderInfo.length()-1); // removing newline character
@@ -521,18 +526,17 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
     for (int i = 0; i < continentList.size(); i++) {
         continentVector->push_back(new Continent(continentName.at(i), mapGraph, continentList.at(i)));
     }
+
     // Setting control value of all continents
     for (int i = 0; i < continentVector->size(); i++) {
         continentVector->at(i)->setControlValue(controlValueList.at(i));
     }
+
     input.close();
     newInput.close();
     finalInput.close();
     cout << filePath << " successfully loaded. Map has been created." << endl;
-    // Uncomment to get check neighbours of a vertex
-//    for (auto i: mapGraph->get_neighbours(79)) {
-//        cout << i << endl;
-//    }
+
     result = new Map(mapGraph, continentVector);
     return result;
 }

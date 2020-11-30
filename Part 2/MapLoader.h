@@ -61,7 +61,10 @@ private:
     ConquestFileReader* conquestFileReader_;
 public:
     explicit ConquestFileReaderAdapter(ConquestFileReader* conquestFileReader) : conquestFileReader_(conquestFileReader){};
+    ~ConquestFileReaderAdapter();
+
     Map* getMap() override {return this->conquestFileReader_->getMap();}
 };
 
+// Simulate client side code
 Map* generateMap(MapLoader* mapLoader);

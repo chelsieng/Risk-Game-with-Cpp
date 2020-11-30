@@ -178,16 +178,15 @@ Map *GameEngine::selectMap() {
             mapSelection = -1;
             continue;
         }
-//
+
         MapLoader *mapLoader = nullptr;
         if (mapSelection >= 7) {
-            auto *file = new ConquestFileReader(map[mapSelection]);
-            mapLoader = new ConquestFileReaderAdapter(file);
+            mapLoader = new ConquestFileReaderAdapter(new ConquestFileReader(map[mapSelection]));
         } else {
             mapLoader = new MapLoader(map[mapSelection]); //Loading selected map files
         }
 
-//         Returns false if map file fails to load (ie invalid map file)
+        // Returns false if map file fails to load (ie invalid map file)
         if (generateMap(mapLoader) == nullptr) {
             cout << "Please try again." << endl << endl;
             delete mapLoader; // handling memory
