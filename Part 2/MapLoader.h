@@ -51,7 +51,7 @@ public:
     //File Name getter
     string getMapName();
     // insertion stream operator
-    friend ostream &operator<<(ostream &, const MapLoader &);
+    friend ostream &operator<<(ostream &, const ConquestFileReader &);
 
 };
 
@@ -61,5 +61,5 @@ private:
     ConquestFileReader* conquestFileReader_;
 public:
     ConquestFileReaderAdapter(ConquestFileReader* conquestFileReader) : conquestFileReader_(conquestFileReader){};
-    Map* getMap() override;
+    Map* getMap() override {return this->conquestFileReader_->getMap();}
 };

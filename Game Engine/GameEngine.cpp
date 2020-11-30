@@ -127,7 +127,7 @@ Map *GameEngine::selectMap() {
             {4, "../Map Files/mexico.map"},
             {5, "../Map Files/northern-europe.map"},
             {6, "../Map Files/swiss.map"},
-            {7, "../Map Files/world.map"}
+            {7, "../Map Files/Africa.map"}
     };
 
     // If user selection loads invalid map files or creates invalid map graph, keep prompting user to select map file
@@ -145,46 +145,52 @@ Map *GameEngine::selectMap() {
         cout << "\t4. mexico.map" << endl;
         cout << "\t5. northern-europe.map" << endl;
         cout << "\t6. swiss.map" << endl;
-        cout << "\t7. world.map" << endl;
+        cout << "\t7. africa.map" << endl;
         cout << ">> ";
         cin >> mapSelection; // user enter selection
-
         // Returns false if user enters integer which is out of bound
         if (map.count(mapSelection) < 1 || map.count(mapSelection) > 7) {
             cout << "Please try again." << endl << endl;
             mapSelection = -1;
             continue;
         }
-
-        auto *m = new MapLoader(map[mapSelection]); //Loading selected map files
+//
+        ConquestFileReaderAdapter *adapter = nullptr;
+        if ( mapSelection == 7) {
+            auto *test = new ConquestFileReader("../Map Files/Africa.map");
+//            cout << "test";
+//            cout << *test->getMap();
+//            adapter = new ConquestFileReaderAdapter(test);
+        }
+//        auto *m = new MapLoader(map[mapSelection]); //Loading selected map files
         // Returns false if map file fails to load (ie invalid map file)
-        if (m->getMap() == nullptr) {
-            cout << "Please try again." << endl << endl;
-            delete m; // handling memory
-            continue;
-        }
-
-        // Map file successfully loaded
-        cout << endl;
-        cout << "Great! Now let's have a look at your map: " << endl;
-
-        // returns true if map graph is valid
-        if (m->getMap()->validate()) {
-            while (key.empty()) {
-                cout << "Enter any key to continue>> "; // Prompt user to press any key to continue
-                cin >> key;
-                cout << endl;
-                // uncomment to see map of game which user selected from
-                cout << *m->getMap();
-            }
-            //     *mapGame = *m->getMap(); // Assign valid map to global variable mapGame
-            return m->getMap();
-        } // else return false if map graph is invalid
-        else {
-            cout << "Please try again." << endl << endl;
-            delete m; // handling memory
-            continue;
-        }
+//        if (adapter->getMap() == nullptr) {
+//            cout << "Please try again." << endl << endl;
+//            delete adapter; // handling memory
+//            continue;
+//        }
+//
+//        // Map file successfully loaded
+//        cout << endl;
+//        cout << "Great! Now let's have a look at your map: " << endl;
+//
+//        // returns true if map graph is valid
+//        if (adapter->getMap()->validate()) {
+//            while (key.empty()) {
+//                cout << "Enter any key to continue>> "; // Prompt user to press any key to continue
+//                cin >> key;
+//                cout << endl;
+//                // uncomment to see map of game which user selected from
+//                cout << *adapter->getMap();
+//            }
+//            //     *mapGame = *m->getMap(); // Assign valid map to global variable mapGame
+//            return adapter->getMap();
+//        } // else return false if map graph is invalid
+//        else {
+//            cout << "Please try again." << endl << endl;
+//            delete adapter; // handling memory
+//            continue;
+//        }
     }
 
 }

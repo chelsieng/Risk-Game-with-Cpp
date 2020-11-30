@@ -289,7 +289,7 @@ ConquestFileReader::~ConquestFileReader() {
     resultMap = nullptr;
 }
 
-ostream &operator<<(ostream &output, const ConquestFileReader &mapLoader) {
+ostream &operator<<(ostream &output, const ConquestFileReader &conquestFileReader) {
     return output;
 }
 
@@ -439,32 +439,49 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
             mapGraph->add_vertex(terr->getId());
         }
     }
-    // Reading file up to [borders] header
-    while (line.find("[borders]") != 0) {
-        // file does not contain [borders] header
-        if (input.eof()) {
+
+    std::ifstream finalInput(filePath);
+    string finalLine;
+    // Reading file up to [Territories] header again
+    while (finalLine.find("[Territories]") != 0) {
+        // file does not contain [countries] header
+        if (newInput.eof()) {
             cout << "Error: Could not load map file, " << filePath << " is invalid." << endl;
             return nullptr;
         }
-        getline(input, line);
+        getline(finalInput, finalLine);
     }
 
     // Borders info
     while (true) {
-        if (line == "\n" || line == "\r" || line == "") {
+//        if (line == "\n" || line == "\r" || line == "") {
+//            break;
+//        }
+
+        // end of file
+        if (finalInput.eof()) {
             break;
         }
-        getline(input, line);
-        string s = line;
-        std::string delimiter = " ";
+        //deal with line breaks
+        if (finalLine.empty()) { continue; }
 
-        string ID = s.substr(0, s.find(delimiter)); //getting territory ID
+        getline(finalInput, finalLine);
+        string s = line;
+        std::string delimiter = ",";
+
+        string terrName = s.substr(0, s.find(delimiter)); //getting territory ID
         int terrID = 0;
-        if (ID != "") {
-            terrID = stoi(ID); // avoid uncaught exception of "no conversion"
+        if (terrName != "") {
+            terrID = terrMap.find(terrName)->second; // avoid uncaught exception of "no conversion"
         }
         if (s != "") { //avoiding uncaught exception for later
-            borderInfo = s.erase(0, s.find(delimiter) + delimiter.length()); //gets border specs of territory ID
+//            borderInfo = s.erase(0, s.find(delimiter) + delimiter.length()); //gets border specs of territory ID
+            //gets border specs of territory ID -> starts at position 5
+            borderInfo = s.erase(0, s.find(delimiter) + delimiter.length());
+            borderInfo = s.erase(0, s.find(delimiter) + delimiter.length());
+            borderInfo = s.erase(0, s.find(delimiter) + delimiter.length());
+            borderInfo = s.erase(0, s.find(delimiter) + delimiter.length());
+            borderInfo = s.erase(0, s.find(delimiter) + delimiter.length());
         }
 
         size_t pos = 0;
@@ -473,7 +490,8 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
         while ((pos = borderInfo.find(delimiter)) != std::string::npos) {
             token = borderInfo.substr(0, pos);
             if (token != "") {
-                edge = stoi(token); // avoiding uncaught exception of "no conversion"
+                edge = terrMap.find(token)->second;
+//                edge = stoi(token); // avoiding uncaught exception of "no conversion"
             }
             // Creating the edges between countries
             // Looping through the graph
@@ -489,7 +507,7 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
         if (borderInfo != "\r" && borderInfo != "\n" && borderInfo != "") {
             for (auto vert : mapGraph->get_vertices()) {
                 if (vert == terrID) { // territory vertex and terrID has the same territory ID
-                    mapGraph->add_edge(vert, (stoi(borderInfo))); // add edge between 2 countries
+                    mapGraph->add_edge(vert, terrMap.find(borderInfo)->second); // add edge between 2 countries
                 }
             }
         }
@@ -505,6 +523,8 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
         continentVector->at(i)->setControlValue(controlValueList.at(i));
     }
     input.close();
+    newInput.close();
+    finalInput.close();
     cout << filePath << " successfully loaded. Map has been created." << endl;
     // Uncomment to get check neighbours of a vertex
 //    for (auto i: mapGraph->get_neighbours(79)) {
