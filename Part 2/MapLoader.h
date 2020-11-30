@@ -60,6 +60,8 @@ class ConquestFileReaderAdapter : public MapLoader {
 private:
     ConquestFileReader* conquestFileReader_;
 public:
-    ConquestFileReaderAdapter(ConquestFileReader* conquestFileReader) : conquestFileReader_(conquestFileReader){};
+    explicit ConquestFileReaderAdapter(ConquestFileReader* conquestFileReader) : conquestFileReader_(conquestFileReader){};
     Map* getMap() override {return this->conquestFileReader_->getMap();}
 };
+
+Map* generateMap(MapLoader* mapLoader);
