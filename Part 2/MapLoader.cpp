@@ -340,6 +340,8 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
 
     map<string, int> contMap = {};
     int contCounter = 1;
+    map<string, int> terrMap = {};
+    int terrCounter = 1;
 
     // Continents info
     while (true) {
@@ -366,22 +368,51 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
         getline(input, line);
     }
 
-    // Countries info
+    //mapping all territories to ids first
     while (true) {
         getline(input, line);
 
         // end of file
         if (input.eof()) {
+            input.close();
             break;
         }
 
         //deal with line breaks
         if (line.empty()) { continue; }
 
+        // id for each territory
+        terrMap[parseString(line).at(0)] = terrCounter++;
+    }
+
+    std::ifstream newInput(filePath);
+    string newLine;
+    // Reading file up to [Territories] header again
+    while (newLine.find("[Territories]") != 0) {
+        // file does not contain [countries] header
+        if (newInput.eof()) {
+            cout << "Error: Could not load map file, " << filePath << " is invalid." << endl;
+            return nullptr;
+        }
+        getline(newInput, newLine);
+    }
+
+    // Countries info
+    while (true) {
+        getline(newInput, newLine);
+
+        // end of file
+        if (newInput.eof()) {
+            break;
+        }
+
+        //deal with line breaks
+        if (newLine.empty()) { continue; }
+
         // New territory for each country read
-        string territoryName = parseString(line).at(0);
+        string territoryName = parseString(newLine).at(0);
         auto *t = new Territory(territoryName);
-        countryMap.insert(pair<int, string>(t->getId(), to_string(contMap.find(parseString(line).at(3))->second)));
+        countryMap.insert(pair<int, string>(t->getId(), to_string(contMap.find(parseString(newLine).at(3))->second)));
         countryList.push_back(t);
 //        cout << line << endl;
     }
@@ -463,6 +494,7 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
             }
         }
     }
+
     // Vector to store all of the continents and their territories
     auto *continentVector = new vector<Continent *>();
     for (int i = 0; i < continentList.size(); i++) {
