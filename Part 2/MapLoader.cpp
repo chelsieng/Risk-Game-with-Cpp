@@ -379,7 +379,9 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
         }
 
         //deal with line breaks
-        if (line.empty()) { continue; }
+        if (line == "\n" || line == "\r" || line.empty()) {
+            continue;
+        }
 
         // id for each territory
         terrMap[parseString(line).at(0)] = terrCounter++;
@@ -407,7 +409,9 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
         }
 
         //deal with line breaks
-        if (newLine.empty()) { continue; }
+        if (newLine == "\n" || newLine == "\r" || newLine.empty()) {
+            continue;
+        }
 
         // New territory for each country read
         string territoryName = parseString(newLine).at(0);
@@ -445,7 +449,7 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
     // Reading file up to [Territories] header again
     while (finalLine.find("[Territories]") != 0) {
         // file does not contain [countries] header
-        if (newInput.eof()) {
+        if (finalInput.eof()) {
             cout << "Error: Could not load map file, " << filePath << " is invalid." << endl;
             return nullptr;
         }
@@ -454,19 +458,17 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
 
     // Borders info
     while (true) {
-//        if (line == "\n" || line == "\r" || line == "") {
-//            break;
-//        }
-
+        getline(finalInput, finalLine);
         // end of file
         if (finalInput.eof()) {
             break;
         }
         //deal with line breaks
-        if (finalLine.empty()) { continue; }
+        if (finalLine == "\n" || finalLine == "\r" || finalLine.empty()) {
+            continue;
+        }
 
-        getline(finalInput, finalLine);
-        string s = line;
+        string s = finalLine;
         std::string delimiter = ",";
 
         string terrName = s.substr(0, s.find(delimiter)); //getting territory ID
@@ -477,7 +479,6 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
         if (s != "") { //avoiding uncaught exception for later
 //            borderInfo = s.erase(0, s.find(delimiter) + delimiter.length()); //gets border specs of territory ID
             //gets border specs of territory ID -> starts at position 5
-            borderInfo = s.erase(0, s.find(delimiter) + delimiter.length());
             borderInfo = s.erase(0, s.find(delimiter) + delimiter.length());
             borderInfo = s.erase(0, s.find(delimiter) + delimiter.length());
             borderInfo = s.erase(0, s.find(delimiter) + delimiter.length());
@@ -505,6 +506,8 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
         }
         // last token
         if (borderInfo != "\r" && borderInfo != "\n" && borderInfo != "") {
+            borderInfo = borderInfo.substr(0, borderInfo.length()-1); // removing newline character
+            int test = terrMap.find(borderInfo)->second;
             for (auto vert : mapGraph->get_vertices()) {
                 if (vert == terrID) { // territory vertex and terrID has the same territory ID
                     mapGraph->add_edge(vert, terrMap.find(borderInfo)->second); // add edge between 2 countries
