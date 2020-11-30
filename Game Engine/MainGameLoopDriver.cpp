@@ -5,7 +5,6 @@
 // Created by Dominique Cartier on 2020-11-10.
 //
 #include <iostream>
-#pragma once
 #include "GameEngine.h"
 #include <cstdlib>
 
@@ -26,14 +25,17 @@ int main() {
     string territoryName2 = "Goo Lagoon";
     string territoryName3 = "Davie's Locker";
     string territoryName4 = "Texas";
+    string territoryName5 = "Perfume Department";
 
     string continentName1 = "Sea";
     string continentName2 = "Land";
+
 
     Territory *territory1 = new Territory(territoryName1);
     Territory *territory2 = new Territory(territoryName2);
     Territory *territory3 = new Territory(territoryName3);
     Territory *territory4 = new Territory(territoryName4);
+    Territory *territory5 = new Territory(territoryName5);
 
     vector<Territory *> *territoriesVector1 = new vector<Territory *>;
     vector<Territory *> *territoriesVector2 = new vector<Territory *>;
@@ -44,21 +46,27 @@ int main() {
     territoriesVector1->push_back(territory2);
     territoriesVector2->push_back(territory3);
     territoriesVector2->push_back(territory4);
+    territoriesVector2->push_back(territory5);
 
     mapGraph->add_vertex(territory1->getId());
     mapGraph->add_vertex(territory2->getId());
     mapGraph->add_vertex(territory3->getId());
     mapGraph->add_vertex(territory4->getId());
+    mapGraph->add_vertex(territory5->getId());
 
     mapGraph->add_edge(territory1->getId(), territory2->getId());
     mapGraph->add_edge(territory2->getId(), territory3->getId());
     mapGraph->add_edge(territory3->getId(), territory4->getId());
+    mapGraph->add_edge(territory3->getId(), territory5->getId());
+    mapGraph->add_edge(territory4->getId(), territory5->getId());
+    mapGraph->add_edge(territory1->getId(), territory5->getId());
+    mapGraph->add_edge(territory2->getId(), territory5->getId());
 
     Continent *continent1 = new Continent(continentName1, mapGraph, territoriesVector1);
     Continent *continent2 = new Continent(continentName2, mapGraph, territoriesVector2);
 
-    continent2->setControlValue(4);
-    continent1->setControlValue(3);
+    continent2->setControlValue(6);
+    continent1->setControlValue(4);
 
     // Creating vector of continents in order to pass it to the Map constructor
     vector<Continent *> *continents1 = new vector<Continent *>;
@@ -103,9 +111,10 @@ int main() {
 
     ///create vector of players
     vector<Player*>* ps1 = new vector<Player*>();
+    p1->setPlayerStrategy(new NeutralPlayerStrategy);
     ps1->push_back(p1);
     ps1->push_back(p2);
-    ps1->push_back(p3);
+ //   ps1->push_back(p3);
  //   ps1->push_back(p4);
 
  //We'll start each player off with a card in hand:

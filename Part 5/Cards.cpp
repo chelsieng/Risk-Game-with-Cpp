@@ -83,9 +83,9 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
         cout << "You are playing a card of type: " << *this->getType() << ".\n";
 
         cout << "\n Here are the places that you can attack:" << endl;
-        vector<Territory*>* attackable = p->AttackAble(theMap);
-        for(int i = 0; i < attackable->size(); i++){
-            cout << i << ": " << attackable->at(i)->getTerritoryName() << endl;
+        vector<Territory*> attackable = p->AttackAble(theMap);
+        for(int i = 0; i < attackable.size(); i++){
+            cout << i << ": " << attackable.at(i)->getTerritoryName() << endl;
         }//end of for (show all options)
         cout << "Please input the number from the list above beside the territory you would like to bomb." << endl;
         int ans;
@@ -97,7 +97,7 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
                 cin.ignore(); // skips to the next line
                 valid=false; // Keep prompting user
             }
-            else if(ans >= 0 && ans < attackable->size()){
+            else if(ans >= 0 && ans < attackable.size()){
                 cout << "Understood!" << endl;
                 valid = true;
             }
@@ -105,7 +105,7 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
                 cout << "Invalid input! Please try again." << endl;
             }
         }//end of while
-        Territory* destination = attackable->at(ans);
+        Territory* destination = attackable.at(ans);
         vector<Territory*>* theNeighbours = theMap->getNeighbours(destination);
         vector<Territory *> *neighboursYouOwn = new vector<Territory *>;
         for (int j = 0; j < theNeighbours->size(); j++) {

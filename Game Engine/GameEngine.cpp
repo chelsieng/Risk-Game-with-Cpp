@@ -216,6 +216,30 @@ vector<Player *> *GameEngine::createPlayers() {
         auto *territories = new vector<Territory *>; // creating vector territories for each player
         auto *ordersList = new OrdersList(); // creating orderList for each player
         auto *player = new Player(hand, ordersList, territories); // creating amount of players user initiated
+        ///Get strategy type
+        cout << "\nWhat type of player is P" << player->getId() << "? Type in the corresponding number from the list below." << endl;
+        cout << "1. Human player" << endl;
+        cout << "2. Aggressive CPU" << endl;
+        cout << "3. Benevolent CPU" << endl;
+        cout << "4. Neutral CPU" << endl;
+        int ans;
+        bool valid = false;
+        while (valid == false) {
+            cin >> ans;
+            cout << endl;
+            if (cin.fail()) {
+                cin.clear(); // clears error flag
+                cin.ignore(); // skips to the next line
+                valid = false; // Keep prompting user
+            } else if (ans < 5 && ans > 0) { valid = true; } //(switch 3 to 5 later)
+            else {
+                cout << "\nInvalid answer! Please try again." << endl;
+            }
+        }//end of while (get valid answer)
+        if(ans == 2){player->setPlayerStrategy(new AggressivePlayerStrategy);}
+        if(ans == 3){player->setPlayerStrategy(new BenevolentPlayerStrategy);}
+        if(ans == 4){player->setPlayerStrategy(new NeutralPlayerStrategy);}
+        ///
         pList->push_back(player); // storing players in global vector variable players
     }
     cout << endl << numOfPlayers << " players have been successfully created. \nLet's have a look at them: " << endl;
@@ -459,61 +483,29 @@ void GameEngine::orderIssuingPhase(vector<Player *> *thePlayers, Map *theMap) {
             this->curr_player = nullptr;
             this->curr_player = p;
             this->setPlayerTurn(thePlayers->at(i)->getId());
-            cout << "\nAlright Player " << p->getId() << ", it's your turn to issue an order!" << endl;
+            cout << "\n***Alright Player " << p->getId() << ", it's your turn to issue an order!***" << endl;
             if (issueRound == 0) {
                 cout << "\nYou must issue any deploy orders before you can do anything else!\n" << endl;
-                p->issueOrder(theMap, thePlayers, 0);
+                p->issueOrder(theMap, thePlayers, 0, p);
             }//end of if (deploy round)
             else {
-                cout << "Would you like to issue another order? Type 1 for yes, and any other number for no." << endl;
-                int ans;
-                cin >> ans;
-              
-                if (cin.fail()) {
-                    cin.clear(); // clears error flag
-                    cin.ignore(); // skips to the next line
-                    --i;
-                    notDone = true; // Keep prompting user
-                } else if(ans == 1) {
-                    notDone = true;
-                    bool valid = false;
-                    int response;
-                    while(valid == false){
-                        cout << "Here are your options. Type in the number corresponding to your choice:" << endl;
-                        cout << "1. Advance armies to defend." << endl;
-                        cout << "2. Advance armies to attack." << endl;
-                        cout << "3. Play a card from your hand." << endl;
-                        cin >> response;
-                        if (cin.fail()) {
-                            cin.clear(); // clears error flag
-                            cin.ignore(); // skips to the next line
-                            valid = false; // Keep prompting user
-                            cout << "Please try again" << endl;
-                        }
-                        else if(response == 1 || response == 2 || (response == 3 && p->getHand()->getSize() > 0)){
-                            valid = true;
-                            cout << "Got it!" << endl;
-                        } else if(response == 3 && p->getHand()->getSize() < 1){
-                            cout << "You don't have any cards in hand! Try something else." << endl;
-                        } else{ cout << "Invalid choice! Please try again." << endl;}
-                    }//end of while (get valid choice)
+            bool didTheyIssue = false;
+                   didTheyIssue = p->issueOrder(theMap, thePlayers, 1, p);
+                   if(didTheyIssue == true){
+                       notDone = true;
+                   }//(someone issued an order this round, so there will be another round after this)
 
-                    p->issueOrder(theMap, thePlayers, response);
-                }//end of if (issue another order)
-                else {
-                    cout << "Okay! No order will be issued." << endl;
-                }//end of else
             }//end of else (not first issue round)
         } //end of for (round robing order issuing for all players)
         issueRound = issueRound + 1;
     }//end of while
-
+    cout << "\nIt seems that everyone is finished issuing orders!" << endl;
     string key;
     while (key.empty()) {
-        cout << "Enter any key to continue>> "; // Prompt user to press any key to continue
+        cout << "\nEnter any key to continue>> "; // Prompt user to press any key to continue
         cin >> key;
         cout << endl;
-    }
+    }//end of while
 
 }///end of order issuing phase function
 
