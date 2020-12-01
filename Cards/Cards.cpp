@@ -311,8 +311,92 @@ void Card::play(Player *p, std::vector<Player *> allPlayers, Map* theMap) {
 
     cout << "You played a card of type: " << *this->getType() << endl;
 
-}//end of play method
+}//end of regular play method
 ///////////////////
+void Card::CPUPlay(Player *p, std::vector<Player *> allPlayers, Map *theMap) {
+    if (type->compare("Bomb") == 0) {
+
+        vector<Territory*> attackable = p->toAttack(theMap, p);
+        int ans = rand() % attackable.size();
+
+        Territory* destination = attackable.at(ans);
+        vector<Territory*>* theNeighbours = theMap->getNeighbours(destination);
+        vector<Territory *> neighboursYouOwn(0);
+        for (int j = 0; j < theNeighbours->size(); j++) {
+            if (theNeighbours->at(j)->isOccupiedBy(p)) {
+                neighboursYouOwn.push_back(theNeighbours->at(j));
+            }//end of if (valid option)
+        }//end of for (get neighbours of territory to be attacked that attacking player owns)
+        int response = rand();
+        int mod = neighboursYouOwn.size();
+        response = response % mod;
+        Territory *chosenOne = neighboursYouOwn.at(response);
+
+        cout << "\nPlayer " << p->getId() << " is playing a bomb card, targeting " << destination->getTerritoryName()
+        << " from " << chosenOne->getTerritoryName() << endl;
+
+        p->issueOrder(new Bomb(p, chosenOne, destination));
+
+
+    } ///END OF BOMB STUFF
+    else if (type->compare("Diplomacy") == 0) {
+        bool found = false;
+        Player *toNegotiate;
+        while (found == false) {
+            int where = rand() % allPlayers.size();
+            if(allPlayers.at(where)->getId() != p->getId()) {
+                int answer = allPlayers.at(where)->getId();
+                found = true;
+                for (Player *pl : allPlayers) {
+                    if (pl->getId() == answer) { toNegotiate = pl; }
+                }//end of for (set the indicated player as the one to negotiate with)
+                // Print effect when issue negotiate order
+                cout << "\nA negotiate order has been issued. Player " << p->getId() << " and Player " << toNegotiate->getId();
+                cout << " cannot attack each other's territories until the end of the turn.\n" << endl;
+            }//end of else (valid player)
+        }//end of while (find player)
+        p->issueOrder(new Negotiate(p, toNegotiate));
+    } ///END OF DIPLOMACY STUFF
+
+    else if (type->compare("Reinforcement") == 0) {
+        ReinforcementCard *reinforce = dynamic_cast<ReinforcementCard *>(this);
+        int amount = reinforce->getNumberOfTroops();
+        Territory* defendMe = p->toDefend(theMap, p).at(0);
+        p->issueOrder(new Deploy(p, defendMe, amount));
+        cout << "\nPlayer " << p->getId() << " is using a reinforcement card to deploy " << amount << " armies to "
+        << defendMe->getTerritoryName() << "." << endl;
+
+    } ///END OF REINFORCEMENT STUFF
+
+    else if (type->compare("Blockade") == 0) {
+        int ans = rand() % p->getPlayerTerritories()->size();
+        Territory *sourceTerritory = p->getPlayerTerritories()->at(ans);
+
+         cout << "\nPlayer " << p->getId() << " is playing a blockade card on " << sourceTerritory->getTerritoryName() << "."
+         << endl;
+        p->issueOrder(new Blockade(p, sourceTerritory));
+    } ///END OF BLOCKADE STUFF
+
+    else if (type->compare("Airlift") == 0) {
+        vector<Territory *> attackable(0); //initializing it as size 0
+        for(int i = 0; i < theMap->getTerritories()->size(); i++) {
+            if(theMap->getTerritories()->at(i)->getOwner()->getId() != p->getId()){
+                attackable.push_back(theMap->getTerritories()->at(i));
+            }
+        }
+        int attack = rand() % attackable.size();
+        Territory *sourceTerritory = p->toDefend(theMap, p).at(0);
+        Territory *targetTerritory = attackable.at(attack);
+
+        //Get number of armies to move:
+        int numArmies = (rand() % (sourceTerritory->getMockArmies() + 1))/2;
+        sourceTerritory->removeMockArmies(numArmies);
+        p->issueOrder(new Airlift(p, sourceTerritory, targetTerritory, numArmies));
+        cout << "\nPlayer " << p->getId() << " is playing an airlift card from " << sourceTerritory->getTerritoryName()
+        << " targeting " << targetTerritory->getTerritoryName() << " with " << numArmies << " armies." << endl;
+    } ///END OF AIRLIFT STUFF
+
+}///end of CPU version of play
 
 
 BombCard::BombCard()
@@ -659,7 +743,10 @@ void Hand::playCardAtIndex(int i, Player *p) //"default" version, don't use in g
 
 void Hand::playCardAtIndex(int i, Player *p, const std::vector<Player *> &allPlayers, Map* theMap) {
     Card cardToPlay = *cardsInHand.at(i);
-    cardsInHand.at(i)->play(p, allPlayers, theMap);                         //uses new version of play() method
+    if(typeid(*p->getPlayerStrategy()) == typeid(HumanPlayerStrategy)) {
+        cardsInHand.at(i)->play(p, allPlayers, theMap);                         //uses new version of play() method
+    }
+    else{cardsInHand.at(i)->CPUPlay(p, allPlayers, theMap); }
     gameDeck->placeOnBottom(cardsInHand.at(i));
     cardsInHand.erase(cardsInHand.begin() + i); //the begin() part is necessary, it seems (can't just use index)
 
@@ -683,6 +770,7 @@ ostream &operator<<(ostream &outs, const Card &printMe) {
     outs << *printMe.getDescription() << endl;
     return outs;
 }
+
 
 
 //Since we have the above, overloading the << operator for the specific card types is a bit useless, but the assignment demands it :b

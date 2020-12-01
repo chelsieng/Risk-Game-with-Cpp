@@ -526,11 +526,34 @@ bool AggressivePlayerStrategy::issueOrder(Map *theMap, vector<Player *> *thePlay
                      defended = false;
             }//end of else (no neighbours)
 
-
-            return defended;
-
+            bool playedCard = false;
+            if(defended == false){
+                if(player->getHand()->getSize() < 1){
+                    playedCard = false;
+                    cout << "Player " << player->getId() << " has no cards that they would like to play." << endl;
+                }
+                else{
+                    int playThisOne = -1;
+                    for(int i = 0; i < player->getHand()->getSize(); i++){
+                        if(!(typeid(player->getHand()->getCardatIndex(i)) == typeid(BombCard)
+                           && player->toAttack(theMap, player).size() < 1)){
+                            playThisOne = i;
+                        }//end of if (playable card)
+                    }//end of for
+                    if(playThisOne >= 0) {
+                        playedCard = true;
+                        player->getHand()->playCardAtIndex(playThisOne, player, *thePlayers, theMap);
+                    }//end of if (playing valid card)
+                    else{
+                        playedCard = false;
+                        cout << "Player " << player->getId() << " has no cards that they would like to play." << endl;
+                    }
+                }
+            }//end of if (tried to play card)
+            if(defended == true){return defended;}
+            return playedCard;
                     ///////
-        }//end of if (player couldn't attack so they've tried to reinforce
+        }//end of if (player couldn't attack so they've tried to reinforce or play a card
     }//end of else if (not deploy phase- some other action must be taken)
     ///End of Aggressive version of issue order
     cout << "\nNo order was issued!" << endl;
@@ -619,11 +642,34 @@ bool BenevolentPlayerStrategy::issueOrder(Map *theMap, vector<Player *> *thePlay
         }//end of for (go through all weakest countries)
 
         if(didSomething == false){
-            cout << "\nPlayer " << player->getId() << " chose not to make any more defensive actions!" << endl;
-        }
+            cout << "\nPlayer " << player->getId() << " chose not to make any more defensive advance orders!" << endl;
+            bool playedCard = false;
+            if(player->getHand()->getSize() < 1){
+                playedCard = false;
+                cout << "Player " << player->getId() << " has no cards that they would like to play." << endl;
+            }
+            else{
+                int playThisOne = -1;
+                for(int i = 0; i < player->getHand()->getSize(); i++){
+                    if(typeid(player->getHand()->getCardatIndex(i)) != typeid(AirliftCard)
+                    &&typeid(player->getHand()->getCardatIndex(i)) != typeid(BombCard)){
+                        playThisOne = i;
+                    }//end of if (playable card)
+                }//end of for
+                if(playThisOne >= 0) {
+                    playedCard = true;
+                    player->getHand()->playCardAtIndex(playThisOne, player, *thePlayers, theMap);
+                }//end of if (playing valid card)
+                else{
+                    playedCard = false;
+                    cout << "Player " << player->getId() << " has no cards that they would like to play." << endl;
+                }
+            }//end of else (they will play a card)
+            return playedCard;
+        }///*
 
         ///Important: So even though the benevolent player may have issued an order, this is actually always gonna return
-        /// false (assuming we're not in deployment phase). This is to avoid an infinite loop of the benevolent
+        /// false (assuming we're not in deployment phase and they didn't play a card). This is to avoid an infinite loop of the benevolent
         /// player passing armies back and forth between their stronger and weaker countries forever.
         ///
         return false;
