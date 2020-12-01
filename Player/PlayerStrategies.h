@@ -1,9 +1,6 @@
-//
-// Created by Dominique Cartier on 2020-11-23.
-//
 
-#ifndef COMP_345_PLAYERSTRATEGIES_H
-#define COMP_345_PLAYERSTRATEGIES_H
+#pragma once
+
 #include "Player.h"
 
 //create the abstract class PlayerStrategy
@@ -37,8 +34,3 @@ class NeutralPlayerStrategy : public PlayerStrategy{
     virtual vector<Territory*> toAttack(Map* theMap, Player *player);
     virtual vector<Territory*> toDefend(Map* theMap, Player *player);
 };
-
-
-
-
-#endif //COMP_345_PLAYERSTRATEGIES_H

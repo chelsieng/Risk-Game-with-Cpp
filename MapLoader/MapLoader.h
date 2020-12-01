@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-#include "../Part 1/Map.h"
+#include "Map.h"
 
 class MapLoader {
 

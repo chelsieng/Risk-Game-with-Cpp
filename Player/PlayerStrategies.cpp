@@ -1,11 +1,7 @@
-//
-// Created by Dominique Cartier on 2020-11-23.
-//
-#include "PlayerStrategies.h"
 #include <algorithm>
 #include <cstdlib>
-#include <ctime>
 
+#include "PlayerStrategies.h"
 
 vector<Territory *> HumanPlayerStrategy::toAttack(Map *theMap, Player *player) {
     cout << "\n Here are the places that you can attack:" << endl;
