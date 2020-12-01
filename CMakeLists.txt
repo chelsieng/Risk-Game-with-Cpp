@@ -15,7 +15,7 @@ add_executable(COMP_345
         "Game Engine/GameEngine.h"
         "Game Engine/GameObservers.cpp"
         "Game Engine/GameObservers.h"
-        "Game Engine/MainGameLoopDriver.cpp"
+#        "Game Engine/MainGameLoopDriver.cpp"
 #        "Game Engine/StartupPhase Driver.cpp"
 #        "Game Engine/Testing.cpp"
 #        "Map/GameStart.cpp"
