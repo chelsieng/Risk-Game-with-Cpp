@@ -1,0 +1,75 @@
+[Map]
+author=Justinas Pupeikis
+image=medieval europe.bmp
+wrap=no
+scroll=none
+warn=yes
+
+[Continents]
+England=1
+France=2
+Iberia=2
+Africa=2
+The Holy Roman Empire=3
+Egypt=2
+The Turks=3
+Russia=3
+Lithuania and Poland=2
+Scandinavia=2
+Sicily=1
+Hungrary=2
+
+[Territories]
+Scotland,187,44,England,Ireland,England and Wales
+Ireland,150,75,England,Scotland
+Paris,211,156,France,England and Wales,Bordeaux,Dijon and Marseille,Frankfurt
+Bordeaux,191,192,France,Paris,Dijon and Marseille,Aragon
+Dijon and Marseille,233,187,France,Paris,Bordeaux,Nurenburg,Southern Italy,Frankfurt
+Aragon,176,224,Iberia,Bordeaux,Castile,Corboda
+Castile,132,221,Iberia,Portugal,Aragon,Corboda
+Portugal,95,238,Iberia,Castile,Corboda
+Corboda,125,262,Iberia,Aragon,Portugal,Castile,Marrakesh
+Marrakesh,96,322,Africa,Corboda,Tumbuktu,Algiers,Arguin
+Algiers,193,317,Africa,Tumbuktu,Marrakesh,Tripoli,Tunis
+Tumbuktu,138,401,Africa,Marrakesh,Arguin,Algiers,Tripoli
+Arguin,48,404,Africa,Tumbuktu,Marrakesh
+Tunis,256,310,Africa,Algiers,Palermo,Tripoli
+Tripoli,323,385,Africa,Algiers,Tunis,Cairo,Gaza and Alexandria,Tumbuktu
+Cairo,492,404,Egypt,Tripoli,Gaza and Alexandria
+Gaza and Alexandria,498,357,Egypt,Tripoli,Cairo,Holy Land,Jedda
+Holy Land,539,314,Egypt,Gaza and Alexandria,Jedda,Antioch and Edessa
+Frankfurt,274,116,The Holy Roman Empire,Paris,Dijon and Marseille,Praha and Bresalau,Nurenburg,Arthus,Krakow
+Nurenburg,281,161,The Holy Roman Empire,Dijon and Marseille,Praha and Bresalau,Viena,Frankfurt,Southern Italy
+Southern Italy,279,203,The Holy Roman Empire,Dijon and Marseille,Croatia,Nurenburg,Naples,Viena
+Viena,319,171,The Holy Roman Empire,Croatia,Praha and Bresalau,Nurenburg,Budapest,Southern Italy
+Praha and Bresalau,328,136,The Holy Roman Empire,Krakow,Frankfurt,Viena,Nurenburg,Budapest
+Baghdad,604,273,The Turks,Yerevan,Antioch and Edessa,Jedda
+Antioch and Edessa,549,272,The Turks,Holy Land,Baghdad,Iconium,Yerevan,Jedda
+Iconium,497,257,The Turks,Antioch and Edessa,Yerevan,Anatolia
+Anatolia,446,268,The Turks,Yerevan,Iconium,Constantinople
+Yerevan,576,224,The Turks,Antioch and Edessa,Baghdad,Tbilisi,Iconium,Anatolia
+Tbilisi,589,197,The Turks,Yerevan,Sarkel
+Constantinople,422,230,The Turks,Anatolia,Greece,Bulgaria
+Sarkel,542,145,Russia,Tbilisi,Kiev,Bulgar,Ryazan
+Bulgar,590,66,Russia,Sarkel,Ryazan,Moscow
+Ryazan,492,92,Russia,Kiev,Sarkel,Bulgar,Smolensk,Moscow
+Kiev,450,140,Russia,Krakow,Wallachia,Vilnius,Sarkel,Ryazan,Smolensk
+Smolensk,440,70,Russia,Moscow,Ryazan,Vilnius,Novgorod,Kiev
+Novgorod,422,33,Russia,Moscow,Helsinki,Vilnius,Smolensk,Riga
+Moscow,510,45,Russia,Ryazan,Bulgar,Smolensk,Novgorod
+Vilnius,395,80,Lithuania and Poland,Kiev,Novgorod,Riga,Krakow,Smolensk
+Riga,374,51,Lithuania and Poland,Vilnius,Novgorod
+Krakow,368,115,Lithuania and Poland,Wallachia,Kiev,Vilnius,Praha and Bresalau,Budapest,Frankfurt
+Helsinki,375,20,Scandinavia,Novgorod,Stockholm
+Stockholm,314,30,Scandinavia,Arthus,Oslo,Helsinki
+Oslo,264,26,Scandinavia,Stockholm
+Arthus,279,61,Scandinavia,Frankfurt,Stockholm
+Budapest,363,170,Hungrary,Croatia,Wallachia,Viena,Praha and Bresalau,Krakow,Bulgaria
+Wallachia,412,175,Hungrary,Budapest,Bulgaria,Krakow,Kiev
+Bulgaria,407,207,Hungrary,Constantinople,Greece,Croatia,Wallachia,Budapest
+Croatia,346,207,Hungrary,Greece,Viena,Southern Italy,Budapest,Bulgaria
+Greece,377,249,The Turks,Constantinople,Croatia,Bulgaria
+Naples,321,249,Sicily,Palermo,Southern Italy
+Palermo,309,292,Sicily,Tunis,Naples
+England and Wales,195,95,England,Scotland,Paris
+Jedda,582,372,Egypt,Gaza and Alexandria,Holy Land,Baghdad,Antioch and Edessa

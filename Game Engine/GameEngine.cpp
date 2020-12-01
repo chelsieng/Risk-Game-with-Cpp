@@ -27,6 +27,10 @@ GameEngine::~GameEngine() {
     this->totalPlayers = nullptr;
 }
 
+Map* generateMap(MapLoader* mapLoader) {
+    return mapLoader->getMap();
+}
+
 Map *GameEngine::getMap() {
     return this->currMap;
 }
@@ -121,13 +125,21 @@ Map *GameEngine::selectMap() {
 
     // Map data structure where key = user select int and value = map files from ../Map Files/ directory
     map<int, string> map = {
-            {1, "../Map Files/artic.map"},
-            {2, "../Map Files/berlin.map"},
-            {3, "../Map Files/brasil2.map"},
-            {4, "../Map Files/mexico.map"},
-            {5, "../Map Files/northern-europe.map"},
-            {6, "../Map Files/swiss.map"},
-            {7, "../Map Files/world.map"}
+            // Domination
+            {1, "../Map Files/Domination/artic.map"},
+            {2, "../Map Files/Domination/berlin.map"},
+            {3, "../Map Files/Domination/brasil2.map"},
+            {4, "../Map Files/Domination/mexico.map"},
+            {5, "../Map Files/Domination/northern-europe.map"},
+            {6, "../Map Files/Domination/swiss.map"},
+
+            // Conquest
+            {7, "../Map Files/Conquest/Africa.map"},
+            {8, "../Map Files/Conquest/Asia.map"},
+            {9, "../Map Files/Conquest/Earthsea.map"},
+            {10, "../Map Files/Conquest/Eurasia - WWII 1939.map"},
+            {11, "../Map Files/Conquest/Medieval Europe.map"},
+            {12, "../Map Files/Conquest/Mediterranean.map"},
     };
 
     // If user selection loads invalid map files or creates invalid map graph, keep prompting user to select map file
@@ -139,28 +151,48 @@ Map *GameEngine::selectMap() {
             continue; // Keep prompting user
         }
         cout << "I. Choose a map from the list of map files below: " << endl;
-        cout << "\t1. artic.map" << endl;
-        cout << "\t2. berlin.map" << endl;
-        cout << "\t3. brasil.map" << endl;
-        cout << "\t4. mexico.map" << endl;
-        cout << "\t5. northern-europe.map" << endl;
-        cout << "\t6. swiss.map" << endl;
-        cout << "\t7. world.map" << endl;
+        cout << endl;
+        cout << "Domination Maps" << endl;
+        cout << "===============" << endl;
+        cout << "\t1. Artic.map" << endl;
+        cout << "\t2. Berlin.map" << endl;
+        cout << "\t3. Brasil.map" << endl;
+        cout << "\t4. Mexico.map" << endl;
+        cout << "\t5. Northern-Europe.map" << endl;
+        cout << "\t6. Swiss.map" << endl;
+        cout << endl;
+        cout << "Conquest Maps" << endl;
+        cout << "=============" << endl;
+        cout << "\t7. Africa.map" << endl;
+        cout << "\t8. Asia.map" << endl;
+        cout << "\t9. Earthsea.map" << endl;
+        cout << "\t10. Eurasia - WWII 1939.map" << endl;
+        cout << "\t11. Medival Europe.map" << endl;
+        cout << "\t12. Mediterranean.map" << endl;
+        cout << endl;
         cout << ">> ";
         cin >> mapSelection; // user enter selection
-
         // Returns false if user enters integer which is out of bound
-        if (map.count(mapSelection) < 1 || map.count(mapSelection) > 7) {
+        if (map.count(mapSelection) < 1 || map.count(mapSelection) > 12) {
             cout << "Please try again." << endl << endl;
             mapSelection = -1;
             continue;
         }
 
-        auto *m = new MapLoader(map[mapSelection]); //Loading selected map files
+        MapLoader *mapLoader = nullptr;
+        ConquestFileReader *reader = nullptr;
+        if (mapSelection >= 7) {
+            reader = new ConquestFileReader(map[mapSelection]);
+            mapLoader = new ConquestFileReaderAdapter(reader);
+        } else {
+            mapLoader = new MapLoader(map[mapSelection]); //Loading selected map files
+        }
+
         // Returns false if map file fails to load (ie invalid map file)
-        if (m->getMap() == nullptr) {
+        if (generateMap(mapLoader) == nullptr) {
             cout << "Please try again." << endl << endl;
-            delete m; // handling memory
+            delete mapLoader; // handling memory
+            delete reader;
             continue;
         }
 
@@ -169,20 +201,21 @@ Map *GameEngine::selectMap() {
         cout << "Great! Now let's have a look at your map: " << endl;
 
         // returns true if map graph is valid
-        if (m->getMap()->validate()) {
+        if (generateMap(mapLoader)->validate()) {
             while (key.empty()) {
                 cout << "Enter any key to continue>> "; // Prompt user to press any key to continue
                 cin >> key;
                 cout << endl;
                 // uncomment to see map of game which user selected from
-                cout << *m->getMap();
+                cout << *generateMap(mapLoader);
             }
             //     *mapGame = *m->getMap(); // Assign valid map to global variable mapGame
-            return m->getMap();
+            return generateMap(mapLoader);
         } // else return false if map graph is invalid
         else {
             cout << "Please try again." << endl << endl;
-            delete m; // handling memory
+            delete mapLoader; // handling memory
+            delete reader;
             continue;
         }
     }
