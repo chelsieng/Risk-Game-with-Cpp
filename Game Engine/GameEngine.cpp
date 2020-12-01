@@ -661,7 +661,46 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
                 cout << "\nLet's see everyone's current standings:" << endl;
             for (int m = 0; m < thePlayers->size(); m++) {
                 cout << *thePlayers->at(m) << endl;
-            }//end of for (print all player statuses
+            }//end of for (print all player statuses)
+            ///Option to change strategy during play
+            cout << "\nWould you like to change any of the players' strategies? Type 'y' for yes, and anything else for no." << endl;
+            string ans = "";
+            cin >> ans;
+            if(ans == "y") {
+                for (Player *player : *thePlayers) {
+                    cout << "\nWould you like to change P" << player->getId()<<"'s strategy? Type 'y' for yes, and anything else for no." << endl;
+                    string ans = "";
+                    cin >> ans;
+                    if(ans == "y") {
+                        ///Get strategy type
+                        cout << "\nWhat type of player is P" << player->getId()
+                             << "? Type in the corresponding number from the list below." << endl;
+                        cout << "1. Human player" << endl;
+                        cout << "2. Aggressive CPU" << endl;
+                        cout << "3. Benevolent CPU" << endl;
+                        cout << "4. Neutral CPU" << endl;
+                        int ans;
+                        bool valid = false;
+                        while (valid == false) {
+                            cin >> ans;
+                            cout << endl;
+                            if (cin.fail()) {
+                                cin.clear(); // clears error flag
+                                cin.ignore(); // skips to the next line
+                                valid = false; // Keep prompting user
+                            } else if (ans < 5 && ans > 0) { valid = true; } //(switch 3 to 5 later)
+                            else {
+                                cout << "\nInvalid answer! Please try again." << endl;
+                            }
+                        }//end of while (get valid answer)
+                        if (ans == 2) { player->setPlayerStrategy(new AggressivePlayerStrategy); }
+                        if (ans == 3) { player->setPlayerStrategy(new BenevolentPlayerStrategy); }
+                        if (ans == 4) { player->setPlayerStrategy(new NeutralPlayerStrategy); }
+                    }//end of if (they chose to change this specific player's strategy)
+                }//end of for (go through all players)
+            }//end of if (they chose yes to change some strategies)
+            ///
+            ///
         }//end of if (nobody has won so far)
     }//end of while
 
