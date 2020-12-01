@@ -512,7 +512,11 @@ Map *ConquestFileReader::loadMap(const string &filePath) {
 
         // last token
         if (borderInfo != "\r" && borderInfo != "\n" && borderInfo != "") {
-            borderInfo = borderInfo.substr(0, borderInfo.length()-1); // removing newline character
+            if (borderInfo.at(borderInfo.length() - 1) == '\r') {
+                borderInfo = borderInfo.substr(0, borderInfo.length() - 1); // removing newline character
+            } else {
+                borderInfo = borderInfo.substr(0, borderInfo.length()); // removing newline character
+            }
             int test = terrMap.find(borderInfo)->second;
             for (auto vert : mapGraph->get_vertices()) {
                 if (vert == terrID) { // territory vertex and terrID has the same territory ID
