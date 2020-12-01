@@ -252,6 +252,7 @@ std::vector<string> MapLoader::parseString(string s) {
 
 ConquestFileReaderAdapter::~ConquestFileReaderAdapter() {
     delete conquestFileReader_;
+    conquestFileReader_ = nullptr;
 }
 
 // Default constructor

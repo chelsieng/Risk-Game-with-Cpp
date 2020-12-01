@@ -180,8 +180,10 @@ Map *GameEngine::selectMap() {
         }
 
         MapLoader *mapLoader = nullptr;
+        ConquestFileReader *reader = nullptr;
         if (mapSelection >= 7) {
-            mapLoader = new ConquestFileReaderAdapter(new ConquestFileReader(map[mapSelection]));
+            reader = new ConquestFileReader(map[mapSelection]);
+            mapLoader = new ConquestFileReaderAdapter(reader);
         } else {
             mapLoader = new MapLoader(map[mapSelection]); //Loading selected map files
         }
@@ -190,6 +192,7 @@ Map *GameEngine::selectMap() {
         if (generateMap(mapLoader) == nullptr) {
             cout << "Please try again." << endl << endl;
             delete mapLoader; // handling memory
+            delete reader;
             continue;
         }
 
@@ -212,6 +215,7 @@ Map *GameEngine::selectMap() {
         else {
             cout << "Please try again." << endl << endl;
             delete mapLoader; // handling memory
+            delete reader;
             continue;
         }
     }
