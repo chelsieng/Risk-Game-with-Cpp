@@ -5,7 +5,7 @@
 #include <map>
 
 #include "Graph.h"
-#include "../Part 4/Player.h"
+#include "Player.h"
 
 using namespace std;
 using namespace graph;

@@ -7,7 +7,7 @@
 #include <cstdlib>      /* srand, rand */
 #include <cmath>        // Maths equations
 
-#include "../Part 1/Map.h"
+#include "Map.h"
 
 using namespace std;
 using std::vector;
