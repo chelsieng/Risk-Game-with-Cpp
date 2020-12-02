@@ -12,9 +12,16 @@ int main() {
     //making a deck
     BlockadeCard card1;
     DiplomacyCard card2;
-    deckNode head(&card2, NULL);
+    AirliftCard card3;
+    BombCard card4;
+    ReinforcementCard card5;
+    deckNode head(&card4, NULL);
     Deck* theDeck = new Deck(&head);
     theDeck->addToDeck(&card1);
+    theDeck->addToDeck(&card3);
+    theDeck->addToDeck(&card4);
+    theDeck->addToDeck(&card5);
+
 
     GameEngine *gameEngine = new GameEngine();
 
@@ -111,15 +118,21 @@ int main() {
 
     ///create vector of players
     vector<Player*>* ps1 = new vector<Player*>();
-    p1->setPlayerStrategy(new NeutralPlayerStrategy);
+    p1->setPlayerStrategy(new BenevolentPlayerStrategy);
+    p1->getHand()->addToHand(theDeck->draw());
+    p1->getHand()->addToHand(theDeck->draw());
+    p1->getHand()->addToHand(theDeck->draw());
+    p1->getHand()->addToHand(theDeck->draw());
+    p1->getHand()->addToHand(theDeck->draw());
+
     ps1->push_back(p1);
     ps1->push_back(p2);
  //   ps1->push_back(p3);
  //   ps1->push_back(p4);
 
  //We'll start each player off with a card in hand:
-    p1->getHand()->addToHand(theDeck->draw());
-    p2->getHand()->addToHand(theDeck->draw());
+ //   p1->getHand()->addToHand(theDeck->draw());
+ //   p2->getHand()->addToHand(theDeck->draw());
 
 
     cout << "Here is our list of players:" << endl;

@@ -56,6 +56,7 @@ public:
     // add it back to the game deck
     void play(Player* p);
     void play(Player* p, std::vector<Player*> allPlayers, Map* theMap);
+    void CPUPlay(Player* p, std::vector<Player*> allPlayers, Map* theMap);
 
     //this last one is the only one that is actually gonna be used
 
