@@ -230,6 +230,7 @@ void Player::removeTerritory(Territory *t) {
 }
 
 void Player::setPlayerStrategy(PlayerStrategy *p) {
+    delete this->playerStrategy;
     this->playerStrategy = p;
 }
 
