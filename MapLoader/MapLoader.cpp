@@ -247,13 +247,40 @@ std::vector<string> MapLoader::parseString(string s) {
 }
 
 //===============================================================================================================
-//---------------------------------------------------CONQUEST FILES----------------------------------------------
+//---------------------------------------------------CONQUEST ADAPTER--------------------------------------------
 //===============================================================================================================
 
 ConquestFileReaderAdapter::~ConquestFileReaderAdapter() {
     delete conquestFileReader_;
     conquestFileReader_ = nullptr;
 }
+
+//Copy Constructor
+ConquestFileReaderAdapter::ConquestFileReaderAdapter(ConquestFileReaderAdapter &conquestFileReaderAdapter)  : MapLoader(conquestFileReaderAdapter) {
+    delete this->conquestFileReader_;
+    this->conquestFileReader_ = nullptr;
+    this->conquestFileReader_ = new ConquestFileReader(*conquestFileReaderAdapter.conquestFileReader_);
+}
+
+// Assignment Operator Overload
+ConquestFileReaderAdapter &ConquestFileReaderAdapter::operator=(const ConquestFileReaderAdapter &conquestFileReaderAdapter) {
+    //handling self assignment
+    if (this != &conquestFileReaderAdapter) {
+        delete this->conquestFileReader_;
+        this->conquestFileReader_ = nullptr;
+        this->conquestFileReader_ = new ConquestFileReader(*conquestFileReaderAdapter.conquestFileReader_);
+    }
+    return *this;
+}
+
+ostream &operator<<(ostream &output, const ConquestFileReaderAdapter &conquestFileReaderAdapter) {
+    return output;
+}
+
+//===============================================================================================================
+//---------------------------------------------------CONQUEST READER--------------------------------------------
+//===============================================================================================================
+
 
 // Default constructor
 ConquestFileReader::ConquestFileReader() {
