@@ -61,9 +61,13 @@ private:
     ConquestFileReader* conquestFileReader_;
 public:
     explicit ConquestFileReaderAdapter(ConquestFileReader* conquestFileReader) : conquestFileReader_(conquestFileReader){};
+    ConquestFileReaderAdapter(ConquestFileReaderAdapter &); //Copy constructor
+    ConquestFileReaderAdapter &operator=(const ConquestFileReaderAdapter &); //Assignment operator
     ~ConquestFileReaderAdapter();
 
     Map* getMap() override {return this->conquestFileReader_->getMap();}
+
+    friend ostream &operator<<(ostream &, const ConquestFileReader &);
 };
 
 // Simulate client side code
