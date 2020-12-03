@@ -270,9 +270,10 @@ vector<Player *> *GameEngine::createPlayers() {
                 cout << "\nInvalid answer! Please try again." << endl;
             }
         }//end of while (get valid answer)
-        if(ans == 2){player->setPlayerStrategy(new AggressivePlayerStrategy);}
-        if(ans == 3){player->setPlayerStrategy(new BenevolentPlayerStrategy);}
-        if(ans == 4){player->setPlayerStrategy(new NeutralPlayerStrategy);}
+        if (ans == 1) { player->setPlayerStrategy(new HumanPlayerStrategy()); }
+        if (ans == 2) { player->setPlayerStrategy(new AggressivePlayerStrategy()); }
+        if (ans == 3) { player->setPlayerStrategy(new BenevolentPlayerStrategy()); }
+        if (ans == 4) { player->setPlayerStrategy(new NeutralPlayerStrategy()); }
         ///
         pList->push_back(player); // storing players in global vector variable players
     }
@@ -693,9 +694,10 @@ void GameEngine::mainGameLoop(vector<Player *> *thePlayers, vector<Continent *> 
                                 cout << "\nInvalid answer! Please try again." << endl;
                             }
                         }//end of while (get valid answer)
-                        if (ans == 2) { player->setPlayerStrategy(new AggressivePlayerStrategy); }
-                        if (ans == 3) { player->setPlayerStrategy(new BenevolentPlayerStrategy); }
-                        if (ans == 4) { player->setPlayerStrategy(new NeutralPlayerStrategy); }
+                        if (ans == 1) { player->setPlayerStrategy(new HumanPlayerStrategy()); }
+                        if (ans == 2) { player->setPlayerStrategy(new AggressivePlayerStrategy()); }
+                        if (ans == 3) { player->setPlayerStrategy(new BenevolentPlayerStrategy()); }
+                        if (ans == 4) { player->setPlayerStrategy(new NeutralPlayerStrategy()); }
                     }//end of if (they chose to change this specific player's strategy)
                 }//end of for (go through all players)
             }//end of if (they chose yes to change some strategies)

@@ -3,6 +3,20 @@
 
 #include "PlayerStrategies.h"
 
+//  PlayerStrategy
+PlayerStrategy::PlayerStrategy() = default;
+
+PlayerStrategy::PlayerStrategy(PlayerStrategy& strategy) = default;
+
+PlayerStrategy::~PlayerStrategy() = default;
+
+//  HumanPlayerStrategy
+HumanPlayerStrategy::HumanPlayerStrategy() : PlayerStrategy() {}
+
+HumanPlayerStrategy::HumanPlayerStrategy(HumanPlayerStrategy& strategy) : PlayerStrategy(strategy) {}
+
+HumanPlayerStrategy::~HumanPlayerStrategy() = default;
+
 vector<Territory *> HumanPlayerStrategy::toAttack(Map *theMap, Player *player) {
     cout << "\n Here are the places that you can attack:" << endl;
     vector<Territory*> attackable = player->AttackAble(theMap);
@@ -404,6 +418,13 @@ bool HumanPlayerStrategy::issueOrder(Map *theMap, vector<Player *> *thePlayers, 
 }
 ////////////////////////////////////////////
 
+//  AggressivePlayerStrategy
+AggressivePlayerStrategy::AggressivePlayerStrategy() : PlayerStrategy() {}
+
+AggressivePlayerStrategy::AggressivePlayerStrategy(AggressivePlayerStrategy& strategy) : PlayerStrategy(strategy) {}
+
+AggressivePlayerStrategy::~AggressivePlayerStrategy() = default;
+
 vector<Territory *> AggressivePlayerStrategy::toDefend(Map *theMap, Player *player) {
     //this version should get the player's strongest country
     Territory* toReturn;
@@ -567,6 +588,13 @@ vector<Territory *> AggressivePlayerStrategy::toAttack(Map *theMap, Player *play
     ///End of Aggressive version of toAttack
 }
 
+//  BenevolentPlayerStrategy
+BenevolentPlayerStrategy::BenevolentPlayerStrategy() : PlayerStrategy() {}
+
+BenevolentPlayerStrategy::BenevolentPlayerStrategy(BenevolentPlayerStrategy& strategy) : PlayerStrategy(strategy) {}
+
+BenevolentPlayerStrategy::~BenevolentPlayerStrategy() = default;
+
 vector<Territory *> BenevolentPlayerStrategy::toDefend(Map *theMap, Player *player) {
     vector<Territory*> weaklings;
     int smallestArmyCount = player->getPlayerTerritories()->at(0)->getMockArmies();
@@ -677,6 +705,13 @@ bool BenevolentPlayerStrategy::issueOrder(Map *theMap, vector<Player *> *thePlay
     return false;
     ///End of Benevolent version of issue order
 }
+
+//  NeutralPlayerStrategy
+NeutralPlayerStrategy::NeutralPlayerStrategy() : PlayerStrategy() {}
+
+NeutralPlayerStrategy::NeutralPlayerStrategy(NeutralPlayerStrategy& strategy) : PlayerStrategy(strategy) {}
+
+NeutralPlayerStrategy::~NeutralPlayerStrategy() = default;
 
 vector<Territory *> NeutralPlayerStrategy::toDefend(Map *theMap, Player *player) {
     return vector<Territory *>();

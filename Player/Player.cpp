@@ -23,7 +23,7 @@ Player::Player(Hand *hand, OrdersList *OrdersList, vector<Territory *> *territor
     this->playerOrdersList = OrdersList;
     this->playerTerritories = territories;
     this->reinforcementPool = 0;
-    this->playerStrategy = new HumanPlayerStrategy; //sets strategy to human by default
+    this->playerStrategy = new HumanPlayerStrategy(); //sets strategy to human by default
 }
 
 // copy constructor
@@ -230,6 +230,7 @@ void Player::removeTerritory(Territory *t) {
 }
 
 void Player::setPlayerStrategy(PlayerStrategy *p) {
+    delete this->playerStrategy;
     this->playerStrategy = p;
 }
 
